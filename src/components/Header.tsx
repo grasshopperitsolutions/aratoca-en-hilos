@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Leaf, Menu, X } from 'lucide-react';
 
@@ -20,9 +20,13 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const prevPathname = useRef(location.pathname);
   useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [location]);
+    if (prevPathname.current !== location.pathname) {
+      setMobileMenuOpen(false);
+      prevPathname.current = location.pathname;
+    }
+  }, [location.pathname]);
 
   return (
     <header
