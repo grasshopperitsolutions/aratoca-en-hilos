@@ -1,0 +1,28 @@
+import { Shield } from 'lucide-react';
+import Reveal from '../components/Reveal';
+import Button from '../components/Button';
+
+export default function Privacy() {
+  return (
+    <section className="min-h-screen flex items-center justify-center px-6 pt-32 pb-24">
+      <Reveal>
+        <div className="text-center max-w-lg">
+          <div className="w-20 h-20 rounded-full bg-moss/20 flex items-center justify-center mx-auto mb-8">
+            <Shield size={36} className="text-penca" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-fraunces text-charcoal mb-4">
+            Política de Privacidad
+          </h1>
+          <p className="text-charcoal/70 text-lg mb-8 font-light">
+            Estamos redactando nuestra política de privacidad. Pronto
+            encontrarás aquí toda la información sobre cómo protegemos tus
+            datos y tu experiencia en Aratoca en Hilos.
+          </p>
+          <Button to="/" variant="outline">
+            Volver al inicio
+          </Button>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
