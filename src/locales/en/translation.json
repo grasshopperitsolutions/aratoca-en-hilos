@@ -1,0 +1,380 @@
+{
+  "site": {
+    "name": "Aratoca en Hilos",
+    "nameAccent": "en Hilos",
+    "tagline": "Handwoven Art",
+    "description": "Aratoca en Hilos is a window into the legacy of fique. Discover how this natural fibre becomes sustainable art through hands that keep our history alive."
+  },
+  "nav": {
+    "home": "Home",
+    "artesanos": "Artisans",
+    "tallerFique": "Fique Workshop",
+    "contacto": "Contact",
+    "terminos": "Terms",
+    "privacidad": "Privacy",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "language": {
+    "label": "Language",
+    "es": "Spanish",
+    "en": "English",
+    "switchTo": "View this page in Spanish"
+  },
+  "common": {
+    "backHome": "Back to home",
+    "loading": "Loading…",
+    "close": "Close",
+    "handmade": "Handmade",
+    "errorTitle": "Something went wrong",
+    "errorBody": "We could not load this section. Please try again in a moment."
+  },
+  "home": {
+    "hero": {
+      "location": "Santander, Colombia",
+      "titleLine1": "A Soul",
+      "titleLine2": "Woven",
+      "titleLine3": "by Hand.",
+      "intro": "Aratoca en Hilos is a window into the legacy of fique. Discover how this natural fibre becomes sustainable art through hands that keep our history alive.",
+      "cta": "Begin the journey",
+      "imageAlt": "Artisan weaving fique on a traditional loom"
+    },
+    "historia": {
+      "title": "Heritage of the Penca",
+      "p1": "The Guane people, native to the canyons of Santander, were the first masters of this fibre. Their sacred knowledge of the earth's cycles let them draw out the strongest threads of all.",
+      "p2": "Aratoca keeps that pulse alive today. Fique is no longer just coffee sacking: it has been raised to an art form, blending natural dyes from leaves and bark with loom techniques that have survived for centuries.",
+      "note": "Our memory is bound in thread.",
+      "imageAltPlant": "Fique plant growing in the fields of Aratoca",
+      "imageAltTexture": "Close-up texture of fique fibre"
+    },
+    "proceso": {
+      "accent": "The Ritual",
+      "title": "7 Steps to Eternity",
+      "steps": {
+        "cosecha": {
+          "title": "Harvest",
+          "desc": "Mature leaves are selected one by one, sparing the central shoot so the plant lives on and keeps flourishing."
+        },
+        "desfibrado": {
+          "title": "Defibring",
+          "desc": "The leaf is skilfully scraped to release the long, strong fibres from the green pulp."
+        },
+        "lavado": {
+          "title": "Washing",
+          "desc": "Pure spring water rinses the fibre, carrying away its natural impurities."
+        },
+        "secado": {
+          "title": "Sun Drying",
+          "desc": "Spread out under the Aratoca sun, the strands take on their characteristic cream and beige tones."
+        },
+        "escarmenado": {
+          "title": "Combing",
+          "desc": "A vigorous brushing that separates, aligns and softens the fibre, readying it for the spindle."
+        },
+        "hilado": {
+          "title": "Spinning",
+          "desc": "The artisan's dance: twisting the fibre by pedal or by hand into threads of every thickness."
+        },
+        "tejido": {
+          "title": "Weaving",
+          "desc": "On the loom the threads cross into wefts that become rugs, canvases and alpargatas."
+        }
+      }
+    },
+    "coleccion": {
+      "titleLine1": "The Root",
+      "titleLine2": "Collection",
+      "subtitle": "Functional pieces where contemporary design embraces pre-Columbian technique.",
+      "cta": "Meet the artisans",
+      "items": {
+        "mochilas": {
+          "title": "Bags and Satchels"
+        },
+        "tapices": {
+          "title": "Decorative Tapestries"
+        },
+        "calzado": {
+          "title": "Traditional Footwear"
+        }
+      }
+    },
+    "libro": {
+      "eyebrow": "Digital Book",
+      "title": "Step inside the Fique Workshop.",
+      "text": "Video archives, artisan diaries and natural dyeing tutorials in a free interactive experience.",
+      "cta": "Open the archive",
+      "sealLine1": "Knowledge",
+      "sealLine2": "shared"
+    }
+  },
+  "artesanos": {
+    "accent": "The Hands",
+    "title": "Artisans of Aratoca",
+    "intro": "Behind every thread there is a person. These are the hands that hold up the fique tradition in Aratoca: masters who learned by watching their grandparents and who now teach a new generation.",
+    "note": "Every piece carries a name.",
+    "empty": "We will publish our artisans' stories here soon.",
+    "photoAlt": "Portrait of {{name}}",
+    "cta": {
+      "title": "Would you like to work with our artisans?",
+      "text": "Write to us and we will put you in direct contact with the workshop.",
+      "button": "Get in touch"
+    }
+  },
+  "tallerFique": {
+    "accent": "Interactive Book",
+    "title": "Fique Workshop",
+    "intro": "Taller Fique is a living book about the fibre that defines Aratoca. It gathers our artisans' knowledge into chapters you can read, watch and listen to: from planting the penca to the last knot on the loom.",
+    "comingSoon": "Coming soon",
+    "comingSoonText": "The full interactive experience is in development. In the meantime, here is what you will find in each chapter.",
+    "chaptersTitle": "The Chapters",
+    "chapters": {
+      "planta": {
+        "title": "The Plant",
+        "desc": "The botany of fique, its life cycle, and why it thrives in the canyons of Santander."
+      },
+      "fibra": {
+        "title": "From Leaf to Thread",
+        "desc": "Defibring, washing and drying explained step by step by the people who do it daily."
+      },
+      "color": {
+        "title": "Natural Dyeing",
+        "desc": "Dye recipes from leaves, bark and roots, with the exact proportions the workshop uses."
+      },
+      "telar": {
+        "title": "The Loom",
+        "desc": "Setting up the loom, the basic wefts, and the patterns inherited from the Guane tradition."
+      },
+      "diarios": {
+        "title": "Artisan Diaries",
+        "desc": "First-person accounts of the craft, of memory, and of passing the trade to the next generation."
+      },
+      "futuro": {
+        "title": "Fique and the Future",
+        "desc": "Sustainability, new uses for the fibre, and the craft's role in the local economy."
+      }
+    },
+    "faqTitle": "Frequently Asked Questions",
+    "faq": {
+      "que": {
+        "question": "What is the Fique Workshop?",
+        "answer": "It is an interactive digital book documenting the craft of fique in Aratoca, Santander. It brings together video, photography, artisan testimony and practical tutorials in a single reading experience."
+      },
+      "costo": {
+        "question": "Does it cost anything?",
+        "answer": "No. The Fique Workshop is free and open to everyone. Our aim is to preserve and share artisanal knowledge, not to sell it."
+      },
+      "quien": {
+        "question": "Who is it for?",
+        "answer": "For students, designers, researchers and anyone curious about traditional Colombian crafts. It also works as supporting material for workshops and classrooms."
+      },
+      "cuando": {
+        "question": "When will it be available?",
+        "answer": "The interactive experience is still in development. Write to us from the contact page if you would like to be notified when it launches."
+      },
+      "aportar": {
+        "question": "Can I contribute content or correct something?",
+        "answer": "Yes. This is a living archive and we welcome corrections, photographs and testimony from the community. Use the contact form to reach us."
+      }
+    },
+    "cta": {
+      "title": "We will let you know when the book opens",
+      "text": "Leave us a message and be among the first to walk through the Fique Workshop.",
+      "button": "Tell me more"
+    }
+  },
+  "contacto": {
+    "accent": "Let's talk",
+    "title": "Contact",
+    "intro": "Have a question about the craft, want to visit the workshop, or interested in working with our artisans? Write to us and we will get back to you.",
+    "form": {
+      "title": "Send us a message",
+      "name": "Name",
+      "namePlaceholder": "Your full name",
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "phone": "Phone (optional)",
+      "phonePlaceholder": "+57 300 000 0000",
+      "message": "Message",
+      "messagePlaceholder": "Tell us how we can help…",
+      "submit": "Send message",
+      "sending": "Sending…",
+      "consent": "By submitting this form you authorise the processing of your personal data in accordance with our Privacy Policy.",
+      "successTitle": "Message sent!",
+      "successBody": "Thank you for writing. We will reply to the email address you gave us as soon as we can.",
+      "successAgain": "Send another message",
+      "errorTitle": "We could not send your message",
+      "errorBody": "Something went wrong submitting the form. Please try again, or write to us directly at {{email}}.",
+      "errors": {
+        "nameRequired": "Please enter your name.",
+        "nameTooLong": "That name is too long.",
+        "emailRequired": "Please enter your email address.",
+        "emailInvalid": "That email address does not look valid.",
+        "phoneInvalid": "That phone number does not look valid.",
+        "messageRequired": "Please write your message.",
+        "messageTooShort": "Tell us a little more (at least 10 characters).",
+        "messageTooLong": "That message is too long (2000 characters maximum).",
+        "throttled": "Please wait a moment before sending another message."
+      }
+    },
+    "direct": {
+      "title": "Other ways to reach us",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "whatsappLabel": "WhatsApp",
+      "whatsappAction": "Message us on WhatsApp",
+      "addressLabel": "Location",
+      "hoursLabel": "Hours",
+      "hoursValue": "Monday to Friday, 8:00 to 17:00 (COT)"
+    }
+  },
+  "terminos": {
+    "title": "Terms and Conditions",
+    "updated": "Last updated: {{date}}",
+    "intro": "These terms govern access to and use of the {{company}} website. By browsing it, you accept the conditions set out below.",
+    "sections": {
+      "aceptacion": {
+        "title": "1. Acceptance of the terms",
+        "body": "Accessing and using this website implies full acceptance of these Terms and Conditions. If you do not agree with any of them, please refrain from using the site.\n\nThese terms may be updated at any time. The version in force is always the one published on this page."
+      },
+      "objeto": {
+        "title": "2. Purpose of the site",
+        "body": "This site is an informational and cultural space dedicated to sharing the artisanal craft of fique in Aratoca, Santander, Colombia. It presents the fibre's process, the work of the region's artisans, and the Taller Fique publishing project.\n\nThe site does not sell online and does not process payments. Any commercial relationship with the artisans is agreed directly with them through the published contact channels."
+      },
+      "propiedad": {
+        "title": "3. Intellectual property",
+        "body": "The texts, photographs, illustrations, videos, trade marks and other content published on this site belong to {{company}} or to their respective authors, and are protected by Colombian copyright law.\n\nYou may quote and share the content for educational, informational or research purposes, provided you credit the source and link back to the original site. Any commercial use requires prior written authorisation."
+      },
+      "uso": {
+        "title": "4. Permitted use",
+        "body": "You agree to use the site lawfully and respectfully. In particular, you may not attempt to breach the site's security, extract data in an automated or bulk fashion, impersonate third parties, or send illegal, offensive or misleading content through the contact form.\n\nWe may restrict access for anyone who breaches these conditions."
+      },
+      "enlaces": {
+        "title": "5. Third-party content and links",
+        "body": "The site may link to external pages, such as social networks or reference material. We do not control those sites and are not responsible for their content, their privacy policies or their practices."
+      },
+      "formulario": {
+        "title": "6. Contact form",
+        "body": "The contact form is provided to make it easier to communicate with us. The data you send is processed in accordance with our Privacy Policy.\n\nWe do not guarantee any particular response time, though we aim to answer every legitimate enquiry."
+      },
+      "disponibilidad": {
+        "title": "7. Service availability",
+        "body": "We aim to keep the site continuously available, but interruptions may occur due to maintenance, updates or causes beyond our control. We do not guarantee uninterrupted availability or that the site will be entirely free of errors."
+      },
+      "responsabilidad": {
+        "title": "8. Limitation of liability",
+        "body": "The information published here is informational in nature. Although we take care over its accuracy, we are not responsible for decisions taken solely on the basis of the site's content.\n\nTo the fullest extent permitted by law, {{company}} shall not be liable for indirect or incidental damages arising from the use of, or inability to use, the site."
+      },
+      "datos": {
+        "title": "9. Personal data protection",
+        "body": "The processing of personal data is governed by our Privacy Policy and by Colombia's Law 1581 of 2012 and its implementing decrees. We recommend reading it before sending us any information."
+      },
+      "modificaciones": {
+        "title": "10. Modifications",
+        "body": "We may modify the site, its content or these terms at any time and without prior notice. Continued use of the site after a modification constitutes acceptance of it."
+      },
+      "ley": {
+        "title": "11. Governing law and jurisdiction",
+        "body": "These terms are governed by the laws of the Republic of {{jurisdiction}}. Any dispute shall be submitted to the competent courts of that country."
+      },
+      "contacto": {
+        "title": "12. Contact",
+        "body": "For any question about these Terms and Conditions, write to us at {{email}} or at {{address}}."
+      }
+    }
+  },
+  "privacidad": {
+    "title": "Privacy Policy",
+    "updated": "Last updated: {{date}}",
+    "intro": "At {{company}} we respect your privacy. This policy explains what personal data we collect, for what purpose, and how you can exercise your rights, in accordance with Colombia's Law 1581 of 2012 and Decree 1074 of 2015.",
+    "sections": {
+      "responsable": {
+        "title": "1. Data controller",
+        "body": "Controller: {{legalName}}\nTax ID: {{taxId}}\nAddress: {{address}}\nEmail: {{email}}\nPhone: {{phone}}\n\nThis email address is also the designated channel for questions and complaints about personal data."
+      },
+      "datos": {
+        "title": "2. Data we collect",
+        "body": "We only collect the data you give us voluntarily through the contact form: name, email address, phone number (optional) and the content of your message.\n\nWe also record the language you were browsing in and the submission date, so that we can reply appropriately.\n\nWe do not collect sensitive data, data from minors, or financial information."
+      },
+      "finalidades": {
+        "title": "3. Purposes of processing",
+        "body": "We use your personal data solely to: respond to your enquiry or request; put you in touch with the artisans when you ask us to; keep an internal record of the communications we receive; and, if you expressly authorise it, tell you when the Taller Fique is published.\n\nWe do not use your data for third-party advertising and we never sell it."
+      },
+      "autorizacion": {
+        "title": "4. Authorisation",
+        "body": "By submitting the contact form you give prior, express and informed authorisation for your personal data to be processed for the purposes described in this policy.\n\nYou may revoke that authorisation at any time by writing to {{email}}, unless a legal or contractual duty requires us to retain the information."
+      },
+      "derechos": {
+        "title": "5. Your rights as a data subject",
+        "body": "Under article 8 of Law 1581 of 2012, as the data subject you have the right to: know, update and rectify your personal data; request proof of the authorisation you gave; be informed about how your data has been used; lodge complaints with the Superintendency of Industry and Commerce for breaches of the law; revoke your authorisation and request deletion of your data where no legal duty to retain it exists; and access free of charge the data that has been processed."
+      },
+      "procedimiento": {
+        "title": "6. How to exercise your rights",
+        "body": "Send your request to {{email}} stating your name, the contact details you gave us, and a clear description of what you are asking for.\n\nEnquiries are handled within a maximum of ten (10) business days and complaints within a maximum of fifteen (15) business days, extendable as provided by law."
+      },
+      "conservacion": {
+        "title": "7. Data retention",
+        "body": "We keep contact form messages for as long as they are needed to handle your request and to demonstrate compliance with our legal obligations.\n\nOnce they are no longer needed, we delete them securely."
+      },
+      "encargados": {
+        "title": "8. Processors and international transfer",
+        "body": "This site uses Google (Firebase) services to host the database, store files and protect against automated abuse. This means your data may be stored on servers located outside Colombia.\n\nGoogle acts as a data processor and is bound by security standards and contractual clauses providing an adequate level of protection. We also use an email provider to deliver the form notifications to us."
+      },
+      "cookies": {
+        "title": "9. Cookies and similar technologies",
+        "body": "This site does not use advertising cookies or third-party tracking cookies.\n\nWe use browser local storage solely to remember technical preferences, and Google's reCAPTCHA service to tell people apart from automated submissions on the contact form."
+      },
+      "seguridad": {
+        "title": "10. Information security",
+        "body": "We apply reasonable technical and administrative measures to protect your data: encrypted connections (HTTPS), restricted access rules on the database, and authentication for the administration panel.\n\nNo system is entirely infallible, but we work to keep the risks to a minimum."
+      },
+      "cambios": {
+        "title": "11. Validity and changes",
+        "body": "This policy applies from its publication date and remains in force for as long as data processing continues.\n\nAny substantial change will be published on this same page along with its update date."
+      },
+      "contacto": {
+        "title": "12. Contact",
+        "body": "If you have questions about this policy or about how your data is processed, write to us at {{email}}."
+      }
+    }
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Page not found",
+    "body": "The page you are looking for does not exist or has been moved. Head back to the home page to carry on exploring the legacy of fique."
+  },
+  "footer": {
+    "about": "Protecting and weaving the artisanal memory of Santander. A tribute to the plant, the hands and the inheritance.",
+    "navigate": "Navigate",
+    "legal": "Legal",
+    "contact": "Contact",
+    "social": "Social networks",
+    "rights": "© {{year}} Aratoca en Hilos. Art from Colombia."
+  },
+  "seo": {
+    "siteName": "Aratoca en Hilos",
+    "home": {
+      "title": "Aratoca en Hilos — Handwoven fique art from Colombia",
+      "description": "Discover the legacy of fique in Aratoca, Santander: the fibre’s process, the artisans who keep it alive, and the Taller Fique book."
+    },
+    "artesanos": {
+      "title": "Artisans of Aratoca — Masters of fique",
+      "description": "Meet the artisans who sustain the fique tradition in Aratoca, Santander: their crafts, their stories and their handmade work."
+    },
+    "tallerFique": {
+      "title": "Fique Workshop — An interactive book about the craft of fique",
+      "description": "A free digital book about the fique of Aratoca: video chapters, natural dyeing, loom techniques and artisan diaries."
+    },
+    "contacto": {
+      "title": "Contact — Aratoca en Hilos",
+      "description": "Write to us to visit the workshop, work with our artisans, or ask about the fique of Aratoca, Santander."
+    },
+    "terminos": {
+      "title": "Terms and Conditions — Aratoca en Hilos",
+      "description": "Conditions for accessing and using the Aratoca en Hilos website, including intellectual property in the published content."
+    },
+    "privacidad": {
+      "title": "Privacy Policy — Aratoca en Hilos",
+      "description": "How we collect and process your personal data under Colombia’s Law 1581 of 2012, and how to exercise your rights."
+    }
+  }
+}

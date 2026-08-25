@@ -1,0 +1,93 @@
+rules_version = '2';
+
+// Aratoca en Hilos — Firestore security rules.
+//
+// Every Firebase call in this project is made from the browser, so the config
+// in the JS bundle is public by definition. These rules are therefore the ONLY
+// thing protecting the client's content: treat them as the real access control,
+// not as a backup for the UI checks.
+//
+// Deploy with:  firebase deploy --only firestore:rules
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ⚠️ Must match COMPANY.email in src/content/company.ts.
+    // Pinning the recipient here is what stops the publicly writable
+    // `contactos` collection being used as an open mail relay: a visitor can
+    // choose the message, never the destination.
+    function contactEmail() {
+      return 'grasshopper.it.solutions@gmail.com';
+    }
+
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // The allowlist itself. Writable only from the Firebase console or the
+    // Admin SDK — never from the client, or an attacker could promote himself.
+    match /admins/{uid} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Artisan profiles. Anyone may read the published ones (the public page
+    // queries with `where('publicado','==',true)`, which satisfies this rule);
+    // only admins see drafts or make changes.
+    match /artesanos/{id} {
+      allow read: if (resource != null && resource.data.publicado == true) || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Media library. Public read so the images render on the site.
+    match /archivos/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Contact form. Public create, admin-only everything else — a visitor must
+    // never be able to read other people's enquiries back out.
+    match /contactos/{id} {
+      allow create: if isValidContacto();
+      allow read, update, delete: if isAdmin();
+    }
+
+    function isValidContacto() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['nombre', 'email', 'telefono', 'mensaje', 'idioma', 'leido', 'creadoEn', 'to', 'template'])
+        && d.keys().hasAll(['nombre', 'email', 'telefono', 'mensaje', 'idioma', 'leido', 'creadoEn', 'to', 'template'])
+        && d.nombre is string && d.nombre.size() > 0 && d.nombre.size() <= 120
+        && d.email is string && d.email.size() > 0 && d.email.size() <= 200
+        && d.email.matches('^[^@\\s]+@[^@\\s]+[.][^@\\s]+$')
+        && d.telefono is string && d.telefono.size() <= 40
+        && d.mensaje is string && d.mensaje.size() >= 10 && d.mensaje.size() <= 2000
+        && d.idioma in ['es', 'en']
+        && d.leido == false
+        && d.creadoEn == request.time
+        // Recipient is pinned, and the email body comes from a server-side
+        // template rather than client-supplied HTML.
+        && d.to == contactEmail()
+        && d.template.keys().hasOnly(['name', 'data'])
+        && d.template.name == 'contacto'
+        && d.template.data is map;
+    }
+
+    // Handlebars templates read by the Trigger Email extension. The extension
+    // uses the Admin SDK, which bypasses rules, so no client needs access.
+    match /templates/{id} {
+      allow read, write: if false;
+    }
+
+    // Outbound mail queue, if the extension is pointed at its own collection.
+    match /mail/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Anything not named above is denied outright.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

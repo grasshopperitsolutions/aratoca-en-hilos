@@ -10,6 +10,19 @@ jobs:
   validate:
     runs-on: ubuntu-latest
 
+    # No Firebase secrets here on purpose: the guarded init in src/firebase.ts
+    # and the fallback in scripts/fetch-content.mjs must keep working without
+    # them, so a fork or an untrusted PR can still build the site.
+    env:
+      VITE_FIREBASE_API_KEY: ''
+      VITE_FIREBASE_AUTH_DOMAIN: ''
+      VITE_FIREBASE_PROJECT_ID: ''
+      VITE_FIREBASE_STORAGE_BUCKET: ''
+      VITE_FIREBASE_MESSAGING_SENDER_ID: ''
+      VITE_FIREBASE_APP_ID: ''
+      VITE_RECAPTCHA_SITE_KEY: ''
+      VITE_SITE_ORIGIN: 'https://grasshoppersolutions.online'
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,3 +44,16 @@ jobs:
 
       - name: Build project
         run: npm run build
+
+      - name: Verify prerendered output
+        run: |
+          set -e
+          for file in dist/index.html dist/artesanos/index.html dist/en/artisans/index.html \
+                      dist/404.html dist/sitemap.xml dist/robots.txt dist/llms.txt dist/.nojekyll; do
+            test -f "$file" || { echo "Missing $file"; exit 1; }
+          done
+          grep -q '<link rel="canonical"' dist/en/artisans/index.html
+          grep -q 'hreflang="x-default"' dist/en/artisans/index.html
+          grep -q 'Artisans of Aratoca' dist/en/artisans/index.html
+          grep -q 'Artesanos de Aratoca' dist/artesanos/index.html
+          echo "Prerender output looks good."

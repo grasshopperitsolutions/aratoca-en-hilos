@@ -5,15 +5,22 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build:content": "node scripts/fetch-content.mjs",
+    "build:client": "vite build",
+    "build:ssr": "vite build --ssr src/entry-server.tsx --outDir dist-ssr",
+    "prerender": "node scripts/prerender.mjs",
+    "build": "npm run build:content && tsc -b && npm run build:client && npm run build:ssr && npm run prerender",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "firebase": "^12.18.0",
+    "i18next": "^26.4.0",
     "lucide-react": "^1.24.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-i18next": "^17.0.12",
     "react-router-dom": "^7.18.1",
     "tailwindcss": "^4.3.3"
   },

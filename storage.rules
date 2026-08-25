@@ -1,0 +1,45 @@
+rules_version = '2';
+
+// Aratoca en Hilos — Cloud Storage security rules.
+//
+// Uploads come straight from the browser, so these rules are the only limit on
+// what lands in the bucket. Admin status is read from the same `admins/`
+// allowlist the Firestore rules use, keeping one source of truth.
+//
+// Deploy with:  firebase deploy --only storage
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null
+        && firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid));
+    }
+
+    // Matches MAX_FILE_BYTES and ACCEPTED_TYPES in src/services/archivos.ts.
+    function isAllowedUpload() {
+      return request.resource.size <= 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp|avif|svg\\+xml)');
+    }
+
+    // Media library, and artisan portraits chosen from it. Public read so the
+    // images render for visitors; writes are admin-only.
+    match /archivos/{file} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isAllowedUpload();
+      allow delete: if isAdmin();
+    }
+
+    match /artesanos/{file} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isAllowedUpload();
+      allow delete: if isAdmin();
+    }
+
+    // No other prefix is writable, so a stray SDK call cannot scatter objects
+    // around the bucket.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 *-ignore*
+# Environment
+.env
+.env.*
+!.env.example

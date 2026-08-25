@@ -1,0 +1,380 @@
+{
+  "site": {
+    "name": "Aratoca en Hilos",
+    "nameAccent": "en Hilos",
+    "tagline": "Arte Tejido a Mano",
+    "description": "Aratoca en Hilos es una ventana al legado del fique. Descubre cómo la fibra natural se transforma en arte sostenible a través de manos que preservan nuestra historia."
+  },
+  "nav": {
+    "home": "Inicio",
+    "artesanos": "Artesanos",
+    "tallerFique": "Taller Fique",
+    "contacto": "Contacto",
+    "terminos": "Términos",
+    "privacidad": "Privacidad",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
+  },
+  "language": {
+    "label": "Idioma",
+    "es": "Español",
+    "en": "Inglés",
+    "switchTo": "Ver esta página en inglés"
+  },
+  "common": {
+    "backHome": "Volver al inicio",
+    "loading": "Cargando…",
+    "close": "Cerrar",
+    "handmade": "Hecho a mano",
+    "errorTitle": "Algo salió mal",
+    "errorBody": "No pudimos cargar esta sección. Intenta de nuevo en unos momentos."
+  },
+  "home": {
+    "hero": {
+      "location": "Santander, Colombia",
+      "titleLine1": "Alma",
+      "titleLine2": "Tejida",
+      "titleLine3": "a Mano.",
+      "intro": "Aratoca en Hilos es una ventana al legado del fique. Descubre cómo la fibra natural se transforma en arte sostenible a través de manos que preservan nuestra historia.",
+      "cta": "Comenzar viaje",
+      "imageAlt": "Artesana tejiendo fique en un telar tradicional"
+    },
+    "historia": {
+      "title": "Herencia de la Penca",
+      "p1": "Los pueblos Guanes, originarios de los cañones de Santander, fueron los primeros maestros de esta fibra. Su conocimiento sagrado sobre los ciclos de la tierra les permitía extraer los hilos más resistentes.",
+      "p2": "Hoy, Aratoca mantiene vivo este pulso. El fique dejó de ser solo para los empaques de café y se ha elevado a un nivel de arte, fusionando tintes naturales de hojas y cortezas con técnicas de telar que han sobrevivido siglos.",
+      "note": "Nuestra memoria está atada.",
+      "imageAltPlant": "Planta de fique en el campo de Aratoca",
+      "imageAltTexture": "Textura cercana de la fibra de fique"
+    },
+    "proceso": {
+      "accent": "El Ritual",
+      "title": "7 Pasos a la Eternidad",
+      "steps": {
+        "cosecha": {
+          "title": "Cosecha",
+          "desc": "Se seleccionan las hojas maduras, cuidando el cogollo central para que la planta siga viva y floreciente."
+        },
+        "desfibrado": {
+          "title": "Desfibrado",
+          "desc": "Con destreza, se raspa la hoja para liberar las fibras largas y fuertes de la pulpa verde."
+        },
+        "lavado": {
+          "title": "Lavado",
+          "desc": "El agua pura de los nacimientos limpia la fibra, eliminando impurezas naturales."
+        },
+        "secado": {
+          "title": "Secado al Sol",
+          "desc": "Extendidas bajo el sol de Aratoca, las hebras adquieren ese característico color crema o beige natural."
+        },
+        "escarmenado": {
+          "title": "Escarmenado",
+          "desc": "Un cepillado vigoroso que separa, alinea y suaviza la fibra, preparándola para el huso."
+        },
+        "hilado": {
+          "title": "Hilado",
+          "desc": "El baile del artesano; torciendo la fibra a pedal o a mano para crear hilos de distintos grosores."
+        },
+        "tejido": {
+          "title": "Tejido",
+          "desc": "En el telar, los hilos se cruzan creando tramas que dan vida a tapetes, lienzos y alpargatas."
+        }
+      }
+    },
+    "coleccion": {
+      "titleLine1": "La Colección",
+      "titleLine2": "Raíz",
+      "subtitle": "Obras funcionales donde el diseño contemporáneo abraza las técnicas precolombinas.",
+      "cta": "Conocer a los artesanos",
+      "items": {
+        "mochilas": {
+          "title": "Mochilas y Bolsos"
+        },
+        "tapices": {
+          "title": "Tapices Decorativos"
+        },
+        "calzado": {
+          "title": "Calzado Tradicional"
+        }
+      }
+    },
+    "libro": {
+      "eyebrow": "Libro Digital",
+      "title": "Adéntrate en el Taller Fique.",
+      "text": "Archivos de video, diarios de artesanos y tutoriales de tintorería natural en una experiencia interactiva gratuita.",
+      "cta": "Abrir Archivo",
+      "sealLine1": "El saber",
+      "sealLine2": "compartido"
+    }
+  },
+  "artesanos": {
+    "accent": "Las Manos",
+    "title": "Artesanos de Aratoca",
+    "intro": "Detrás de cada hilo hay una persona. Estas son las manos que sostienen la tradición del fique en Aratoca: maestros y maestras que aprendieron mirando a sus abuelos y que hoy enseñan a una nueva generación.",
+    "note": "Cada pieza lleva un nombre.",
+    "empty": "Pronto publicaremos aquí las historias de nuestros artesanos.",
+    "photoAlt": "Retrato de {{name}}",
+    "cta": {
+      "title": "¿Quieres trabajar con nuestros artesanos?",
+      "text": "Escríbenos y te ponemos en contacto directo con el taller.",
+      "button": "Contáctanos"
+    }
+  },
+  "tallerFique": {
+    "accent": "Libro Interactivo",
+    "title": "Taller Fique",
+    "intro": "Taller Fique es un libro vivo sobre la fibra que define a Aratoca. Reúne el conocimiento de nuestros artesanos en capítulos que puedes leer, ver y escuchar: desde la siembra de la penca hasta el último nudo del telar.",
+    "comingSoon": "Próximamente",
+    "comingSoonText": "La experiencia interactiva completa está en desarrollo. Mientras tanto, aquí puedes conocer lo que encontrarás en cada capítulo.",
+    "chaptersTitle": "Los Capítulos",
+    "chapters": {
+      "planta": {
+        "title": "La Planta",
+        "desc": "Botánica del fique, su ciclo de vida y por qué prospera en los cañones de Santander."
+      },
+      "fibra": {
+        "title": "De la Hoja al Hilo",
+        "desc": "Desfibrado, lavado y secado explicados paso a paso por quienes lo hacen a diario."
+      },
+      "color": {
+        "title": "Tintorería Natural",
+        "desc": "Recetas de tintes con hojas, cortezas y raíces, con las proporciones que usa el taller."
+      },
+      "telar": {
+        "title": "El Telar",
+        "desc": "Montaje del telar, tramas básicas y los patrones heredados de la tradición Guane."
+      },
+      "diarios": {
+        "title": "Diarios de Artesanos",
+        "desc": "Testimonios en primera persona sobre el oficio, la memoria y el relevo generacional."
+      },
+      "futuro": {
+        "title": "Fique y Futuro",
+        "desc": "Sostenibilidad, nuevos usos de la fibra y el papel del oficio en la economía local."
+      }
+    },
+    "faqTitle": "Preguntas Frecuentes",
+    "faq": {
+      "que": {
+        "question": "¿Qué es el Taller Fique?",
+        "answer": "Es un libro digital interactivo que documenta el oficio del fique en Aratoca, Santander. Reúne video, fotografía, testimonios de artesanos y tutoriales prácticos en una sola experiencia de lectura."
+      },
+      "costo": {
+        "question": "¿Tiene algún costo?",
+        "answer": "No. El Taller Fique es de acceso libre y gratuito. Nuestro objetivo es preservar y difundir el conocimiento artesanal, no comercializarlo."
+      },
+      "quien": {
+        "question": "¿Para quién está pensado?",
+        "answer": "Para estudiantes, diseñadores, investigadores y para cualquier persona curiosa por los oficios tradicionales colombianos. También sirve como material de apoyo para talleres y aulas."
+      },
+      "cuando": {
+        "question": "¿Cuándo estará disponible?",
+        "answer": "La experiencia interactiva se encuentra en desarrollo. Escríbenos desde la página de contacto si quieres que te avisemos cuando se publique."
+      },
+      "aportar": {
+        "question": "¿Puedo aportar contenido o corregir algo?",
+        "answer": "Sí. Este es un archivo vivo y agradecemos las correcciones, fotografías y testimonios de la comunidad. Usa el formulario de contacto para escribirnos."
+      }
+    },
+    "cta": {
+      "title": "Te avisamos cuando abra el libro",
+      "text": "Déjanos un mensaje y serás de los primeros en recorrer el Taller Fique.",
+      "button": "Quiero saber más"
+    }
+  },
+  "contacto": {
+    "accent": "Hablemos",
+    "title": "Contacto",
+    "intro": "¿Tienes una pregunta sobre el oficio, quieres visitar el taller o te interesa trabajar con nuestros artesanos? Escríbenos y te respondemos.",
+    "form": {
+      "title": "Envíanos un mensaje",
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre completo",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "tucorreo@ejemplo.com",
+      "phone": "Teléfono (opcional)",
+      "phonePlaceholder": "+57 300 000 0000",
+      "message": "Mensaje",
+      "messagePlaceholder": "Cuéntanos en qué podemos ayudarte…",
+      "submit": "Enviar mensaje",
+      "sending": "Enviando…",
+      "consent": "Al enviar este formulario autorizas el tratamiento de tus datos personales conforme a nuestra Política de Privacidad.",
+      "successTitle": "¡Mensaje enviado!",
+      "successBody": "Gracias por escribirnos. Te responderemos al correo que nos dejaste lo antes posible.",
+      "successAgain": "Enviar otro mensaje",
+      "errorTitle": "No pudimos enviar tu mensaje",
+      "errorBody": "Ocurrió un problema al enviar el formulario. Intenta de nuevo o escríbenos directamente a {{email}}.",
+      "errors": {
+        "nameRequired": "Escribe tu nombre.",
+        "nameTooLong": "El nombre es demasiado largo.",
+        "emailRequired": "Escribe tu correo electrónico.",
+        "emailInvalid": "Ese correo no parece válido.",
+        "phoneInvalid": "Ese teléfono no parece válido.",
+        "messageRequired": "Escribe tu mensaje.",
+        "messageTooShort": "Cuéntanos un poco más (mínimo 10 caracteres).",
+        "messageTooLong": "El mensaje es demasiado largo (máximo 2000 caracteres).",
+        "throttled": "Espera un momento antes de enviar otro mensaje."
+      }
+    },
+    "direct": {
+      "title": "Otras formas de encontrarnos",
+      "emailLabel": "Correo",
+      "phoneLabel": "Teléfono",
+      "whatsappLabel": "WhatsApp",
+      "whatsappAction": "Escribir por WhatsApp",
+      "addressLabel": "Ubicación",
+      "hoursLabel": "Atención",
+      "hoursValue": "Lunes a viernes, 8:00 a 17:00 (COT)"
+    }
+  },
+  "terminos": {
+    "title": "Términos y Condiciones",
+    "updated": "Última actualización: {{date}}",
+    "intro": "Estos términos regulan el acceso y uso del sitio web de {{company}}. Al navegar en él, aceptas las condiciones descritas a continuación.",
+    "sections": {
+      "aceptacion": {
+        "title": "1. Aceptación de los términos",
+        "body": "El acceso y uso de este sitio web implica la aceptación plena de estos Términos y Condiciones. Si no estás de acuerdo con alguno de ellos, te pedimos abstenerte de utilizar el sitio.\n\nEstos términos pueden actualizarse en cualquier momento. La versión vigente es siempre la publicada en esta página."
+      },
+      "objeto": {
+        "title": "2. Objeto del sitio",
+        "body": "Este sitio es un espacio informativo y cultural dedicado a divulgar el oficio artesanal del fique en Aratoca, Santander, Colombia. Presenta el proceso de la fibra, el trabajo de los artesanos de la región y el proyecto editorial Taller Fique.\n\nEl sitio no realiza ventas en línea ni procesa pagos. Cualquier relación comercial con los artesanos se acuerda directamente con ellos por los canales de contacto publicados."
+      },
+      "propiedad": {
+        "title": "3. Propiedad intelectual",
+        "body": "Los textos, fotografías, ilustraciones, videos, marcas y demás contenidos publicados en este sitio pertenecen a {{company}} o a sus respectivos autores, y están protegidos por la legislación colombiana sobre derecho de autor.\n\nSe permite citar y compartir el contenido con fines educativos, informativos o de investigación, siempre que se atribuya la fuente y se enlace al sitio original. Cualquier uso comercial requiere autorización previa y por escrito."
+      },
+      "uso": {
+        "title": "4. Uso permitido",
+        "body": "Te comprometes a usar el sitio de forma lícita y respetuosa. En particular, no está permitido intentar vulnerar la seguridad del sitio, extraer datos de forma automatizada y masiva, suplantar la identidad de terceros, ni enviar contenido ilegal, ofensivo o engañoso a través del formulario de contacto.\n\nPodemos restringir el acceso a quien incumpla estas condiciones."
+      },
+      "enlaces": {
+        "title": "5. Contenido de terceros y enlaces",
+        "body": "El sitio puede enlazar a páginas externas, como redes sociales o materiales de referencia. No controlamos esos sitios ni respondemos por su contenido, sus políticas de privacidad o sus prácticas."
+      },
+      "formulario": {
+        "title": "6. Formulario de contacto",
+        "body": "El formulario de contacto se ofrece para facilitar la comunicación con nosotros. Los datos que envíes se tratan conforme a nuestra Política de Privacidad.\n\nNo garantizamos un tiempo de respuesta determinado, aunque procuramos responder toda comunicación legítima."
+      },
+      "disponibilidad": {
+        "title": "7. Disponibilidad del servicio",
+        "body": "Procuramos que el sitio esté disponible de forma continua, pero puede haber interrupciones por mantenimiento, actualizaciones o causas ajenas a nuestro control. No garantizamos disponibilidad ininterrumpida ni ausencia total de errores."
+      },
+      "responsabilidad": {
+        "title": "8. Limitación de responsabilidad",
+        "body": "La información publicada tiene carácter divulgativo. Aunque cuidamos su exactitud, no respondemos por decisiones tomadas exclusivamente con base en el contenido del sitio.\n\nEn la máxima medida permitida por la ley, {{company}} no será responsable por daños indirectos o incidentales derivados del uso o de la imposibilidad de uso del sitio."
+      },
+      "datos": {
+        "title": "9. Protección de datos personales",
+        "body": "El tratamiento de datos personales se rige por nuestra Política de Privacidad y por la Ley 1581 de 2012 y sus decretos reglamentarios. Te recomendamos leerla antes de enviarnos cualquier información."
+      },
+      "modificaciones": {
+        "title": "10. Modificaciones",
+        "body": "Podemos modificar el sitio, su contenido o estos términos en cualquier momento y sin aviso previo. El uso continuado del sitio después de una modificación implica su aceptación."
+      },
+      "ley": {
+        "title": "11. Ley aplicable y jurisdicción",
+        "body": "Estos términos se rigen por las leyes de la República de {{jurisdiction}}. Cualquier controversia se someterá a los jueces y tribunales competentes de dicho país."
+      },
+      "contacto": {
+        "title": "12. Contacto",
+        "body": "Para cualquier consulta sobre estos Términos y Condiciones, escríbenos a {{email}} o a la dirección {{address}}."
+      }
+    }
+  },
+  "privacidad": {
+    "title": "Política de Privacidad",
+    "updated": "Última actualización: {{date}}",
+    "intro": "En {{company}} respetamos tu privacidad. Esta política explica qué datos personales recolectamos, con qué finalidad y cómo puedes ejercer tus derechos, conforme a la Ley 1581 de 2012 y el Decreto 1074 de 2015 de Colombia.",
+    "sections": {
+      "responsable": {
+        "title": "1. Responsable del tratamiento",
+        "body": "Responsable: {{legalName}}\nIdentificación: {{taxId}}\nDirección: {{address}}\nCorreo electrónico: {{email}}\nTeléfono: {{phone}}\n\nEste correo es también el canal habilitado para atender consultas y reclamos sobre datos personales."
+      },
+      "datos": {
+        "title": "2. Datos que recolectamos",
+        "body": "Solo recolectamos los datos que nos entregas voluntariamente a través del formulario de contacto: nombre, correo electrónico, teléfono (opcional) y el contenido de tu mensaje.\n\nAdemás, registramos el idioma en el que navegabas y la fecha de envío, para poder responderte adecuadamente.\n\nNo recolectamos datos sensibles, ni datos de menores de edad, ni información financiera."
+      },
+      "finalidades": {
+        "title": "3. Finalidades del tratamiento",
+        "body": "Usamos tus datos personales únicamente para: responder a tu consulta o solicitud; ponerte en contacto con los artesanos cuando así lo pidas; llevar un registro interno de las comunicaciones recibidas; y, si lo autorizas expresamente, informarte sobre la publicación del Taller Fique.\n\nNo usamos tus datos para publicidad de terceros ni los vendemos bajo ninguna circunstancia."
+      },
+      "autorizacion": {
+        "title": "4. Autorización",
+        "body": "Al enviar el formulario de contacto autorizas de manera previa, expresa e informada el tratamiento de tus datos personales para las finalidades descritas en esta política.\n\nPuedes revocar esa autorización en cualquier momento escribiendo a {{email}}, salvo que exista un deber legal o contractual de conservar la información."
+      },
+      "derechos": {
+        "title": "5. Tus derechos como titular",
+        "body": "Conforme al artículo 8 de la Ley 1581 de 2012, como titular de los datos tienes derecho a: conocer, actualizar y rectificar tus datos personales; solicitar prueba de la autorización otorgada; ser informado sobre el uso que se ha dado a tus datos; presentar quejas ante la Superintendencia de Industria y Comercio por infracciones a la ley; revocar la autorización y solicitar la supresión de tus datos cuando no exista un deber legal de conservarlos; y acceder de forma gratuita a los datos que hayan sido objeto de tratamiento."
+      },
+      "procedimiento": {
+        "title": "6. Cómo ejercer tus derechos",
+        "body": "Envía tu solicitud a {{email}} indicando tu nombre, los datos de contacto que nos entregaste y una descripción clara de lo que solicitas.\n\nLas consultas se atienden en un máximo de diez (10) días hábiles y los reclamos en un máximo de quince (15) días hábiles, prorrogables conforme a la ley."
+      },
+      "conservacion": {
+        "title": "7. Conservación de los datos",
+        "body": "Conservamos los mensajes del formulario de contacto mientras sean necesarios para atender tu solicitud y para acreditar el cumplimiento de nuestras obligaciones legales.\n\nCuando dejan de ser necesarios, los eliminamos de forma segura."
+      },
+      "encargados": {
+        "title": "8. Encargados y transferencia internacional",
+        "body": "Este sitio utiliza servicios de Google (Firebase) para el alojamiento de la base de datos, el almacenamiento de archivos y la protección contra abuso automatizado. Esto implica que tus datos pueden almacenarse en servidores ubicados fuera de Colombia.\n\nGoogle actúa como encargado del tratamiento y se somete a estándares de seguridad y a cláusulas contractuales que ofrecen un nivel adecuado de protección. También utilizamos un proveedor de correo electrónico para hacernos llegar las notificaciones del formulario."
+      },
+      "cookies": {
+        "title": "9. Cookies y tecnologías similares",
+        "body": "Este sitio no utiliza cookies publicitarias ni de seguimiento de terceros.\n\nUtilizamos almacenamiento local del navegador únicamente para recordar preferencias técnicas, y el servicio reCAPTCHA de Google para distinguir a las personas de los envíos automatizados en el formulario de contacto."
+      },
+      "seguridad": {
+        "title": "10. Seguridad de la información",
+        "body": "Aplicamos medidas técnicas y administrativas razonables para proteger tus datos: conexiones cifradas (HTTPS), reglas de acceso restringido a la base de datos y autenticación para el panel de administración.\n\nNingún sistema es completamente infalible, pero trabajamos para reducir los riesgos al mínimo."
+      },
+      "cambios": {
+        "title": "11. Vigencia y cambios",
+        "body": "Esta política rige desde su fecha de publicación y permanece vigente mientras se realice el tratamiento de datos.\n\nCualquier cambio sustancial será publicado en esta misma página con su fecha de actualización."
+      },
+      "contacto": {
+        "title": "12. Contacto",
+        "body": "Si tienes dudas sobre esta política o sobre el tratamiento de tus datos, escríbenos a {{email}}."
+      }
+    }
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Página no encontrada",
+    "body": "La página que buscas no existe o ha sido movida. Te invitamos a volver al inicio para seguir explorando el legado del fique."
+  },
+  "footer": {
+    "about": "Protegiendo y tejiendo la memoria artesanal de Santander. Un tributo a la planta, las manos y la herencia.",
+    "navigate": "Navegar",
+    "legal": "Legal",
+    "contact": "Contacto",
+    "social": "Redes sociales",
+    "rights": "© {{year}} Aratoca en Hilos. Arte de Colombia."
+  },
+  "seo": {
+    "siteName": "Aratoca en Hilos",
+    "home": {
+      "title": "Aratoca en Hilos — Arte tejido a mano en fique",
+      "description": "Descubre el legado del fique en Aratoca, Santander: el proceso de la fibra, los artesanos que lo mantienen vivo y el libro Taller Fique."
+    },
+    "artesanos": {
+      "title": "Artesanos de Aratoca — Maestros del fique",
+      "description": "Conoce a los artesanos y artesanas que sostienen la tradición del fique en Aratoca, Santander: sus oficios, sus historias y su trabajo a mano."
+    },
+    "tallerFique": {
+      "title": "Taller Fique — Libro interactivo sobre el oficio del fique",
+      "description": "Un libro digital gratuito sobre el fique de Aratoca: capítulos de video, tintorería natural, técnicas de telar y diarios de artesanos."
+    },
+    "contacto": {
+      "title": "Contacto — Aratoca en Hilos",
+      "description": "Escríbenos para visitar el taller, trabajar con nuestros artesanos o resolver dudas sobre el fique de Aratoca, Santander."
+    },
+    "terminos": {
+      "title": "Términos y Condiciones — Aratoca en Hilos",
+      "description": "Condiciones de acceso y uso del sitio web de Aratoca en Hilos, incluida la propiedad intelectual del contenido publicado."
+    },
+    "privacidad": {
+      "title": "Política de Privacidad — Aratoca en Hilos",
+      "description": "Cómo recolectamos y tratamos tus datos personales conforme a la Ley 1581 de 2012 de Colombia, y cómo ejercer tus derechos."
+    }
+  }
+}

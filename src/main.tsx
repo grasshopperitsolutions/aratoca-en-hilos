@@ -1,13 +1,24 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
+import './i18n/config'
 import App from './App.tsx'
 
-createRoot(document.getElementById('root')!).render(
+const container = document.getElementById('root')!
+
+const app = (
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <App />
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 )
+
+// Production HTML arrives prerendered, so it must be hydrated rather than
+// replaced. `vite dev` serves an empty root, which still needs a fresh render.
+if (container.hasChildNodes()) {
+  hydrateRoot(container, app)
+} else {
+  createRoot(container).render(app)
+}

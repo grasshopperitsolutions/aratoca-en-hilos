@@ -1,20 +1,45 @@
 import {
-  Leaf,
-  Scissors,
-  Droplets,
-  Sun,
-  Wind,
-  RefreshCw,
-  Layers,
   ArrowDownRight,
   ArrowRight,
   BookOpen,
+  Droplets,
+  Layers,
+  Leaf,
   MapPin,
+  RefreshCw,
+  Scissors,
+  Sun,
+  Wind,
+  type LucideIcon,
 } from 'lucide-react';
-import Reveal from '../components/Reveal';
+import { useTranslation } from 'react-i18next';
+
 import Button from '../components/Button';
+import Reveal from '../components/Reveal';
+import { IMAGES } from '../content/images';
+import { useLanguage } from '../i18n/languageContext';
+
+/** The seven stages of fique. Ids match the translation keys. */
+const PROCESS_STEPS: { id: string; icon: LucideIcon; color: string }[] = [
+  { id: 'cosecha', icon: Leaf, color: '#4C7A3D' },
+  { id: 'desfibrado', icon: Scissors, color: '#6B4226' },
+  { id: 'lavado', icon: Droplets, color: '#8FA878' },
+  { id: 'secado', icon: Sun, color: '#B85C38' },
+  { id: 'escarmenado', icon: Wind, color: '#A79E8E' },
+  { id: 'hilado', icon: RefreshCw, color: '#6B4226' },
+  { id: 'tejido', icon: Layers, color: '#B85C38' },
+];
+
+const COLLECTION = [
+  { id: 'mochilas', img: IMAGES.collectionBags, offset: 'md:mt-0' },
+  { id: 'tapices', img: IMAGES.collectionTapestries, offset: 'md:mt-16' },
+  { id: 'calzado', img: IMAGES.collectionFootwear, offset: 'md:mt-8' },
+];
 
 export default function Home() {
+  const { t } = useTranslation();
+  const { path } = useLanguage();
+
   return (
     <>
       {/* SPLIT HERO SECTION */}
@@ -26,25 +51,25 @@ export default function Home() {
               <div className="flex items-center gap-3 mb-6">
                 <span className="h-[1px] w-8 bg-penca"></span>
                 <span className="text-penca font-bold uppercase tracking-widest text-xs flex items-center gap-1">
-                  <MapPin size={14} /> Santander, Colombia
+                  <MapPin size={14} /> {t('home.hero.location')}
                 </span>
               </div>
             </Reveal>
 
             <Reveal direction="up" delay={300}>
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-fraunces font-bold text-charcoal leading-[1.1] mb-6">
-                Alma <br />
-                <span className="text-terracotta italic font-light">Tejida</span>{' '}
+                {t('home.hero.titleLine1')} <br />
+                <span className="text-terracotta italic font-light">
+                  {t('home.hero.titleLine2')}
+                </span>{' '}
                 <br />
-                a Mano.
+                {t('home.hero.titleLine3')}
               </h1>
             </Reveal>
 
             <Reveal direction="up" delay={500}>
               <p className="text-lg md:text-xl text-charcoal/80 leading-relaxed mb-10 font-light border-l-2 border-fique pl-6">
-                Aratoca en Hilos es una ventana al legado del fique. Descubre
-                cómo la fibra natural se transforma en arte sostenible a través
-                de manos que preservan nuestra historia.
+                {t('home.hero.intro')}
               </p>
             </Reveal>
 
@@ -56,7 +81,7 @@ export default function Home() {
                 <span className="w-12 h-12 rounded-full border border-charcoal flex items-center justify-center group-hover:bg-charcoal group-hover:text-cream transition-all">
                   <ArrowDownRight size={20} />
                 </span>
-                Comenzar viaje
+                {t('home.hero.cta')}
               </a>
             </Reveal>
           </div>
@@ -71,18 +96,15 @@ export default function Home() {
         <div className="w-full md:w-1/2 h-[60vh] md:h-screen relative overflow-hidden">
           <div className="absolute inset-0 bg-earth/20 mix-blend-multiply z-10"></div>
           <img
-            src="https://images.unsplash.com/photo-1584446979603-51eb4eb24ebc?auto=format&fit=crop&q=80&w=1200"
-            alt="Artesana tejiendo"
+            src={IMAGES.heroWeaver}
+            alt={t('home.hero.imageAlt')}
             className="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-[2000ms]"
           />
         </div>
       </section>
 
       {/* SECCIÓN HISTORIA (Editorial) */}
-      <section
-        id="historia"
-        className="py-24 md:py-32 px-6 md:px-12 bg-moss/10"
-      >
+      <section id="historia" className="py-24 md:py-32 px-6 md:px-12 bg-moss/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Texto Histórico */}
@@ -92,29 +114,15 @@ export default function Home() {
                   <span className="absolute -top-10 -left-6 text-8xl text-fique opacity-50 font-serif">
                     &ldquo;
                   </span>
-                  Herencia <br className="hidden md:block" />
-                  de la Penca
+                  {t('home.historia.title')}
                 </h2>
                 <div className="space-y-6 text-charcoal/80 text-lg">
-                  <p>
-                    <span className="font-fraunces text-4xl float-left mr-3 text-terracotta leading-none">
-                      L
-                    </span>
-                    os pueblos Guanes, originarios de los cañones de Santander,
-                    fueron los primeros maestros de esta fibra. Su conocimiento
-                    sagrado sobre los ciclos de la tierra les permitía extraer
-                    los hilos más resistentes.
-                  </p>
-                  <p>
-                    Hoy, Aratoca mantiene vivo este pulso. El fique dejó de ser
-                    solo para los empaques de café y se ha elevado a un nivel de
-                    arte, fusionando tintes naturales de hojas y cortezas con
-                    técnicas de telar que han sobrevivido siglos.
-                  </p>
+                  <p>{t('home.historia.p1')}</p>
+                  <p>{t('home.historia.p2')}</p>
                 </div>
                 <div className="mt-10">
                   <span className="font-caveat text-3xl text-penca block -rotate-2">
-                    Nuestra memoria está atada.
+                    {t('home.historia.note')}
                   </span>
                 </div>
               </Reveal>
@@ -124,19 +132,18 @@ export default function Home() {
             <div className="lg:col-span-6 lg:col-start-7 relative mt-10 lg:mt-0">
               <Reveal direction="left" delay={200}>
                 <div className="relative w-full aspect-square">
-                  {/* Foto 1 */}
                   <img
-                    src="https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?auto=format&fit=crop&q=80&w=800"
-                    alt="Planta de fique"
+                    src={IMAGES.fiquePlant}
+                    alt={t('home.historia.imageAltPlant')}
+                    loading="lazy"
                     className="absolute top-0 right-0 w-3/4 h-3/4 object-cover rounded-tr-[4rem] rounded-bl-[4rem] rounded-tl-xl rounded-br-xl shadow-2xl z-10"
                   />
-                  {/* Foto 2 */}
                   <img
-                    src="https://images.unsplash.com/photo-1610488961726-2a8d3de635bc?auto=format&fit=crop&q=80&w=600"
-                    alt="Textura de fique"
+                    src={IMAGES.fiqueTexture}
+                    alt={t('home.historia.imageAltTexture')}
+                    loading="lazy"
                     className="absolute bottom-0 left-0 w-2/3 h-2/3 object-cover rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-lg rounded-bl-lg border-8 border-cream shadow-xl z-20"
                   />
-                  {/* Círculo decorativo */}
                   <div className="absolute top-1/4 -left-4 w-24 h-24 bg-terracotta rounded-full mix-blend-multiply opacity-80 z-0 blur-xl"></div>
                 </div>
               </Reveal>
@@ -151,10 +158,10 @@ export default function Home() {
           <Reveal>
             <div className="text-center mb-20">
               <h2 className="text-sm font-bold uppercase tracking-widest text-penca mb-4">
-                El Ritual
+                {t('home.proceso.accent')}
               </h2>
               <h3 className="text-4xl md:text-5xl font-fraunces text-charcoal">
-                7 Pasos a la Eternidad
+                {t('home.proceso.title')}
               </h3>
             </div>
           </Reveal>
@@ -163,54 +170,11 @@ export default function Home() {
             {/* Línea central vertical (solo desktop) */}
             <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-stone/30 transform -translate-x-1/2"></div>
 
-            {[
-              {
-                title: 'Cosecha',
-                desc: 'Se seleccionan las hojas maduras, cuidando el cogollo central para que la planta siga viva y floreciente.',
-                icon: Leaf,
-                color: '#4C7A3D',
-              },
-              {
-                title: 'Desfibrado',
-                desc: 'Con destreza, se raspa la hoja para liberar las fibras largas y fuertes de la pulpa verde.',
-                icon: Scissors,
-                color: '#6B4226',
-              },
-              {
-                title: 'Lavado',
-                desc: 'El agua pura de los nacimientos limpia la fibra, eliminando impurezas naturales.',
-                icon: Droplets,
-                color: '#8FA878',
-              },
-              {
-                title: 'Secado al Sol',
-                desc: 'Extendidas bajo el sol de Aratoca, las hebras adquieren ese característico color crema o beige natural.',
-                icon: Sun,
-                color: '#B85C38',
-              },
-              {
-                title: 'Escarmenado',
-                desc: 'Un cepillado vigoroso que separa, alinea y suaviza la fibra, preparándola para el huso.',
-                icon: Wind,
-                color: '#A79E8E',
-              },
-              {
-                title: 'Hilado',
-                desc: 'El baile del artesano; torciendo la fibra a pedal o a mano para crear hilos de distintos grosores.',
-                icon: RefreshCw,
-                color: '#6B4226',
-              },
-              {
-                title: 'Tejido',
-                desc: 'En el telar, los hilos se cruzan creando tramas que dan vida a tapetes, lienzos y alpargatas.',
-                icon: Layers,
-                color: '#B85C38',
-              },
-            ].map((step, index) => {
+            {PROCESS_STEPS.map((step, index) => {
               const isEven = index % 2 === 0;
               return (
                 <div
-                  key={index}
+                  key={step.id}
                   className="mb-16 md:mb-24 relative flex flex-col md:flex-row items-center justify-between group"
                 >
                   {/* Mobile Line */}
@@ -219,23 +183,18 @@ export default function Home() {
                   {/* Desktop Layout Alterno */}
                   <div
                     className={`w-full md:w-5/12 relative z-10 pl-16 md:pl-0 ${
-                      isEven
-                        ? 'md:text-right md:pr-12'
-                        : 'md:order-3 md:text-left md:pl-12'
+                      isEven ? 'md:text-right md:pr-12' : 'md:order-3 md:text-left md:pl-12'
                     }`}
                   >
-                    <Reveal
-                      direction={isEven ? 'right' : 'left'}
-                      delay={100}
-                    >
+                    <Reveal direction={isEven ? 'right' : 'left'} delay={100}>
                       <span className="text-stone font-fraunces text-6xl opacity-20 absolute -top-8 -left-4 md:static md:opacity-100 md:text-4xl md:mb-2 block">
                         0{index + 1}
                       </span>
                       <h4 className="text-2xl font-fraunces text-charcoal mb-3">
-                        {step.title}
+                        {t(`home.proceso.steps.${step.id}.title`)}
                       </h4>
                       <p className="text-charcoal/70 text-base leading-relaxed">
-                        {step.desc}
+                        {t(`home.proceso.steps.${step.id}.desc`)}
                       </p>
                     </Reveal>
                   </div>
@@ -245,9 +204,7 @@ export default function Home() {
                     <Reveal delay={200}>
                       <div
                         className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110 shadow-lg text-cream"
-                        style={{
-                          backgroundColor: step.color,
-                        }}
+                        style={{ backgroundColor: step.color }}
                       >
                         <step.icon size={24} className="md:w-7 md:h-7" />
                       </div>
@@ -256,9 +213,7 @@ export default function Home() {
 
                   {/* Espaciador para la cuadrícula en desktop */}
                   <div
-                    className={`hidden md:block w-5/12 ${
-                      isEven ? 'md:order-3' : 'md:order-1'
-                    }`}
+                    className={`hidden md:block w-5/12 ${isEven ? 'md:order-3' : 'md:order-1'}`}
                   ></div>
                 </div>
               );
@@ -268,57 +223,48 @@ export default function Home() {
       </section>
 
       {/* GALERÍA / PRODUCTOS (Grid Asimétrico) */}
-      <section className="py-24 bg-charcoal text-cream rounded-t-[3rem] md:rounded-t-[5rem] mt-[-2rem] relative z-20 px-6 md:px-12">
+      <section
+        id="coleccion"
+        className="py-24 bg-charcoal text-cream rounded-t-[3rem] md:rounded-t-[5rem] mt-[-2rem] relative z-20 px-6 md:px-12"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
             <Reveal>
               <h2 className="text-4xl md:text-5xl font-fraunces text-fique mb-4">
-                La Colección <br /> Raíz
+                {t('home.coleccion.titleLine1')} <br /> {t('home.coleccion.titleLine2')}
               </h2>
               <p className="text-stone max-w-md font-light text-lg">
-                Obras funcionales donde el diseño contemporáneo abraza las
-                técnicas precolombinas.
+                {t('home.coleccion.subtitle')}
               </p>
             </Reveal>
             <Reveal delay={200}>
-              <Button variant="ghost" className="text-terracotta hover:text-fique pb-2 border-b border-terracotta hover:border-fique rounded-none px-0">
-                Ver Catálogo Completo <ArrowRight size={16} />
+              <Button
+                to={path('artesanos')}
+                variant="ghost"
+                className="text-terracotta hover:text-fique pb-2 border-b border-terracotta hover:border-fique rounded-none px-0"
+              >
+                {t('home.coleccion.cta')} <ArrowRight size={16} />
               </Button>
             </Reveal>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                img: 'https://images.unsplash.com/photo-1590874023605-7265be7fc972?auto=format&fit=crop&q=80&w=600',
-                title: 'Mochilas y Bolsos',
-                offset: 'md:mt-0',
-              },
-              {
-                img: 'https://images.unsplash.com/photo-1579738018301-383794bfa2bd?auto=format&fit=crop&q=80&w=600',
-                title: 'Tapices Decorativos',
-                offset: 'md:mt-16',
-              },
-              {
-                img: 'https://images.unsplash.com/photo-1603228965688-6f176b6279f5?auto=format&fit=crop&q=80&w=600',
-                title: 'Calzado Tradicional',
-                offset: 'md:mt-8',
-              },
-            ].map((item, i) => (
-              <Reveal key={i} delay={i * 200} className={`group ${item.offset}`}>
+            {COLLECTION.map((item, i) => (
+              <Reveal key={item.id} delay={i * 200} className={`group ${item.offset}`}>
                 <div className="relative overflow-hidden rounded-tl-3xl rounded-br-3xl mb-6 bg-earth">
                   <div className="absolute inset-0 bg-charcoal/20 group-hover:bg-transparent transition-colors z-10 duration-500"></div>
                   <img
                     src={item.img}
-                    alt={item.title}
+                    alt={t(`home.coleccion.items.${item.id}.title`)}
+                    loading="lazy"
                     className="w-full h-96 object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[800ms]"
                   />
                 </div>
                 <h3 className="text-2xl font-fraunces text-cream mb-2">
-                  {item.title}
+                  {t(`home.coleccion.items.${item.id}.title`)}
                 </h3>
                 <span className="text-sm text-moss uppercase tracking-widest">
-                  Hecho a mano
+                  {t('common.handmade')}
                 </span>
               </Reveal>
             ))}
@@ -338,18 +284,15 @@ export default function Home() {
                 <div className="flex items-center gap-3 mb-4 text-fique">
                   <BookOpen size={24} />
                   <span className="font-bold uppercase tracking-widest text-sm">
-                    Libro Digital
+                    {t('home.libro.eyebrow')}
                   </span>
                 </div>
                 <h2 className="text-4xl md:text-5xl font-fraunces text-cream mb-6 leading-tight">
-                  Adéntrate en el Taller Fique.
+                  {t('home.libro.title')}
                 </h2>
-                <p className="text-cream/80 text-lg mb-8 font-light">
-                  Archivos de video, diarios de artesanos y tutoriales de
-                  tintorería natural en una experiencia interactiva gratuita.
-                </p>
-                <Button variant="primary">
-                  Abrir Archivo
+                <p className="text-cream/80 text-lg mb-8 font-light">{t('home.libro.text')}</p>
+                <Button to={path('tallerFique')} variant="primary">
+                  {t('home.libro.cta')}
                 </Button>
               </div>
 
@@ -357,7 +300,7 @@ export default function Home() {
                 <div className="w-64 h-64 border-2 border-fique rounded-full flex items-center justify-center p-4 -rotate-[10deg] hover:rotate-0 transition-transform duration-700">
                   <div className="w-full h-full border border-fique rounded-full flex items-center justify-center border-dashed">
                     <span className="font-caveat text-4xl text-cream text-center px-6">
-                      El saber <br /> compartido
+                      {t('home.libro.sealLine1')} <br /> {t('home.libro.sealLine2')}
                     </span>
                   </div>
                 </div>

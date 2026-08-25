@@ -115,11 +115,24 @@ Use Tailwind font classes: `font-fraunces`, `font-nunito`, `font-caveat`.
 
 ```
 src/
-  components/     # Reusable UI components (Header, Footer, Reveal, Button, SectionTitle, IconCircle)
-  pages/          # Route-level pages (Home, About, TallerFique, Terms, Privacy, Contact)
-  layouts/        # Layout wrappers (MainLayout)
-  hooks/          # Custom hooks (useScrollReveal)
-  assets/         # Images, icons
+  components/     # Reusable UI (Header, Footer, Reveal, Button, SectionTitle,
+                  #   IconCircle, PageHeader, LegalDocument, SocialLinks)
+    admin/        # Admin-only UI (MediaPicker)
+  pages/          # Public routes (Home, Artesanos, TallerFique, Contacto,
+                  #   Terminos, Privacidad, NotFound) — filenames match PageKey
+    admin/        # Admin routes (Login, AdminArtesanos, AdminMensajes, AdminArchivos)
+  layouts/        # MainLayout (public) and AdminLayout
+  hooks/          # useScrollReveal, useArtesanos, useAdminAuth, useDocumentHead
+  i18n/           # routes.ts (URL map), config.ts, LanguageProvider, languageContext
+  locales/        # es/translation.json, en/translation.json — full key parity required
+  content/        # company.ts, images.ts, legal.ts, faq.ts, artesanos.generated.json
+  seo/            # meta.ts (head builder), jsonld.ts (structured data)
+  services/       # Firestore/Storage access, split public vs admin
+  types/          # Shared content types
+  firebase.ts     # App + Firestore + App Check (public)
+  firebaseAdmin.ts# Auth + Storage (admin chunk only)
+  entry-server.tsx# SSR entry used by the prerender step
+scripts/          # fetch-content.mjs, prerender.mjs
 ```
 
 - One component per file.
@@ -127,11 +140,30 @@ src/
 
 ---
 
-## Routing
+## Routing and languages
 
-- Pages: `/` (Home), `/acerca-de` (About), `/taller-fique` (Workshop), `/terminos` (Terms), `/privacidad` (Privacy), `/contacto` (Contact).
-- Uses `react-router-dom` for client-side routing with `<BrowserRouter>` in `main.tsx`.
-- Header navigation is fixed at top, background `bg-cream/90` or transparent depending on scroll position.
+- The site is bilingual. **Spanish sits at the root, English under `/en/` with English
+  slugs**: `/artesanos` ↔ `/en/artisans`, `/taller-fique` ↔ `/en/fique-workshop`,
+  `/contacto` ↔ `/en/contact`, `/terminos` ↔ `/en/terms`, `/privacidad` ↔ `/en/privacy`.
+- **`src/i18n/routes.ts` is the single source of truth for URLs.** The router, the language
+  switcher, the sitemap and the SEO manifest are all generated from it. Never hardcode a
+  path — use `useLanguage().path(page)`.
+- `/acerca-de` is retired and redirects to `/artesanos`.
+- `<BrowserRouter basename={import.meta.env.BASE_URL}>` in `main.tsx` — the site is deployed
+  under the `/aratoca-en-hilos/` sub-path, so the basename is mandatory.
+- `main.tsx` hydrates when the root already has prerendered content and renders fresh
+  otherwise, so both `vite dev` and the static build work.
+- Header navigation is fixed at top, `bg-cream/90` or transparent depending on scroll, and
+  carries the ES/EN switcher. **The admin panel is never linked from it.**
+
+## Internationalisation
+
+- All user-facing copy lives in `src/locales/{es,en}/translation.json`. No hardcoded
+  Spanish or English in `src/pages` or `src/components`.
+- The two locale files must keep **exact key parity**.
+- The admin panel under `pages/admin` is deliberately Spanish-only and exempt.
+- The active language comes from the URL only — never from `localStorage` or `navigator`,
+  which would make the prerendered output non-deterministic.
 
 ---
 
@@ -145,12 +177,36 @@ src/
 | **Button** | `src/components/Button.tsx` | `variant?`, `children`, `href?`, `to?`, `onClick?` | Styled button with primary/secondary/outline/ghost variants |
 | **SectionTitle** | `src/components/SectionTitle.tsx` | `title`, `subtitle?`, `accent?`, `align?` | Consistent section heading pattern |
 | **IconCircle** | `src/components/IconCircle.tsx` | `icon`, `color`, `size?` | Circular icon container |
+| **PageHeader** | `src/components/PageHeader.tsx` | `accent?`, `title`, `intro?`, `note?` | Top-of-page band; reserves the space the fixed header needs |
+| **LegalDocument** | `src/components/LegalDocument.tsx` | `namespace`, `sections`, `values`, `updated`, `intro` | Renders Términos and Privacidad from translation keys |
+| **SocialLinks** | `src/components/SocialLinks.tsx` | `className?` | Social icons; renders nothing until URLs are configured |
 
 ---
 
 ## Development workflow
 
-- Run `npm run dev` for local development.
-- TypeScript strict mode enabled.
+- Run `npm run dev` for local development (served under `/aratoca-en-hilos/`).
+- TypeScript strict mode is enabled.
 - ESLint with the project's config for code quality.
 - Before committing, ensure no TypeScript errors and the app builds with `npm run build`.
+
+## Prerendering and SEO
+
+- `npm run build` renders every route to static HTML. **Anything that must be indexed has to
+  render without JavaScript** — most AI crawlers do not execute it.
+- Collapsible content must keep its text in the DOM. The Taller Fique FAQ uses native
+  `<details>`/`<summary>` for exactly this reason.
+- Per-page metadata lives in the `seo.*` translation keys; `src/seo/meta.ts` turns it into
+  head tags for both the static build and client-side navigation.
+- Anything rendered during hydration must be deterministic — no `Date.now()`, no random
+  values, no browser-only reads during render, or hydration will mismatch.
+
+## Firebase boundaries
+
+- All Firebase calls are made from the browser. **The security rules in `firestore.rules`
+  and `storage.rules` are the real access control**, not the UI checks.
+- `src/firebase.ts` (App + Firestore + App Check) is public. `src/firebaseAdmin.ts`
+  (Auth + Storage) may only be imported from `pages/admin`, `components/admin`, or
+  admin-only services — importing it elsewhere drags ~35 kB gzipped into the public bundle.
+- Firestore is loaded via dynamic `import()` on the public side so it stays out of the
+  bundle that blocks first paint.
