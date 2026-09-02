@@ -3,16 +3,15 @@ import { COMPANY, SOCIAL_LINKS } from '../content/company';
 import { FAQ_IDS } from '../content/faq';
 import artesanosSnapshot from '../content/artesanos.generated.json';
 import { buildPath, type Language, type PageKey } from '../i18n/routes';
+import { absoluteUrl } from './origin';
 import type { Artesano } from '../types/content';
 
 /**
  * Structured data, built per page and per language.
  *
  * Kept separate from `meta.ts` so the schema markup can grow (products, events,
- * the Phase 2 book) without turning the head builder into a grab bag.
- *
- * Note this module cannot import from `meta.ts` — `meta.ts` imports it — so the
- * absolute-URL helper is passed in by the caller instead.
+ * the Phase 2 book) without turning the head builder into a grab bag. The URL
+ * helper comes from `origin.ts` rather than `meta.ts`, which imports this file.
  */
 
 type UrlBuilder = (appPath: string) => string;
@@ -124,15 +123,7 @@ function artisanList(url: UrlBuilder, language: Language) {
 
 /** Assembles the JSON-LD blocks for a page. Empty entries are dropped. */
 export function buildJsonLd(page: PageKey, language: Language): unknown[] {
-  // Imported lazily to avoid a circular import with meta.ts at module scope.
-  const url: UrlBuilder = (appPath) => {
-    const origin = (
-      import.meta.env.VITE_SITE_ORIGIN || 'https://grasshoppersolutions.online'
-    ).replace(/\/+$/, '');
-    const basePrefix = import.meta.env.BASE_URL.replace(/\/+$/, '');
-    const suffix = appPath === '/' ? '/' : `${appPath}/`;
-    return `${origin}${basePrefix}${suffix}`;
-  };
+  const url: UrlBuilder = absoluteUrl;
 
   const blocks: (object | null)[] = [];
 

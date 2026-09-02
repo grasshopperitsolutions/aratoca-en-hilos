@@ -25,11 +25,108 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
-    // The allowlist itself. Writable only from the Firebase console or the
-    // Admin SDK — never from the client, or an attacker could promote himself.
+    // The allowlist. Membership is what grants every other permission below, so
+    // the only way onto it is by redeeming an invitation addressed to your own
+    // verified-by-possession email — never by writing this collection freely.
+    //
+    // The very first admin is still created by hand in the Firebase console;
+    // there is no bootstrap path here on purpose.
     match /admins/{uid} {
       allow read: if isAdmin();
-      allow write: if false;
+
+      // You may only ever create your OWN entry, and only while holding a live
+      // invitation for the address your session is authenticated as.
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && aceptaInvitacionValida();
+
+      // An admin may remove another admin but never themselves. That single
+      // restriction guarantees at least one admin always remains, so the panel
+      // can never be locked out.
+      allow delete: if isAdmin() && uid != request.auth.uid;
+
+      // The only permitted edit is realigning your OWN entry's email with what
+      // Firebase Auth already reports for your session, after an email change.
+      // Access is granted by the document existing, not by its contents, so
+      // this cannot escalate anything — and the new value is not chosen freely,
+      // it must equal the address Auth has already verified.
+      allow update: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['email'])
+        && request.resource.data.email == request.auth.token.email.lower();
+    }
+
+    function aceptaInvitacionValida() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['email', 'creadoEn', 'invitacion'])
+        && d.keys().hasAll(['email', 'creadoEn', 'invitacion'])
+        && d.invitacion is string
+        && d.email == request.auth.token.email.lower()
+        && d.creadoEn == request.time
+        && exists(/databases/$(database)/documents/invitaciones/$(d.invitacion))
+        && invitacionUtilizable(d.invitacion);
+    }
+
+    function invitacionUtilizable(token) {
+      let inv = get(/databases/$(database)/documents/invitaciones/$(token)).data;
+      return inv.email == request.auth.token.email.lower()
+        && inv.estado == 'pendiente'
+        && inv.expiraEn > request.time;
+    }
+
+    // Admin invitations. The document id is an unguessable random token which
+    // doubles as the capability in the emailed link, and writing a document
+    // here is what sends the email — the Trigger Email extension watches this
+    // collection.
+    match /invitaciones/{token} {
+      // A single document may be read by anyone who knows its token, because
+      // the invitee has no session yet. `list` stays admin-only, so the
+      // collection cannot be enumerated to harvest addresses.
+      allow get: if true;
+      allow list: if isAdmin();
+
+      allow create: if isAdmin() && esInvitacionValida();
+      allow delete: if isAdmin();
+
+      // The ONLY permitted edit is the invitee flipping their own invitation
+      // from pending to used as they redeem it. Admins deliberately have no
+      // update permission — resending means delete and re-invite, which mints a
+      // fresh token rather than reviving an old one. The email extension writes
+      // its delivery status with the Admin SDK, which bypasses these rules.
+      allow update: if marcaSuPropiaInvitacionUsada();
+    }
+
+    function esInvitacionValida() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['email', 'estado', 'creadaEn', 'expiraEn', 'invitadaPor', 'to', 'template'])
+        && d.keys().hasAll(['email', 'estado', 'creadaEn', 'expiraEn', 'invitadaPor', 'to', 'template'])
+        && d.email is string && d.email.size() > 0 && d.email.size() <= 200
+        && d.email == d.email.lower()
+        && d.email.matches('^[^@\\s]+@[^@\\s]+[.][^@\\s]+$')
+        && d.estado == 'pendiente'
+        && d.creadaEn == request.time
+        && d.expiraEn is timestamp
+        && d.expiraEn > request.time
+        // Bounded so a stray value cannot mint an invitation that never expires.
+        && d.expiraEn < request.time + duration.value(30, 'd')
+        && d.invitadaPor is string && d.invitadaPor.size() <= 200
+        // The recipient is the invited address and the body comes from a fixed
+        // server-side template, so this collection cannot be used to mail
+        // arbitrary content to arbitrary people.
+        && d.to == d.email
+        && d.template.keys().hasOnly(['name', 'data'])
+        && d.template.name == 'invitacion'
+        && d.template.data is map;
+    }
+
+    function marcaSuPropiaInvitacionUsada() {
+      return request.auth != null
+        && resource.data.email == request.auth.token.email.lower()
+        && resource.data.estado == 'pendiente'
+        && resource.data.expiraEn > request.time
+        && request.resource.data.estado == 'usada'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['estado', 'usadaEn'])
+        && request.resource.data.usadaEn == request.time;
     }
 
     // Artisan profiles. Anyone may read the published ones (the public page

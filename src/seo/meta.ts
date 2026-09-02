@@ -8,33 +8,12 @@ import {
 } from '../i18n/routes';
 import { OG_IMAGE } from '../content/images';
 import { buildJsonLd } from './jsonld';
+import { absoluteUrl } from './origin';
 
-/**
- * Canonical origin. Every canonical URL, hreflang alternate, Open Graph tag and
- * sitemap entry is built from it, so it must be the real production origin —
- * a placeholder here silently poisons the whole SEO deliverable.
- */
-export const SITE_ORIGIN = (
-  import.meta.env.VITE_SITE_ORIGIN || 'https://grasshoppersolutions.online'
-).replace(/\/+$/, '');
-
-/** Deployment sub-path, e.g. `/aratoca-en-hilos/`. */
-export const BASE_PATH = import.meta.env.BASE_URL;
+export { SITE_ORIGIN, BASE_PATH, absoluteUrl } from './origin';
 
 /** BCP-47 tags for `hreflang` and `og:locale`. */
 const LOCALE_TAGS: Record<Language, string> = { es: 'es-CO', en: 'en' };
-
-/**
- * Absolute, canonical URL for an app-relative path.
- *
- * Always ends in a slash, matching the directory-style files the prerender step
- * emits (`dist/artesanos/index.html` → `/aratoca-en-hilos/artesanos/`).
- */
-export function absoluteUrl(appPath: string): string {
-  const basePrefix = BASE_PATH.replace(/\/+$/, '');
-  const suffix = appPath === '/' ? '/' : `${appPath}/`;
-  return `${SITE_ORIGIN}${basePrefix}${suffix}`;
-}
 
 export interface HeadAlternate {
   hreflang: string;

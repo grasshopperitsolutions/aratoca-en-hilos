@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { FolderOpen, Inbox, Leaf, LogOut, Users } from 'lucide-react';
+import { FolderOpen, Inbox, Leaf, LogOut, ShieldCheck, Users } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 
 import Login from '../pages/admin/Login';
@@ -11,6 +11,7 @@ const ADMIN_LINKS = [
   { to: '/admin/artesanos', label: 'Artesanos', icon: Users },
   { to: '/admin/mensajes', label: 'Mensajes', icon: Inbox },
   { to: '/admin/archivos', label: 'Archivos', icon: FolderOpen },
+  { to: '/admin/administradores', label: 'Administradores', icon: ShieldCheck },
 ];
 
 /**

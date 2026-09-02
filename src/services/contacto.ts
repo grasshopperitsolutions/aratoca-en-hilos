@@ -5,8 +5,6 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
-  orderBy,
-  query,
   serverTimestamp,
   updateDoc,
   type DocumentData,
@@ -16,6 +14,7 @@ import {
 import { COMPANY } from '../content/company';
 import { db, requireDb } from '../firebase';
 import { THROTTLED_ERROR_NAME, type ContactoInput } from './contactLimits';
+import { descendingBy } from './ordering';
 import type { Mensaje } from '../types/content';
 
 export { CONTACT_LIMITS, type ContactoInput } from './contactLimits';
@@ -103,10 +102,9 @@ export function subscribeMensajes(
   onError?: (error: Error) => void,
 ): () => void {
   if (!db) return () => {};
-  const inbox = query(collection(db, CONTACTOS_COLLECTION), orderBy('creadoEn', 'desc'));
   return onSnapshot(
-    inbox,
-    (snapshot) => onData(snapshot.docs.map(mapMensaje)),
+    collection(db, CONTACTOS_COLLECTION),
+    (snapshot) => onData(snapshot.docs.map(mapMensaje).sort(descendingBy((m) => m.creadoEn))),
     (error) => onError?.(error),
   );
 }

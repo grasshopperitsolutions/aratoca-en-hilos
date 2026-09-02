@@ -20,6 +20,8 @@ const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
 const AdminArtesanos = lazy(() => import('./pages/admin/AdminArtesanos'));
 const AdminMensajes = lazy(() => import('./pages/admin/AdminMensajes'));
 const AdminArchivos = lazy(() => import('./pages/admin/AdminArchivos'));
+const AdminAdministradores = lazy(() => import('./pages/admin/AdminAdministradores'));
+const Registro = lazy(() => import('./pages/admin/Registro'));
 
 const PAGES: Record<PageKey, ComponentType> = {
   home: Home,
@@ -62,6 +64,18 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
 
+        {/* Invitation acceptance. Sits OUTSIDE AdminLayout because the visitor
+            is not an admin yet — the layout's gate would bounce them to the
+            login form. The token in the URL is the credential. */}
+        <Route
+          path="/admin/registro"
+          element={
+            <Suspense fallback={<AdminLoading />}>
+              <Registro />
+            </Suspense>
+          }
+        />
+
         {/* Admin: deliberately absent from the header, footer, sitemap and
             prerender manifest — reachable only by typing the URL. */}
         <Route
@@ -76,6 +90,7 @@ export default function App() {
           <Route path="artesanos" element={<AdminArtesanos />} />
           <Route path="mensajes" element={<AdminMensajes />} />
           <Route path="archivos" element={<AdminArchivos />} />
+          <Route path="administradores" element={<AdminAdministradores />} />
         </Route>
       </Routes>
     </LanguageProvider>

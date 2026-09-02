@@ -2,7 +2,6 @@ import {
   Timestamp,
   collection,
   onSnapshot,
-  orderBy,
   query,
   where,
   type DocumentData,
@@ -10,6 +9,7 @@ import {
 } from 'firebase/firestore';
 
 import { db } from '../firebase';
+import { ascendingBy } from './ordering';
 import { EMPTY_LOCALISED, type Artesano, type Localised } from '../types/content';
 
 export const ARTESANOS_COLLECTION = 'artesanos';
@@ -67,15 +67,13 @@ export function subscribePublishedArtesanos(
 ): () => void {
   if (!db) return () => {};
 
-  const published = query(
-    collection(db, ARTESANOS_COLLECTION),
-    where('publicado', '==', true),
-    orderBy('orden', 'asc'),
-  );
+  // Filter only — the sort happens in code (see ./ordering). That also means
+  // this query needs no composite index.
+  const published = query(collection(db, ARTESANOS_COLLECTION), where('publicado', '==', true));
 
   return onSnapshot(
     published,
-    (snapshot) => onData(snapshot.docs.map(mapArtesano)),
+    (snapshot) => onData(snapshot.docs.map(mapArtesano).sort(ascendingBy((a) => a.orden))),
     (error) => onError?.(error),
   );
 }

@@ -4,8 +4,6 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
-  orderBy,
-  query,
   serverTimestamp,
   updateDoc,
 } from 'firebase/firestore';
@@ -14,6 +12,7 @@ import { deleteObject, ref } from 'firebase/storage';
 import { requireDb } from '../firebase';
 import { requireStorage } from '../firebaseAdmin';
 import { ARTESANOS_COLLECTION, mapArtesano, type ArtesanoInput } from './artesanos';
+import { ascendingBy } from './ordering';
 import type { Artesano } from '../types/content';
 
 /**
@@ -28,10 +27,9 @@ export function subscribeAllArtesanos(
   onData: (artesanos: Artesano[]) => void,
   onError?: (error: Error) => void,
 ): () => void {
-  const all = query(collection(requireDb(), ARTESANOS_COLLECTION), orderBy('orden', 'asc'));
   return onSnapshot(
-    all,
-    (snapshot) => onData(snapshot.docs.map(mapArtesano)),
+    collection(requireDb(), ARTESANOS_COLLECTION),
+    (snapshot) => onData(snapshot.docs.map(mapArtesano).sort(ascendingBy((a) => a.orden))),
     (error) => onError?.(error),
   );
 }

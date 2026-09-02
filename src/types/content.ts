@@ -45,4 +45,32 @@ export interface Archivo {
   subidoEn: string | null;
 }
 
+/** An account on the admin allowlist. The document id is the Firebase Auth uid. */
+export interface Admin {
+  /** Firebase Auth uid. */
+  id: string;
+  email: string;
+  creadoEn: string | null;
+  /** Token of the invitation this account was created from, when applicable. */
+  invitacion?: string;
+}
+
+export type EstadoInvitacion = 'pendiente' | 'usada';
+
+/**
+ * A pending admin invitation. The document id is an unguessable token, which
+ * doubles as the capability in the emailed link.
+ */
+export interface Invitacion {
+  /** The token — also the document id. */
+  id: string;
+  email: string;
+  estado: EstadoInvitacion;
+  creadaEn: string | null;
+  expiraEn: string | null;
+  usadaEn: string | null;
+  /** Email of the admin who sent the invitation. */
+  invitadaPor: string;
+}
+
 export const EMPTY_LOCALISED: Localised = { es: '', en: '' };

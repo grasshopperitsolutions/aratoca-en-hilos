@@ -12,7 +12,7 @@ import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { loadEnv } from 'vite';
 import { initializeApp, deleteApp } from 'firebase/app';
-import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore';
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
 const OUTPUT = path.resolve('src/content/artesanos.generated.json');
 const env = loadEnv('production', process.cwd(), 'VITE_');
@@ -42,29 +42,28 @@ const localised = (value) => ({
 });
 
 try {
+  // Filter only; the sort happens below in code, matching src/services/ordering.ts.
   const snapshot = await getDocs(
-    query(
-      collection(getFirestore(app), 'artesanos'),
-      where('publicado', '==', true),
-      orderBy('orden', 'asc'),
-    ),
+    query(collection(getFirestore(app), 'artesanos'), where('publicado', '==', true)),
   );
 
-  const artesanos = snapshot.docs.map((document) => {
-    const data = document.data();
-    return {
-      id: document.id,
-      nombre: typeof data.nombre === 'string' ? data.nombre : '',
-      oficio: localised(data.oficio),
-      bio: localised(data.bio),
-      fotoUrl: typeof data.fotoUrl === 'string' ? data.fotoUrl : '',
-      fotoPath: typeof data.fotoPath === 'string' ? data.fotoPath : '',
-      orden: typeof data.orden === 'number' ? data.orden : 0,
-      publicado: true,
-      creadoEn: toIso(data.creadoEn),
-      actualizadoEn: toIso(data.actualizadoEn),
-    };
-  });
+  const artesanos = snapshot.docs
+    .map((document) => {
+      const data = document.data();
+      return {
+        id: document.id,
+        nombre: typeof data.nombre === 'string' ? data.nombre : '',
+        oficio: localised(data.oficio),
+        bio: localised(data.bio),
+        fotoUrl: typeof data.fotoUrl === 'string' ? data.fotoUrl : '',
+        fotoPath: typeof data.fotoPath === 'string' ? data.fotoPath : '',
+        orden: typeof data.orden === 'number' ? data.orden : 0,
+        publicado: true,
+        creadoEn: toIso(data.creadoEn),
+        actualizadoEn: toIso(data.actualizadoEn),
+      };
+    })
+    .sort((a, b) => a.orden - b.orden);
 
   await writeFile(OUTPUT, `${JSON.stringify(artesanos, null, 2)}\n`);
   console.log(`[fetch-content] Wrote ${artesanos.length} published artisan(s) to the snapshot.`);

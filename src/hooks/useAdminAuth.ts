@@ -4,6 +4,8 @@ import { doc, getDoc } from 'firebase/firestore';
 
 import { db } from '../firebase';
 import { auth } from '../firebaseAdmin';
+import { ADMINS_COLLECTION } from '../services/admins';
+import { sincronizarEmailAdmin } from '../services/cuenta';
 
 export type AdminStatus =
   /** Still resolving the Firebase session. */
@@ -13,8 +15,6 @@ export type AdminStatus =
   /** Signed in, but not on the admin allowlist. */
   | 'unauthorised'
   | 'admin';
-
-export const ADMINS_COLLECTION = 'admins';
 
 /**
  * Resolves whether the current visitor may use the admin panel.
@@ -47,6 +47,20 @@ export function useAdminAuth() {
       try {
         const allowlisted = await getDoc(doc(dbRef, ADMINS_COLLECTION, nextUser.uid));
         setStatus(allowlisted.exists() ? 'admin' : 'unauthorised');
+
+        if (allowlisted.exists()) {
+          // An email change completes whenever the user opens the link Firebase
+          // sent — possibly in a different browser, with this app nowhere in
+          // sight. Realign the allowlist entry on the next sign-in so the admin
+          // list never shows a stale address. Failure here is cosmetic only.
+          const stored = allowlisted.data().email;
+          void sincronizarEmailAdmin(
+            nextUser,
+            typeof stored === 'string' ? stored : '',
+          ).catch((error: Error) =>
+            console.warn('[admin] could not sync the stored email:', error.message),
+          );
+        }
       } catch (error) {
         console.error('[admin] could not verify the allowlist:', error);
         setStatus('unauthorised');

@@ -1,13 +1,4 @@
 {
-  "indexes": [
-    {
-      "collectionGroup": "artesanos",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "publicado", "order": "ASCENDING" },
-        { "fieldPath": "orden", "order": "ASCENDING" }
-      ]
-    }
-  ],
+  "indexes": [],
   "fieldOverrides": []
 }

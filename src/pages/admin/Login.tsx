@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
 import { isFirebaseConfigured } from '../../firebase';
 import { requireAuth } from '../../firebaseAdmin';
+import { enviarRestablecerPassword } from '../../services/cuenta';
 import type { AdminStatus } from '../../hooks/useAdminAuth';
 
 /** Firebase auth codes mapped to messages worth showing a person. */
@@ -20,19 +21,47 @@ const AUTH_MESSAGES: Record<string, string> = {
 /**
  * Sign-in screen for the admin panel.
  *
- * No sign-up and no password reset by design: the single admin account is
- * created by hand in the Firebase console, so there is no self-service path
- * for anyone who stumbles onto this URL.
+ * No sign-up: accounts are created only by redeeming an invitation, so there is
+ * no self-service path for anyone who stumbles onto this URL. Password reset is
+ * available, and uses Firebase's own email rather than Brevo.
  */
 export default function Login({ status }: { status: AdminStatus }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  /**
+   * Firebase reports success even for an address with no account, so that this
+   * form cannot be used to discover which emails are registered. The wording
+   * below is deliberately non-committal for the same reason.
+   */
+  async function handleReset() {
+    setError(null);
+    setNotice(null);
+
+    if (!email.trim()) {
+      setError('Escribe tu correo y vuelve a pulsar el enlace.');
+      return;
+    }
+
+    setBusy(true);
+    try {
+      await enviarRestablecerPassword(email);
+      setNotice(`Si existe una cuenta para ${email.trim()}, le enviamos un enlace para cambiar la contraseña.`);
+    } catch (caught) {
+      const code = caught instanceof FirebaseError ? caught.code : '';
+      setError(AUTH_MESSAGES[code] ?? 'No pudimos enviar el correo. Inténtalo de nuevo.');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+    setNotice(null);
     setBusy(true);
 
     try {
@@ -135,7 +164,21 @@ export default function Login({ status }: { status: AdminStatus }) {
                 />
               </div>
 
+              <button
+                type="button"
+                onClick={handleReset}
+                disabled={busy}
+                className="text-sm text-stone hover:text-terracotta underline disabled:opacity-50"
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
+
               {error && <p className="text-terracotta text-sm">{error}</p>}
+              {notice && (
+                <p className="border border-penca/40 bg-moss/10 rounded-lg p-3 text-sm text-charcoal">
+                  {notice}
+                </p>
+              )}
 
               <button
                 type="submit"

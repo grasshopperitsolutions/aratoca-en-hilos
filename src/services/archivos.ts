@@ -5,8 +5,6 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
-  orderBy,
-  query,
   serverTimestamp,
   type DocumentData,
   type QueryDocumentSnapshot,
@@ -15,6 +13,7 @@ import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebas
 
 import { db, requireDb } from '../firebase';
 import { requireStorage } from '../firebaseAdmin';
+import { descendingBy } from './ordering';
 import type { Archivo } from '../types/content';
 
 export const ARCHIVOS_COLLECTION = 'archivos';
@@ -69,10 +68,9 @@ export function subscribeArchivos(
   onError?: (error: Error) => void,
 ): () => void {
   if (!db) return () => {};
-  const library = query(collection(db, ARCHIVOS_COLLECTION), orderBy('subidoEn', 'desc'));
   return onSnapshot(
-    library,
-    (snapshot) => onData(snapshot.docs.map(mapArchivo)),
+    collection(db, ARCHIVOS_COLLECTION),
+    (snapshot) => onData(snapshot.docs.map(mapArchivo).sort(descendingBy((a) => a.subidoEn))),
     (error) => onError?.(error),
   );
 }

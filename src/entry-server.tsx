@@ -115,7 +115,14 @@ export function renderNotFound(): RenderResult {
  * entirely, because `main.tsx` renders fresh instead of hydrating.
  */
 export function getShellPages(): string[] {
-  return ['admin', 'admin/artesanos', 'admin/mensajes', 'admin/archivos'];
+  return [
+    'admin',
+    'admin/artesanos',
+    'admin/mensajes',
+    'admin/archivos',
+    'admin/administradores',
+    'admin/registro',
+  ];
 }
 
 export interface RedirectPage {
