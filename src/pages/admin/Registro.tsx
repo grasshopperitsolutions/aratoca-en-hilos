@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CircleAlert, Leaf, Lock } from 'lucide-react';
+import { CircleAlert, Eye, EyeOff, Leaf, Lock } from 'lucide-react';
 import { FirebaseError } from 'firebase/app';
 
 import { isFirebaseConfigured } from '../../firebase';
@@ -65,6 +65,8 @@ export default function Registro() {
   });
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -208,15 +210,26 @@ export default function Registro() {
                 <label htmlFor="registro-password" className={LABEL}>
                   {phase.kind === 'nueva' ? 'Contraseña' : 'Contraseña actual'}
                 </label>
-                <input
-                  id="registro-password"
-                  type="password"
-                  required
-                  autoComplete={phase.kind === 'nueva' ? 'new-password' : 'current-password'}
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  className={FIELD}
-                />
+                <div className="relative">
+                  <input
+                    id="registro-password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    autoComplete={phase.kind === 'nueva' ? 'new-password' : 'current-password'}
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    className={`${FIELD} pr-11`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((visible) => !visible)}
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                    aria-pressed={showPassword}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-stone hover:text-terracotta transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 {phase.kind === 'nueva' && (
                   <p className="text-stone text-xs mt-2">
                     Mínimo {MIN_PASSWORD_LENGTH} caracteres.
@@ -229,15 +242,26 @@ export default function Registro() {
                   <label htmlFor="registro-confirm" className={LABEL}>
                     Repite la contraseña
                   </label>
-                  <input
-                    id="registro-confirm"
-                    type="password"
-                    required
-                    autoComplete="new-password"
-                    value={confirm}
-                    onChange={(event) => setConfirm(event.target.value)}
-                    className={FIELD}
-                  />
+                  <div className="relative">
+                    <input
+                      id="registro-confirm"
+                      type={showConfirm ? 'text' : 'password'}
+                      required
+                      autoComplete="new-password"
+                      value={confirm}
+                      onChange={(event) => setConfirm(event.target.value)}
+                      className={`${FIELD} pr-11`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirm((visible) => !visible)}
+                      aria-label={showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                      aria-pressed={showConfirm}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-stone hover:text-terracotta transition-colors"
+                    >
+                      {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </div>
               )}
 
