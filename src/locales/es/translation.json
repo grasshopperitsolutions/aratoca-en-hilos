@@ -118,6 +118,10 @@
       "title": "¿Quieres trabajar con nuestros artesanos?",
       "text": "Escríbenos y te ponemos en contacto directo con el taller.",
       "button": "Contáctanos"
+    },
+    "contacto": {
+      "whatsapp": "Escribir por WhatsApp",
+      "mapa": "Ver ubicación"
     }
   },
   "tallerFique": {

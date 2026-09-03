@@ -10,7 +10,13 @@ import {
 
 import { db } from '../firebase';
 import { ascendingBy } from './ordering';
-import { EMPTY_LOCALISED, type Artesano, type Localised } from '../types/content';
+import {
+  EMPTY_LOCALISED,
+  type Artesano,
+  type EnlaceArtesano,
+  type Localised,
+  type TelefonoArtesano,
+} from '../types/content';
 
 export const ARTESANOS_COLLECTION = 'artesanos';
 
@@ -37,6 +43,32 @@ function toLocalised(value: unknown): Localised {
   return { ...EMPTY_LOCALISED };
 }
 
+/** Firestore has no array-of-object typing, so every entry is re-checked here. */
+function toEnlaces(value: unknown): EnlaceArtesano[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((entry) => ({
+      url: typeof entry?.url === 'string' ? entry.url : '',
+      etiqueta: typeof entry?.etiqueta === 'string' ? entry.etiqueta : '',
+    }))
+    .filter((entry) => entry.url.length > 0);
+}
+
+function toTelefonos(value: unknown): TelefonoArtesano[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((entry) => ({
+      numero: typeof entry?.numero === 'string' ? entry.numero : '',
+      whatsapp: entry?.whatsapp === true,
+    }))
+    .filter((entry) => entry.numero.length > 0);
+}
+
+function toCorreos(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((entry): entry is string => typeof entry === 'string' && entry.length > 0);
+}
+
 export function mapArtesano(snapshot: QueryDocumentSnapshot<DocumentData>): Artesano {
   const data = snapshot.data();
   return {
@@ -46,6 +78,10 @@ export function mapArtesano(snapshot: QueryDocumentSnapshot<DocumentData>): Arte
     bio: toLocalised(data.bio),
     fotoUrl: typeof data.fotoUrl === 'string' ? data.fotoUrl : '',
     fotoPath: typeof data.fotoPath === 'string' ? data.fotoPath : '',
+    enlaces: toEnlaces(data.enlaces),
+    telefonos: toTelefonos(data.telefonos),
+    correos: toCorreos(data.correos),
+    mapaUrl: typeof data.mapaUrl === 'string' ? data.mapaUrl : '',
     orden: typeof data.orden === 'number' ? data.orden : 0,
     publicado: data.publicado === true,
     creadoEn: toIso(data.creadoEn),

@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowUp, Eye, EyeOff, GripVertical, ImageIcon, Pencil, Plus, Trash2 } from 'lucide-react';
 
-import MediaPicker, { type MediaSelection } from '../../components/admin/MediaPicker';
+import ArtesanoForm from '../../components/admin/ArtesanoForm';
 import type { ArtesanoInput } from '../../services/artesanos';
 import {
   createArtesano,
   deleteArtesano,
   subscribeAllArtesanos,
   updateArtesano,
+  validateArtesano,
+  type ArtesanoErrors,
 } from '../../services/artesanosAdmin';
 import type { Artesano } from '../../types/content';
 
@@ -17,6 +19,10 @@ const EMPTY_FORM: ArtesanoInput = {
   bio: { es: '', en: '' },
   fotoUrl: '',
   fotoPath: '',
+  enlaces: [],
+  telefonos: [],
+  correos: [],
+  mapaUrl: '',
   orden: 0,
   publicado: false,
 };
@@ -29,21 +35,40 @@ function toInput(artesano: Artesano): ArtesanoInput {
     bio: artesano.bio,
     fotoUrl: artesano.fotoUrl,
     fotoPath: artesano.fotoPath,
+    enlaces: artesano.enlaces,
+    telefonos: artesano.telefonos,
+    correos: artesano.correos,
+    mapaUrl: artesano.mapaUrl,
     orden: artesano.orden,
     publicado: artesano.publicado,
   };
 }
 
-const FIELD =
-  'w-full rounded-lg border border-stone/50 bg-cream px-4 py-2.5 text-charcoal placeholder:text-stone/70 focus:border-penca focus:outline-none focus:ring-1 focus:ring-penca transition-colors';
-const LABEL = 'block text-xs font-bold uppercase tracking-widest text-charcoal mb-2';
+/**
+ * Blank rows are a normal by-product of the "add another" buttons, so they are
+ * dropped on save rather than nagged about.
+ */
+function pruneEmpty(form: ArtesanoInput): ArtesanoInput {
+  return {
+    ...form,
+    nombre: form.nombre.trim(),
+    mapaUrl: form.mapaUrl.trim(),
+    correos: form.correos.map((c) => c.trim()).filter(Boolean),
+    telefonos: form.telefonos
+      .map((t) => ({ ...t, numero: t.numero.trim() }))
+      .filter((t) => t.numero),
+    enlaces: form.enlaces
+      .map((e) => ({ url: e.url.trim(), etiqueta: e.etiqueta.trim() }))
+      .filter((e) => e.url),
+  };
+}
 
 export default function AdminArtesanos() {
   const [artesanos, setArtesanos] = useState<Artesano[]>([]);
   const [editing, setEditing] = useState<Artesano | null>(null);
   const [form, setForm] = useState<ArtesanoInput>(EMPTY_FORM);
   const [showForm, setShowForm] = useState(false);
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const [errors, setErrors] = useState<ArtesanoErrors>({});
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const dragIndex = useRef<number | null>(null);
@@ -56,28 +81,35 @@ export default function AdminArtesanos() {
   function startCreate() {
     setEditing(null);
     setForm({ ...EMPTY_FORM, orden: artesanos.length });
+    setErrors({});
     setShowForm(true);
   }
 
   function startEdit(artesano: Artesano) {
     setEditing(artesano);
     setForm(toInput(artesano));
+    setErrors({});
     setShowForm(true);
   }
 
   async function handleSave() {
-    if (!form.nombre.trim()) {
-      setError('El nombre es obligatorio.');
+    const cleaned = pruneEmpty(form);
+    const found = validateArtesano(cleaned);
+    setErrors(found);
+    if (Object.keys(found).length > 0) {
+      setError('Faltan datos obligatorios: imagen, nombre y descripción.');
       return;
     }
+
     setBusy(true);
     setError(null);
     try {
-      if (editing) await updateArtesano(editing.id, form);
-      else await createArtesano(form);
+      if (editing) await updateArtesano(editing.id, cleaned);
+      else await createArtesano(cleaned);
       setShowForm(false);
       setEditing(null);
       setForm(EMPTY_FORM);
+      setErrors({});
     } catch (caught) {
       console.error('[admin/artesanos] save failed:', caught);
       setError('No se pudo guardar. Revisa tu conexión y los permisos.');
@@ -118,10 +150,6 @@ export default function AdminArtesanos() {
     void persistOrder(next);
   }
 
-  function applySelection(selection: MediaSelection) {
-    setForm((current) => ({ ...current, fotoUrl: selection.url, fotoPath: selection.path }));
-  }
-
   return (
     <div>
       <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
@@ -152,114 +180,7 @@ export default function AdminArtesanos() {
             {editing ? `Editando: ${editing.nombre}` : 'Nuevo artesano'}
           </h2>
 
-          <div>
-            <label htmlFor="nombre" className={LABEL}>
-              Nombre
-            </label>
-            <input
-              id="nombre"
-              className={FIELD}
-              value={form.nombre}
-              onChange={(event) => setForm({ ...form, nombre: event.target.value })}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="oficio-es" className={LABEL}>
-                Oficio (español)
-              </label>
-              <input
-                id="oficio-es"
-                className={FIELD}
-                value={form.oficio.es}
-                onChange={(event) =>
-                  setForm({ ...form, oficio: { ...form.oficio, es: event.target.value } })
-                }
-              />
-            </div>
-            <div>
-              <label htmlFor="oficio-en" className={LABEL}>
-                Oficio (inglés)
-              </label>
-              <input
-                id="oficio-en"
-                className={FIELD}
-                value={form.oficio.en}
-                onChange={(event) =>
-                  setForm({ ...form, oficio: { ...form.oficio, en: event.target.value } })
-                }
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="bio-es" className={LABEL}>
-                Biografía (español)
-              </label>
-              <textarea
-                id="bio-es"
-                rows={5}
-                className={`${FIELD} resize-y`}
-                value={form.bio.es}
-                onChange={(event) =>
-                  setForm({ ...form, bio: { ...form.bio, es: event.target.value } })
-                }
-              />
-            </div>
-            <div>
-              <label htmlFor="bio-en" className={LABEL}>
-                Biografía (inglés)
-              </label>
-              <textarea
-                id="bio-en"
-                rows={5}
-                className={`${FIELD} resize-y`}
-                value={form.bio.en}
-                onChange={(event) =>
-                  setForm({ ...form, bio: { ...form.bio, en: event.target.value } })
-                }
-              />
-            </div>
-          </div>
-
-          <div>
-            <span className={LABEL}>Retrato</span>
-            <div className="flex items-center gap-4 flex-wrap">
-              <div className="w-24 h-24 rounded-lg overflow-hidden bg-moss/20 border border-stone/20 flex items-center justify-center shrink-0">
-                {form.fotoUrl ? (
-                  <img src={form.fotoUrl} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <ImageIcon size={24} className="text-stone" />
-                )}
-              </div>
-              <button
-                onClick={() => setPickerOpen(true)}
-                className="rounded-full border border-charcoal px-5 py-2.5 text-sm font-bold uppercase tracking-widest hover:bg-charcoal hover:text-cream transition-all"
-              >
-                {form.fotoUrl ? 'Cambiar imagen' : 'Elegir imagen'}
-              </button>
-              {form.fotoUrl && (
-                <button
-                  onClick={() => setForm({ ...form, fotoUrl: '', fotoPath: '' })}
-                  className="text-sm text-stone hover:text-terracotta underline"
-                >
-                  Quitar
-                </button>
-              )}
-            </div>
-          </div>
-
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={form.publicado}
-              onChange={(event) => setForm({ ...form, publicado: event.target.checked })}
-              className="w-4 h-4 accent-penca"
-            />
-            <span className="text-sm text-charcoal">Publicado (visible en el sitio)</span>
-          </label>
+          <ArtesanoForm form={form} errors={errors} onChange={setForm} />
 
           <div className="flex gap-3 pt-2">
             <button
@@ -273,6 +194,7 @@ export default function AdminArtesanos() {
               onClick={() => {
                 setShowForm(false);
                 setEditing(null);
+                setErrors({});
               }}
               className="rounded-full border border-stone px-6 py-3 text-sm font-bold uppercase tracking-widest text-charcoal hover:bg-stone/10 transition-all"
             >
@@ -360,9 +282,6 @@ export default function AdminArtesanos() {
         </ul>
       )}
 
-      {pickerOpen && (
-        <MediaPicker onSelect={applySelection} onClose={() => setPickerOpen(false)} />
-      )}
     </div>
   );
 }

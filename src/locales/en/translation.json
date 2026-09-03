@@ -118,6 +118,10 @@
       "title": "Would you like to work with our artisans?",
       "text": "Write to us and we will put you in direct contact with the workshop.",
       "button": "Get in touch"
+    },
+    "contacto": {
+      "whatsapp": "Message on WhatsApp",
+      "mapa": "View location"
     }
   },
   "tallerFique": {

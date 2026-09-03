@@ -15,6 +15,29 @@ import { ARTESANOS_COLLECTION, mapArtesano, type ArtesanoInput } from './artesan
 import { ascendingBy } from './ordering';
 import type { Artesano } from '../types/content';
 
+/** Required fields, checked before a save is allowed. */
+export interface ArtesanoErrors {
+  nombre?: string;
+  bio?: string;
+  foto?: string;
+}
+
+/**
+ * Image, name and description are mandatory; everything else is optional.
+ *
+ * Only the Spanish description is required — Spanish is the site's base
+ * language, and the public page falls back to it when the English is empty.
+ * Requiring both would mean an artisan cannot be published until someone has
+ * translated them.
+ */
+export function validateArtesano(form: ArtesanoInput): ArtesanoErrors {
+  const errors: ArtesanoErrors = {};
+  if (!form.nombre.trim()) errors.nombre = 'El nombre es obligatorio.';
+  if (!form.bio.es.trim()) errors.bio = 'La descripción en español es obligatoria.';
+  if (!form.fotoUrl) errors.foto = 'La imagen es obligatoria.';
+  return errors;
+}
+
 /**
  * Artisan writes — admin only.
  *

@@ -41,6 +41,21 @@ const localised = (value) => ({
   en: typeof value?.en === 'string' ? value.en : '',
 });
 
+// Mirrors the runtime mapping in src/services/artesanos.ts — the prerendered
+// HTML must show exactly what the hydrated page shows.
+const enlaces = (value) =>
+  (Array.isArray(value) ? value : [])
+    .map((e) => ({ url: typeof e?.url === 'string' ? e.url : '', etiqueta: typeof e?.etiqueta === 'string' ? e.etiqueta : '' }))
+    .filter((e) => e.url.length > 0);
+
+const telefonos = (value) =>
+  (Array.isArray(value) ? value : [])
+    .map((e) => ({ numero: typeof e?.numero === 'string' ? e.numero : '', whatsapp: e?.whatsapp === true }))
+    .filter((e) => e.numero.length > 0);
+
+const correos = (value) =>
+  (Array.isArray(value) ? value : []).filter((e) => typeof e === 'string' && e.length > 0);
+
 try {
   // Filter only; the sort happens below in code, matching src/services/ordering.ts.
   const snapshot = await getDocs(
@@ -57,6 +72,10 @@ try {
         bio: localised(data.bio),
         fotoUrl: typeof data.fotoUrl === 'string' ? data.fotoUrl : '',
         fotoPath: typeof data.fotoPath === 'string' ? data.fotoPath : '',
+        enlaces: enlaces(data.enlaces),
+        telefonos: telefonos(data.telefonos),
+        correos: correos(data.correos),
+        mapaUrl: typeof data.mapaUrl === 'string' ? data.mapaUrl : '',
         orden: typeof data.orden === 'number' ? data.orden : 0,
         publicado: true,
         creadoEn: toIso(data.creadoEn),

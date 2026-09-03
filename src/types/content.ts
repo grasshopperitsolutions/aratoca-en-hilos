@@ -3,22 +3,56 @@ import type { Language } from '../i18n/routes';
 /** A string that exists in both site languages. */
 export type Localised = Record<Language, string>;
 
+/**
+ * A link on an artisan profile.
+ *
+ * One field for every kind of link: the network is detected from the hostname
+ * (see content/social.ts), so a social profile renders as an icon and anything
+ * else renders as a labelled link. The admin only ever types a URL.
+ */
+export interface EnlaceArtesano {
+  url: string;
+  /** Shown for links that are not a recognised social network. */
+  etiqueta: string;
+}
+
+export interface TelefonoArtesano {
+  numero: string;
+  /** Adds a wa.me link alongside the tel: one. */
+  whatsapp: boolean;
+}
+
 /** An artisan profile, managed from /admin/artesanos. */
 export interface Artesano {
   id: string;
+  /** Required. */
   nombre: string;
-  /** Craft or trade, e.g. "Tejedora" / "Weaver". */
+  /** Craft or trade, e.g. "Tejedora" / "Weaver". Optional. */
   oficio: Localised;
+  /** The description. Required in Spanish; English falls back to it. */
   bio: Localised;
-  /** Public download URL of the portrait, or empty when none has been set. */
+  /** Required. Public download URL of the portrait. */
   fotoUrl: string;
   /** Storage path, kept so the object can be deleted alongside the document. */
   fotoPath: string;
+  /** Optional social profiles and websites. */
+  enlaces: EnlaceArtesano[];
+  /** Optional phone numbers, each flagged for WhatsApp or not. */
+  telefonos: TelefonoArtesano[];
+  /** Optional email addresses. */
+  correos: string[];
+  /** Optional Google Maps link. Rendered as a link, not an embedded map. */
+  mapaUrl: string;
   /** Sort position, ascending. */
   orden: number;
   publicado: boolean;
   creadoEn: string | null;
   actualizadoEn: string | null;
+}
+
+/** Falls back to Spanish, the base language, when a translation is missing. */
+export function localised(value: Localised, language: Language): string {
+  return value[language]?.trim() || value.es;
 }
 
 /** A contact form submission. */
