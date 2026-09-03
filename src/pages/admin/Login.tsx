@@ -23,7 +23,7 @@ const AUTH_MESSAGES: Record<string, string> = {
  *
  * No sign-up: accounts are created only by redeeming an invitation, so there is
  * no self-service path for anyone who stumbles onto this URL. Password reset is
- * available, and uses Firebase's own email rather than Brevo.
+ * available, and uses Firebase's own email rather than the transactional provider.
  */
 export default function Login({ status }: { status: AdminStatus }) {
   const [email, setEmail] = useState('');

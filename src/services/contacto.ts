@@ -22,12 +22,11 @@ export { CONTACT_LIMITS, type ContactoInput } from './contactLimits';
 export const CONTACTOS_COLLECTION = 'contactos';
 
 /**
- * Template name resolved by the "Trigger Email from Firestore" extension.
+ * Template the mail function renders for this document.
  *
- * The submitted document carries `template.name` rather than raw `message.html`
- * on purpose: the HTML body then comes from the `templates` collection, which
- * the public cannot write. A visitor can only choose the *data*, never the
- * markup that gets emailed.
+ * The submitted document carries `template.name` rather than any markup on
+ * purpose: the body is built server-side in functions/src/templates.ts, so a
+ * visitor can only choose the *data*, never the HTML that gets emailed.
  */
 export const CONTACT_TEMPLATE = 'contacto';
 
@@ -54,7 +53,7 @@ function markSubmitted(): void {
 }
 
 /**
- * Records the enquiry and hands it to the email extension in one write.
+ * Records the enquiry and queues its notification email in one write.
  *
  * `to` is pinned to the company address and re-checked in the security rules,
  * so this publicly writable collection cannot be turned into an open relay.

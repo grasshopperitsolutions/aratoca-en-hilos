@@ -43,6 +43,7 @@ content snapshot. Only the contact form and the admin panel need Firebase.
 | `npm run preview` | Serves `dist/` exactly as it will be deployed |
 | `npm run lint` | ESLint |
 | `npx tsc -b` | Type check |
+| `npm --prefix functions run build` | Compile the email Cloud Functions |
 
 `npm run build` runs five steps in order:
 
@@ -124,8 +125,8 @@ Signing in is not sufficient for access — the uid must also have a document in
 ### Adding and removing administrators
 
 An admin invites a colleague by email from `/admin/administradores`. That writes a document
-to `invitaciones/{token}`, which is what sends the email — the Trigger Email extension
-watches the collection. The invitee follows the link, chooses their own password, and their
+to `invitaciones/{token}`, which is what sends the email — a Cloud Function watches the
+collection. The invitee follows the link, chooses their own password, and their
 account is added to the allowlist. Invitations expire after 7 days.
 
 Three properties are enforced in `firestore.rules`, not in the UI:
@@ -185,7 +186,7 @@ rules are version-controlled and reviewable.
 
 ### 4. Firebase's own emails
 
-Three emails come from Firebase itself — free, no Brevo, no backend:
+Three emails come from Firebase itself — free, no Resend, no backend:
 
 | Email | Where it is triggered |
 |---|---|
@@ -217,118 +218,111 @@ that one write and nothing else.
 Register a **reCAPTCHA v3** site key and set it as `VITE_RECAPTCHA_SITE_KEY`. The
 `contactos` collection is publicly writable — without App Check it is a spam target.
 
-### 6. Email notifications (Brevo)
+### 6. Email notifications (Resend, via Cloud Functions)
 
-Two things get emailed: contact form enquiries and admin invitations. Both go through the
-**Trigger Email from Firestore** extension over Brevo SMTP.
+Two things get emailed: contact form enquiries and admin invitations.
 
-**In Brevo:**
+The site is frontend-only, so it cannot hold the Resend API key — anything in the bundle is
+public, and Resend's API returns no CORS headers, so a browser call is blocked anyway. Two
+small Firestore-triggered Cloud Functions hold the key instead.
 
-1. Create a free account (300 emails/day is ample here).
-2. **Senders, Domains & Dedicated IPs** → add and verify the sender address the site will
-   send *from*. Unverified senders get rejected or land in spam.
-3. **SMTP & API → SMTP** → copy the **login** and generate an **SMTP key**. The SMTP key is
-   not your account password.
-   Host `smtp-relay.brevo.com`, port `587`.
+This is what the Trigger Email extension used to do. It is written out here because
+[Firebase Extensions is deprecated and shuts down on 31 March 2027](https://firebase.google.com/docs/extensions/faq-and-troubleshooting) —
+installed extensions keep running but can no longer be updated or reconfigured.
 
-**In Firebase → Extensions**, install **Trigger Email from Firestore** *twice* — once per
-collection. Both instances use the same Brevo credentials:
+```
+functions/src/
+  email.ts       the ONLY file that knows about Resend — swap providers here
+  templates.ts   email bodies, in code and version-controlled
+  index.ts       the two Firestore triggers
+```
 
-| Instance | Collection | Sends |
-|---|---|---|
-| 1 | `contactos` | Contact form enquiries to the company address |
-| 2 | `invitaciones` | Admin invitations to the invited address |
+Nothing under `src/` names a provider. The frontend still just writes a Firestore document;
+`firestore.rules` still does the validation, including pinning the contact recipient and the
+template name. The function is downstream of all of it.
 
-For each instance set:
+**In Resend:**
 
-- **SMTP connection URI**: `smtps://YOUR_BREVO_LOGIN@smtp-relay.brevo.com:587`
-  (the password goes in the separate secret field, not in the URI)
-- **SMTP password**: your Brevo SMTP key
-- **Default FROM address**: the verified Brevo sender
-- **Firestore collection**: as per the table above
-- **Templates collection**: `templates`
+1. **Domains → Add Domain**, then add the DNS records it gives you. Resend puts SPF and its
+   MX on a sending subdomain (`send.yourdomain.com`) and DKIM at `resend._domainkey`, so it
+   does not touch the apex SPF — which means another provider can coexist at the apex later.
+2. **API Keys → Create API Key** with sending permission.
+3. The `From` address must be on the verified domain, or every send is rejected.
 
-The extension sends on document *create* and does not resend when a document is later
-updated without touching its `delivery` field — which is what marking an invitation as used
-does. Worth confirming on the first real invitation.
+**In this repo:**
+
+```bash
+cd functions && npm install
+
+# The API key is a secret — it never lands in a file or in git.
+firebase functions:secrets:set RESEND_API_KEY
+
+# The From address is not secret.
+cp .env.example .env      # then set EMAIL_FROM
+
+firebase deploy --only functions
+```
+
+Two functions deploy: `enviarCorreoContacto` (watching `contactos`) and
+`enviarCorreoInvitacion` (watching `invitaciones`). Both need the Blaze plan, which the
+project is already on for Cloud Storage.
+
+**Checking a send.** The function writes a `delivery` field back onto the document it
+handled, so the outcome sits next to the thing that produced it:
+
+| `delivery.state` | Means |
+|---|---|
+| *(absent)* | The trigger never ran — check `firebase functions:log` |
+| `ERROR` | Read `delivery.error`; usually a bad key or an unverified `From` |
+| `SUCCESS` | Sent; `delivery.messageId` is Resend's id for it |
+
+A document already `SUCCESS` is skipped if the function retries, so a retry cannot send the
+same invitation twice.
 
 > The `invitaciones` documents hold both the invitation state and the email payload, so
 > writing one is what sends it. Deleting an invitation is how you cancel it; there is no
 > resend, because a fresh invite mints a fresh token.
 
-Submitted documents carry `to` and `template: { name: 'contacto', data: {…} }` rather than
-raw HTML. The rules pin `to` to the company address, so the collection cannot be used as an
-open mail relay, and the email body comes from a template the public cannot write.
+Submitted documents carry `to` and `template: { name, data }` rather than any markup. The
+rules pin `to`, so neither collection can be used as an open mail relay, and the body is
+built server-side from `functions/src/templates.ts` — a visitor chooses the data, never the
+HTML. Everything interpolated is escaped, and anything reaching a subject line is stripped
+of control characters so it cannot smuggle extra headers.
 
-Create the template at `templates/contacto`:
-
-```json
-{
-  "subject": "Nuevo mensaje de {{nombre}} — Aratoca en Hilos",
-  "html": "<h2>Nuevo mensaje desde el sitio web</h2><p><strong>Nombre:</strong> {{nombre}}</p><p><strong>Correo:</strong> {{email}}</p><p><strong>Teléfono:</strong> {{telefono}}</p><p><strong>Idioma:</strong> {{idioma}}</p><hr><p>{{mensaje}}</p>"
-}
-```
-
-And the invitation template at `templates/invitacion`:
-
-```json
-{
-  "subject": "Te han invitado a administrar Aratoca en Hilos",
-  "html": "<h2>Invitación al panel de Aratoca en Hilos</h2><p>{{invitadaPor}} te ha invitado a administrar el sitio.</p><p><a href=\"{{enlace}}\">Crea tu contraseña y entra al panel</a></p><p>El enlace caduca en {{dias}} días. Si no esperabas este correo, ignóralo.</p>"
-}
-```
-
-> ⚠️ The contact recipient address is hard-coded in `firestore.rules` (`contactEmail()`) and
-> must match `COMPANY.email` in `src/content/company.ts`. Change both together.
-> Invitations need no such pinning — the rules require the recipient to equal the invited
-> address.
-
-### Data model
-
-| Collection | Access |
-|---|---|
-| `admins/{uid}` | Admin read; no client writes |
-| `artesanos/{id}` | Public read where `publicado == true`; admin write |
-| `contactos/{id}` | Public **create** only (field- and size-validated); admin read/update/delete |
-| `archivos/{id}` | Public read; admin write |
-| `invitaciones/{token}` | `get` by anyone holding the token; `list`/create/delete admin-only; the invitee may only mark their own invitation used |
-| `templates/{id}` | No client access — the extension uses the Admin SDK |
+**Switching providers later** means rewriting `sendEmail()` in `functions/src/email.ts` and
+changing the two config values. No other file in the project mentions a provider.
 
 ---
 
-## Deployment
+## Handover
 
-Pushing to `master` builds and deploys to GitHub Pages via
-`.github/workflows/deploy.yml`.
+The Firebase project is intended to **transfer to the client**, not to be recreated. In the
+console under **Project settings → Users and permissions**, add the client's Google account
+as **Owner**, have them accept, then remove yourself. The project must always have at least
+one Owner.
 
-Add these **repository secrets** (Settings → Secrets and variables → Actions). Vite inlines
-`VITE_*` at build time, so they must be present in CI rather than at runtime. They are
-public values by design — the rules are what protect the data.
+Two things do not move with it:
 
-```
-VITE_FIREBASE_API_KEY
-VITE_FIREBASE_AUTH_DOMAIN
-VITE_FIREBASE_PROJECT_ID
-VITE_FIREBASE_STORAGE_BUCKET
-VITE_FIREBASE_MESSAGING_SENDER_ID
-VITE_FIREBASE_APP_ID
-VITE_RECAPTCHA_SITE_KEY
-VITE_SITE_ORIGIN
-```
+- **Billing.** The Blaze plan is attached to a Cloud Billing account, which is separate from
+  project ownership. The client needs their own billing account, and the project must be
+  pointed at it — otherwise you keep paying.
+- **The project ID.** `aratoca-en-hilos` is permanent and cannot be renamed. It is already
+  client-named, so this costs nothing here.
 
-### Why there is a nightly build
+Moving the site to the client's domain is two values — `base` in `vite.config.ts` and
+`VITE_SITE_ORIGIN`. Canonical URLs, hreflang, the sitemap, invitation links and the Firebase
+continue-URLs all derive from them.
 
-Artisan content lives in Firestore and is baked into the prerendered HTML at build time.
-Visitors see admin edits immediately, because the page subscribes to Firestore — but
-**crawlers only see them after a rebuild**. The workflow therefore runs nightly at 06:00 UTC,
-and can be triggered by hand from the Actions tab after a content change.
+What must be redone on the client's domain:
 
-### Moving to another domain
+- Resend domain verification and its DNS records (SPF/DKIM on the sending subdomain)
+- `EMAIL_FROM` for the functions, and the `RESEND_API_KEY` secret
+- **Authentication → Settings → Authorized domains**
+- Optionally, the custom domain for Firebase's own auth emails
 
-`vite.config.ts` sets `base: '/aratoca-en-hilos/'`. To serve the site from a domain root,
-change that to `'/'` and set `VITE_SITE_ORIGIN` to the new origin; everything else —
-canonicals, hreflang, the sitemap, `robots.txt` — follows automatically. The build output in
-`dist/` is a plain folder and can be handed over or dropped on any static host.
+**`contactEmail()` in `firestore.rules` and `COMPANY.email` in `src/content/company.ts` must
+change together.** The rules pin the contact form's recipient, so changing one without the
+other makes every submission fail the security rules.
 
 ---
 

@@ -22,7 +22,7 @@ import type { Admin, Invitacion } from '../types/content';
 export const ADMINS_COLLECTION = 'admins';
 export const INVITACIONES_COLLECTION = 'invitaciones';
 
-/** Template name resolved by the Trigger Email extension watching `invitaciones`. */
+/** Template the mail function renders for this document. Pinned by the rules. */
 export const INVITE_TEMPLATE = 'invitacion';
 
 /** How long an invitation stays usable. */
@@ -143,8 +143,8 @@ export function subscribeInvitaciones(
 }
 
 /**
- * Creates an invitation. Writing the document is what sends the email: the
- * Trigger Email extension watches this collection.
+ * Creates an invitation. Writing the document is what sends the email: a Cloud
+ * Function watches this collection (see functions/src/index.ts).
  *
  * `to` is set to the invited address and the rules require the two to match, so
  * an admin cannot use this collection to mail arbitrary content to arbitrary

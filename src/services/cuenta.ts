@@ -14,8 +14,9 @@ import { ADMINS_COLLECTION, normaliseEmail } from './admins';
 /**
  * The three emails Firebase Authentication sends on its own.
  *
- * These cost nothing, need no backend and no Brevo — Google delivers them. The
- * price is limited customisation: subject, body, sender name and reply-to are
+ * These cost nothing, need no backend and no external email provider — Google
+ * delivers them. The price is limited customisation: subject, body, sender name
+ * and reply-to are
  * editable in the console (Authentication → Templates), and the sender domain
  * can be verified there, but the layout is Google's. Fully branded versions
  * would need `generatePasswordResetLink()` from the Admin SDK, which is a

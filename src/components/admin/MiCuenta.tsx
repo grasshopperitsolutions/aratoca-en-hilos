@@ -32,7 +32,7 @@ function messageFor(error: unknown, fallback: string): string {
 
 /**
  * Account self-service, built entirely on the three emails Firebase sends by
- * itself — no Brevo involved, and nothing here costs anything.
+ * itself — no external email provider involved, and nothing here costs anything.
  */
 export default function MiCuenta({ user }: { user: User }) {
   const [verified, setVerified] = useState(user.emailVerified);

@@ -76,8 +76,8 @@ service cloud.firestore {
 
     // Admin invitations. The document id is an unguessable random token which
     // doubles as the capability in the emailed link, and writing a document
-    // here is what sends the email — the Trigger Email extension watches this
-    // collection.
+    // here is what sends the email — a Cloud Function watches this collection
+    // (functions/src/index.ts).
     match /invitaciones/{token} {
       // A single document may be read by anyone who knows its token, because
       // the invitee has no session yet. `list` stays admin-only, so the
@@ -91,7 +91,7 @@ service cloud.firestore {
       // The ONLY permitted edit is the invitee flipping their own invitation
       // from pending to used as they redeem it. Admins deliberately have no
       // update permission — resending means delete and re-invite, which mints a
-      // fresh token rather than reviving an old one. The email extension writes
+      // fresh token rather than reviving an old one. The mail function writes
       // its delivery status with the Admin SDK, which bypasses these rules.
       allow update: if marcaSuPropiaInvitacionUsada();
     }
@@ -168,18 +168,6 @@ service cloud.firestore {
         && d.template.keys().hasOnly(['name', 'data'])
         && d.template.name == 'contacto'
         && d.template.data is map;
-    }
-
-    // Handlebars templates read by the Trigger Email extension. The extension
-    // uses the Admin SDK, which bypasses rules, so no client needs access.
-    match /templates/{id} {
-      allow read, write: if false;
-    }
-
-    // Outbound mail queue, if the extension is pointed at its own collection.
-    match /mail/{id} {
-      allow read: if isAdmin();
-      allow write: if false;
     }
 
     // Anything not named above is denied outright.
