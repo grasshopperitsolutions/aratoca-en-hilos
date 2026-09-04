@@ -1,36 +1,64 @@
 import {
-  BookOpen,
   ChevronDown,
-  Layers,
-  NotebookPen,
+  Coins,
+  GraduationCap,
+  Landmark,
   Palette,
   Recycle,
   Scissors,
   Sprout,
   type LucideIcon,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+import AssetFigure from '../components/libro/AssetFigure';
+import { ModulosWeb, Sesion3h } from '../components/libro/Bloques';
+import { MapaAprendizaje } from '../components/libro/Diagramas';
 import Button from '../components/Button';
+import DescargarPdf from '../components/libro/DescargarPdf';
 import IconCircle from '../components/IconCircle';
 import PageHeader from '../components/PageHeader';
 import Reveal from '../components/Reveal';
 import { FAQ_IDS } from '../content/faq';
+import { libroTexto } from '../content/libro';
+import { capitulosDeParte } from '../content/libro/estructura';
 import { useLanguage } from '../i18n/languageContext';
+import { buildPath, pageKeyDeCapitulo } from '../i18n/routes';
+import { LIBRO_PARTES, type LibroCapitulo } from '../types/libro';
 
-/** Chapter ids match the translation keys; icon and accent colour live here. */
-const CHAPTERS: { id: string; icon: LucideIcon; color: string }[] = [
-  { id: 'planta', icon: Sprout, color: '#4C7A3D' },
-  { id: 'fibra', icon: Scissors, color: '#6B4226' },
-  { id: 'color', icon: Palette, color: '#B85C38' },
-  { id: 'telar', icon: Layers, color: '#8FA878' },
-  { id: 'diarios', icon: NotebookPen, color: '#A79E8E' },
-  { id: 'futuro', icon: Recycle, color: '#4C7A3D' },
-];
+/**
+ * Icon and accent colour per chapter of the book.
+ *
+ * Raw hex is the documented exception to the design-system rule: `IconCircle`
+ * takes a CSS colour string, not a Tailwind class. Values are the theme tokens
+ * from index.css.
+ */
+const CHAPTER_ICONS: Record<LibroCapitulo, { icon: LucideIcon; color: string }> = {
+  1: { icon: Landmark, color: '#6B4226' },
+  2: { icon: Coins, color: '#A79E8E' },
+  3: { icon: Sprout, color: '#4C7A3D' },
+  4: { icon: Recycle, color: '#8FA878' },
+  5: { icon: Scissors, color: '#B85C38' },
+  6: { icon: Palette, color: '#6B4226' },
+  7: { icon: GraduationCap, color: '#4C7A3D' },
+};
 
+/**
+ * Taller Fique — the presentation page for the book.
+ *
+ * This is the front door: it introduces "Trenzando Saberes", shows what is in
+ * it, and hands the visitor to the reader at /libro or to any single chapter.
+ * The book's own text is the source for every title here, so this page cannot
+ * drift out of step with the publication it advertises.
+ */
 export default function TallerFique() {
   const { t } = useTranslation();
-  const { path } = useLanguage();
+  const { language, path } = useLanguage();
+
+  const libro = libroTexto(language);
+  const chapterPath = (numero: LibroCapitulo) =>
+    buildPath(pageKeyDeCapitulo(numero), language);
 
   return (
     <>
@@ -40,51 +68,144 @@ export default function TallerFique() {
         intro={t('tallerFique.intro')}
       />
 
-      {/* Estado del libro: la experiencia interactiva llega en la Fase 2 */}
-      <section className="px-6 md:px-12 py-16 bg-cream">
-        <div className="max-w-3xl mx-auto">
+      {/* El libro: portada, panorama y accesos */}
+      <section className="px-6 md:px-12 py-16 md:py-20 bg-cream">
+        <div className="max-w-4xl mx-auto">
+          <AssetFigure tag="TAG_01_HERO_PANORAMA" priority className="!mt-0" />
+
           <Reveal>
-            <div className="border border-dashed border-stone rounded-tl-3xl rounded-br-3xl p-8 md:p-12 text-center">
-              <div className="flex items-center justify-center gap-3 mb-4 text-penca">
-                <BookOpen size={24} />
-                <span className="font-bold uppercase tracking-widest text-sm">
-                  {t('tallerFique.comingSoon')}
-                </span>
-              </div>
-              <p className="text-charcoal/70 text-lg font-light">
-                {t('tallerFique.comingSoonText')}
+            <div className="text-center mt-4">
+              <h2 className="font-fraunces text-3xl md:text-4xl text-charcoal">
+                {libro.titulo}
+              </h2>
+              <p className="text-charcoal/70 font-light text-lg mt-3 max-w-2xl mx-auto">
+                {libro.subtitulo}
               </p>
+              <p className="text-stone text-xs uppercase tracking-widest mt-4">
+                {libro.editor}
+              </p>
+
+              <div className="flex flex-wrap gap-4 justify-center mt-10">
+                <Button to={path('libro')} variant="primary">
+                  {t('tallerFique.abrirLibro')}
+                </Button>
+                <DescargarPdf />
+              </div>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* Capítulos */}
+      {/* Capítulos, agrupados por parte */}
       <section className="px-6 md:px-12 py-20 md:py-28 bg-moss/10">
         <div className="max-w-6xl mx-auto">
           <Reveal>
-            <h2 className="text-4xl md:text-5xl font-fraunces text-charcoal text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-fraunces text-charcoal text-center">
               {t('tallerFique.chaptersTitle')}
             </h2>
+            <p className="text-charcoal/70 font-light text-center max-w-2xl mx-auto mt-4 mb-16">
+              {t('tallerFique.chaptersIntro')}
+            </p>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {CHAPTERS.map((chapter, index) => (
-              <Reveal key={chapter.id} delay={(index % 3) * 150}>
-                <div className="bg-cream rounded-tl-3xl rounded-br-3xl p-8 h-full border border-stone/20 hover:shadow-xl transition-shadow duration-500">
-                  <div className="mb-6">
-                    <IconCircle icon={chapter.icon} color={chapter.color} />
+          <div className="space-y-14">
+            {LIBRO_PARTES.map((numeroParte) => {
+              const parte = libro.partes[numeroParte];
+              return (
+                <div key={numeroParte}>
+                  <Reveal>
+                    <div className="flex items-baseline gap-4 mb-8">
+                      <span className="text-xs font-bold uppercase tracking-widest text-penca shrink-0">
+                        {t('libro.parte', { numero: numeroParte })}
+                      </span>
+                      <h3 className="font-fraunces text-2xl text-earth">{parte.titulo}</h3>
+                    </div>
+                  </Reveal>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {capitulosDeParte(numeroParte).map((numero, index) => {
+                      const { icon, color } = CHAPTER_ICONS[numero];
+                      return (
+                        <Reveal key={numero} delay={(index % 3) * 150}>
+                          <Link
+                            to={chapterPath(numero)}
+                            className="group block bg-cream rounded-tl-3xl rounded-br-3xl p-8 h-full border border-stone/20 hover:shadow-xl transition-shadow duration-500"
+                          >
+                            <div className="mb-6">
+                              <IconCircle icon={icon} color={color} />
+                            </div>
+                            <p className="text-xs font-bold uppercase tracking-widest text-stone mb-2">
+                              {t('libro.parte', { numero: numeroParte })} ·{' '}
+                              {String(numero).padStart(2, '0')}
+                            </p>
+                            <h4 className="text-xl font-fraunces text-charcoal group-hover:text-terracotta transition-colors">
+                              {libro.capitulos[numero].titulo}
+                            </h4>
+                          </Link>
+                        </Reveal>
+                      );
+                    })}
                   </div>
-                  <h3 className="text-2xl font-fraunces text-charcoal mb-3">
-                    {t(`tallerFique.chapters.${chapter.id}.title`)}
-                  </h3>
-                  <p className="text-charcoal/70 leading-relaxed font-light">
-                    {t(`tallerFique.chapters.${chapter.id}.desc`)}
-                  </p>
                 </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Los 7 pasos — tira visual */}
+      <section className="px-6 md:px-12 py-20 md:py-28 bg-cream">
+        <div className="max-w-6xl mx-auto">
+          <Reveal>
+            <h2 className="text-4xl md:text-5xl font-fraunces text-charcoal text-center">
+              {libro.pasos.titulo}
+            </h2>
+            <p className="text-charcoal/70 font-light text-center max-w-2xl mx-auto mt-4 mb-16">
+              {libro.pasos.intro}
+            </p>
+          </Reveal>
+
+          <ol className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            {libro.pasos.items.map((paso, index) => (
+              <Reveal key={paso.numero} delay={(index % 4) * 120}>
+                <li className="h-full border-t-2 border-fique pt-4">
+                  <span
+                    className="block font-fraunces text-3xl text-fique leading-none"
+                    aria-hidden="true"
+                  >
+                    {String(paso.numero).padStart(2, '0')}
+                  </span>
+                  <h3 className="font-fraunces text-base text-charcoal mt-3">{paso.titulo}</h3>
+                </li>
               </Reveal>
             ))}
-          </div>
+          </ol>
+
+          <Reveal>
+            <div className="text-center mt-14">
+              <Button to={chapterPath(5)} variant="outline">
+                {t('tallerFique.verPasos')}
+              </Button>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* El taller presencial y los módulos digitales */}
+      <section className="px-6 md:px-12 py-20 md:py-28 bg-moss/10">
+        <div className="max-w-4xl mx-auto">
+          <Reveal>
+            <h2 className="text-4xl md:text-5xl font-fraunces text-charcoal text-center">
+              {t('tallerFique.cursoTitle')}
+            </h2>
+            <p className="text-charcoal/70 font-light text-center max-w-2xl mx-auto mt-4 mb-12">
+              {t('tallerFique.cursoIntro')}
+            </p>
+          </Reveal>
+
+          <MapaAprendizaje />
+          <Sesion3h />
+          <ModulosWeb />
         </div>
       </section>
 

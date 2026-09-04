@@ -68,6 +68,12 @@ export interface Mensaje {
   creadoEn: string | null;
 }
 
+/**
+ * A role a library file can be given, so a page can find it by meaning rather
+ * than by filename. At most one file holds each role at a time.
+ */
+export type ArchivoRol = 'libro-pdf';
+
 /** A file in the media library, managed from /admin/archivos. */
 export interface Archivo {
   id: string;
@@ -77,6 +83,11 @@ export interface Archivo {
   tipo: string;
   tamano: number;
   subidoEn: string | null;
+  /**
+   * Set when this file is the one a page asks for by role — currently only the
+   * downloadable book PDF. Lets the client replace the book without a redeploy.
+   */
+  rol: ArchivoRol | null;
 }
 
 /** An account on the admin allowlist. The document id is the Firebase Auth uid. */

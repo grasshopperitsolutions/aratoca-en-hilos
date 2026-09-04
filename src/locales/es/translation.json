@@ -9,6 +9,7 @@
     "home": "Inicio",
     "artesanos": "Artesanos",
     "tallerFique": "Taller Fique",
+    "libro": "Libro",
     "contacto": "Contacto",
     "terminos": "Términos",
     "privacidad": "Privacidad",
@@ -125,65 +126,92 @@
     }
   },
   "tallerFique": {
-    "accent": "Libro Interactivo",
+    "accent": "Libro interactivo",
     "title": "Taller Fique",
-    "intro": "Taller Fique es un libro vivo sobre la fibra que define a Aratoca. Reúne el conocimiento de nuestros artesanos en capítulos que puedes leer, ver y escuchar: desde la siembra de la penca hasta el último nudo del telar.",
-    "comingSoon": "Próximamente",
-    "comingSoonText": "La experiencia interactiva completa está en desarrollo. Mientras tanto, aquí puedes conocer lo que encontrarás en cada capítulo.",
-    "chaptersTitle": "Los Capítulos",
-    "chapters": {
-      "planta": {
-        "title": "La Planta",
-        "desc": "Botánica del fique, su ciclo de vida y por qué prospera en los cañones de Santander."
-      },
-      "fibra": {
-        "title": "De la Hoja al Hilo",
-        "desc": "Desfibrado, lavado y secado explicados paso a paso por quienes lo hacen a diario."
-      },
-      "color": {
-        "title": "Tintorería Natural",
-        "desc": "Recetas de tintes con hojas, cortezas y raíces, con las proporciones que usa el taller."
-      },
-      "telar": {
-        "title": "El Telar",
-        "desc": "Montaje del telar, tramas básicas y los patrones heredados de la tradición Guane."
-      },
-      "diarios": {
-        "title": "Diarios de Artesanos",
-        "desc": "Testimonios en primera persona sobre el oficio, la memoria y el relevo generacional."
-      },
-      "futuro": {
-        "title": "Fique y Futuro",
-        "desc": "Sostenibilidad, nuevos usos de la fibra y el papel del oficio en la economía local."
-      }
-    },
-    "faqTitle": "Preguntas Frecuentes",
+    "intro": "«Trenzando Saberes» es el libro digital de la Alcaldía Municipal de Aratoca sobre la historia, la transformación y el futuro del fique en Santander. Siete capítulos ilustrados, de libre acceso, sobre el oficio que sostiene a las familias de la Ciudad de las Colinas.",
+    "abrirLibro": "Abrir el libro",
+    "chaptersTitle": "Los capítulos",
+    "chaptersIntro": "La obra se organiza en tres partes: de las raíces prehispánicas del oficio, al proceso que convierte la penca en hilo, y de ahí al futuro del fique como material de diseño.",
+    "verPasos": "Leer el capítulo completo",
+    "cursoTitle": "El taller",
+    "cursoIntro": "El «Taller de Oficios del Fique: Creatividad, Tradición y Emprendimiento en Aratoca» es un espacio de formación no formal que reúne a maestros artesanos y jóvenes aprendices del municipio.",
+    "faqTitle": "Preguntas frecuentes",
     "faq": {
       "que": {
-        "question": "¿Qué es el Taller Fique?",
-        "answer": "Es un libro digital interactivo que documenta el oficio del fique en Aratoca, Santander. Reúne video, fotografía, testimonios de artesanos y tutoriales prácticos en una sola experiencia de lectura."
+        "question": "¿Qué es «Trenzando Saberes»?",
+        "answer": "Es una guía didáctica y cultural publicada por la Alcaldía Municipal de Aratoca, Santander, dentro de la Convocatoria de Proyectos Productivos 2026. Reúne en siete capítulos la historia del fique, su proceso de transformación artesanal y el camino hacia una bioeconomía circular en el municipio."
+      },
+      "donde": {
+        "question": "¿Dónde puedo leerlo?",
+        "answer": "Aquí mismo. Puedes abrir el libro completo o entrar directamente a cualquiera de los siete capítulos desde esta página. No hace falta registrarse ni descargar nada."
       },
       "costo": {
         "question": "¿Tiene algún costo?",
-        "answer": "No. El Taller Fique es de acceso libre y gratuito. Nuestro objetivo es preservar y difundir el conocimiento artesanal, no comercializarlo."
+        "answer": "Ninguno. La obra es de libre acceso: es una publicación institucional de la Alcaldía de Aratoca destinada a la salvaguarda del oficio y a la apropiación social del conocimiento."
+      },
+      "pdf": {
+        "question": "¿Puedo descargarlo en PDF?",
+        "answer": "Sí, cuando la edición impresa esté cerrada. El libro se encuentra todavía en proceso de edición; en cuanto la versión definitiva esté lista, el botón de descarga aparecerá en esta página."
       },
       "quien": {
-        "question": "¿Para quién está pensado?",
-        "answer": "Para estudiantes, diseñadores, investigadores y para cualquier persona curiosa por los oficios tradicionales colombianos. También sirve como material de apoyo para talleres y aulas."
+        "question": "¿Quién lo hizo?",
+        "answer": "La Alcaldía Municipal de Aratoca, a través de la Secretaría de Desarrollo Social y Proyectos Productivos, junto con los artesanos y artesanas del taller Aratoca en Hilos, que aportaron la técnica, la memoria y las voces que recorren el libro."
       },
-      "cuando": {
-        "question": "¿Cuándo estará disponible?",
-        "answer": "La experiencia interactiva se encuentra en desarrollo. Escríbenos desde la página de contacto si quieres que te avisemos cuando se publique."
-      },
-      "aportar": {
-        "question": "¿Puedo aportar contenido o corregir algo?",
-        "answer": "Sí. Este es un archivo vivo y agradecemos las correcciones, fotografías y testimonios de la comunidad. Usa el formulario de contacto para escribirnos."
+      "taller": {
+        "question": "¿Cómo participo en el taller presencial?",
+        "answer": "El taller se realiza por convocatoria en Aratoca y está dirigido a artesanos y jóvenes del municipio. Escríbenos desde la página de contacto y te avisamos cuando se abra la siguiente cohorte."
       }
     },
     "cta": {
-      "title": "Te avisamos cuando abra el libro",
-      "text": "Déjanos un mensaje y serás de los primeros en recorrer el Taller Fique.",
-      "button": "Quiero saber más"
+      "title": "¿Quieres formar parte del taller?",
+      "text": "Escríbenos y te contamos cómo participar en la próxima convocatoria del Taller de Oficios del Fique.",
+      "button": "Contactar"
+    }
+  },
+  "libro": {
+    "indice": "Índice",
+    "indiceNota": "{{total}} capítulos · Lectura libre y gratuita",
+    "parte": "Parte {{numero}}",
+    "parteCapitulo": "Parte {{parte}} · {{titulo}} — Capítulo {{capitulo}}",
+    "leerInteractivoTitulo": "Lee este capítulo en el libro interactivo",
+    "leerInteractivo": "Abrir el libro",
+    "navegacionCapitulos": "Navegación entre capítulos",
+    "anterior": "Capítulo anterior",
+    "siguiente": "Siguiente capítulo",
+    "descargarPdf": "Descargar el libro en PDF",
+    "abrir": "Abrir el libro interactivo",
+    "cerrar": "Cerrar el libro",
+    "cargando": "Preparando el libro…",
+    "capituloDe": "Capítulo {{numero}} de {{total}}",
+    "movimientoReducido": "Has pedido menos movimiento, así que las páginas cambian sin animación de giro.",
+    "sinWebgl": "Tu navegador no puede mostrar el libro en 3D, pero puedes leerlo completo capítulo por capítulo aquí abajo.",
+    "diagramas": {
+      "furcraea": {
+        "titulo": "Ciclo de vida de la Furcraea",
+        "desc": "Diagrama interactivo: al avanzar los años la planta gana pencas, se protege el cogollo central y, tras la madurez, brota el escapo floral.",
+        "cogollo": "Cogollo protegido",
+        "corte": "Pencas basales cortadas",
+        "anio": "Año {{numero}}",
+        "maduro": "Madurez: brota el escapo",
+        "creciendo": "En crecimiento",
+        "control": "Años transcurridos desde la siembra",
+        "pie": "Una misma mata se cosecha durante 15 a 20 años si se dejan quince pencas rodeando el cogollo."
+      },
+      "bioeconomia": {
+        "titulo": "De la hoja a la fibra y al bagazo",
+        "desc": "Diagrama de flujo: de cada hoja cosechada, el 4% se aprovecha como fibra y el 96% restante es bagazo, que puede volver al suelo como abono o biopesticida.",
+        "hoja": "Hoja cosechada",
+        "fibra": "Fibra útil",
+        "bagazo": "Bagazo",
+        "artesania": "Hilo y artesanía",
+        "abono": "Abono orgánico",
+        "biopesticida": "Biopesticida",
+        "ciclo": "El bagazo vuelve a nutrir el suelo fiquero",
+        "pie": "El reto y la oportunidad del oficio caben en dos cifras: 4% y 96%."
+      },
+      "ruta": {
+        "titulo": "Ruta de los siete módulos del taller"
+      }
     }
   },
   "contacto": {
@@ -365,8 +393,12 @@
       "description": "Conoce a los artesanos y artesanas que sostienen la tradición del fique en Aratoca, Santander: sus oficios, sus historias y su trabajo a mano."
     },
     "tallerFique": {
-      "title": "Taller Fique — Libro interactivo sobre el oficio del fique",
-      "description": "Un libro digital gratuito sobre el fique de Aratoca: capítulos de video, tintorería natural, técnicas de telar y diarios de artesanos."
+      "title": "Taller Fique — Trenzando Saberes, el libro del fique de Aratoca",
+      "description": "El libro digital gratuito de la Alcaldía de Aratoca sobre el fique: siete capítulos sobre su historia, los 7 pasos del oficio y su futuro sostenible."
+    },
+    "libro": {
+      "title": "Trenzando Saberes — El libro del fique de Aratoca",
+      "description": "Libro digital gratuito de la Alcaldía de Aratoca sobre la historia, la transformación y el futuro del fique en Santander. Siete capítulos ilustrados."
     },
     "contacto": {
       "title": "Contacto — Aratoca en Hilos",

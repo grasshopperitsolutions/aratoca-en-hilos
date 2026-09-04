@@ -3,11 +3,13 @@ import {
   DEFAULT_LANGUAGE,
   LANGUAGES,
   buildPath,
+  capituloDePageKey,
   type Language,
   type PageKey,
 } from '../i18n/routes';
 import { OG_IMAGE } from '../content/images';
 import { buildJsonLd } from './jsonld';
+import { descripcionCapitulo, tituloCapitulo } from './libroSeo';
 import { absoluteUrl } from './origin';
 
 export { SITE_ORIGIN, BASE_PATH, absoluteUrl } from './origin';
@@ -28,6 +30,8 @@ export interface HeadData {
   canonical: string;
   alternates: HeadAlternate[];
   ogImage: string;
+  /** `article` for book chapters, `website` for everything else. */
+  ogType: string;
   jsonLd: unknown[];
 }
 
@@ -46,14 +50,21 @@ export function buildHead(page: PageKey, language: Language): HeadData {
     href: absoluteUrl(buildPath(page, DEFAULT_LANGUAGE)),
   });
 
+  // Book chapters take their title and description from the book itself; every
+  // other page uses its `seo.<page>.*` translation keys.
+  const capitulo = capituloDePageKey(page);
+
   return {
     lang: language,
     locale: LOCALE_TAGS[language],
-    title: t(`seo.${page}.title`),
-    description: t(`seo.${page}.description`),
+    title: capitulo ? tituloCapitulo(capitulo, language) : t(`seo.${page}.title`),
+    description: capitulo
+      ? descripcionCapitulo(capitulo, language)
+      : t(`seo.${page}.description`),
     canonical: absoluteUrl(buildPath(page, language)),
     alternates,
     ogImage: OG_IMAGE,
+    ogType: capitulo ? 'article' : 'website',
     jsonLd: buildJsonLd(page, language),
   };
 }
@@ -85,7 +96,7 @@ export function renderHeadTags(head: HeadData): string {
       (alternate) =>
         `<link rel="alternate" hreflang="${alternate.hreflang}" href="${alternate.href}" data-head="1" />`,
     ),
-    `<meta property="og:type" content="website" data-head="1" />`,
+    `<meta property="og:type" content="${head.ogType}" data-head="1" />`,
     `<meta property="og:site_name" content="${escapeAttribute(i18n.getFixedT(head.lang)('seo.siteName'))}" data-head="1" />`,
     `<meta property="og:locale" content="${head.locale}" data-head="1" />`,
     `<meta property="og:title" content="${escapeAttribute(head.title)}" data-head="1" />`,

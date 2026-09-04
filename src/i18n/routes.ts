@@ -9,16 +9,33 @@
  * (`src/seo/manifest.ts`) all derive from this map, so they can never drift.
  */
 
+import { LIBRO_CAPITULOS, type LibroCapitulo } from '../types/libro';
+
 export const LANGUAGES = ['es', 'en'] as const;
 export type Language = (typeof LANGUAGES)[number];
 
 /** Spanish is the primary audience: it sits at the root and is the x-default. */
 export const DEFAULT_LANGUAGE: Language = 'es';
 
+/**
+ * One page key per book chapter, e.g. `libroCap3`.
+ *
+ * Generated rather than hand-listed so adding a chapter to the book is a single
+ * edit in `types/libro.ts` — the router, sitemap, hreflang and prerender
+ * manifest all follow from `PAGE_KEYS`.
+ */
+export type LibroCapituloKey = `libroCap${LibroCapitulo}`;
+
+export const LIBRO_CAPITULO_KEYS: readonly LibroCapituloKey[] = LIBRO_CAPITULOS.map(
+  (numero) => `libroCap${numero}` as LibroCapituloKey,
+);
+
 export type PageKey =
   | 'home'
   | 'artesanos'
   | 'tallerFique'
+  | 'libro'
+  | LibroCapituloKey
   | 'contacto'
   | 'terminos'
   | 'privacidad';
@@ -28,16 +45,27 @@ export const PAGE_KEYS: readonly PageKey[] = [
   'home',
   'artesanos',
   'tallerFique',
+  'libro',
+  ...LIBRO_CAPITULO_KEYS,
   'contacto',
   'terminos',
   'privacidad',
 ];
+
+const CAPITULO_SLUGS = Object.fromEntries(
+  LIBRO_CAPITULOS.map((numero) => [
+    `libroCap${numero}`,
+    { es: `libro/capitulo-${numero}`, en: `book/chapter-${numero}` },
+  ]),
+) as Record<LibroCapituloKey, Record<Language, string>>;
 
 /** Slug per page per language. The home page is the empty slug. */
 export const ROUTE_SLUGS: Record<PageKey, Record<Language, string>> = {
   home: { es: '', en: '' },
   artesanos: { es: 'artesanos', en: 'artisans' },
   tallerFique: { es: 'taller-fique', en: 'fique-workshop' },
+  libro: { es: 'libro', en: 'book' },
+  ...CAPITULO_SLUGS,
   contacto: { es: 'contacto', en: 'contact' },
   terminos: { es: 'terminos', en: 'terms' },
   privacidad: { es: 'privacidad', en: 'privacy' },
@@ -79,6 +107,26 @@ export function pageFromPath(pathname: string): PageKey | null {
   const normalised = `/${pathname.replace(/^\/+|\/+$/g, '')}`;
   const match = PAGE_KEYS.find((page) => buildPath(page, language) === normalised);
   return match ?? null;
+}
+
+/**
+ * Chapter number behind a page key, or `null` for any other page.
+ *
+ * Lets the SEO layer and the chapter component source their titles from the book
+ * itself rather than duplicating fourteen chapter names into the locale files.
+ */
+export function capituloDePageKey(page: PageKey): LibroCapitulo | null {
+  const match = /^libroCap(\d+)$/.exec(page);
+  if (!match) return null;
+  const numero = Number(match[1]);
+  return (LIBRO_CAPITULOS as readonly number[]).includes(numero)
+    ? (numero as LibroCapitulo)
+    : null;
+}
+
+/** Page key for a chapter number. */
+export function pageKeyDeCapitulo(numero: LibroCapitulo): LibroCapituloKey {
+  return `libroCap${numero}` as LibroCapituloKey;
 }
 
 /**

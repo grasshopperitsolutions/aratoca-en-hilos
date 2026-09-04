@@ -10,11 +10,14 @@ import {
   LANGUAGES,
   PAGE_KEYS,
   buildPath,
+  capituloDePageKey,
   languageFromPath,
   type Language,
   type PageKey,
 } from './i18n/routes';
 import { SITE_ORIGIN, absoluteUrl, buildHead, renderHeadTags } from './seo/meta';
+import { descripcionCapitulo } from './seo/libroSeo';
+import { libroTexto } from './content/libro';
 import { COMPANY } from './content/company';
 
 const BASE_PATH = import.meta.env.BASE_URL;
@@ -176,10 +179,23 @@ export function renderRedirect(redirect: RedirectPage): string {
 `;
 }
 
+/**
+ * Crawl hints per page. Artisans change whenever the admin publishes one; the
+ * book is a finished publication and will not change between editions.
+ */
+function crawlHints(page: PageKey): { changefreq: string; priority: string } {
+  if (page === 'home') return { changefreq: 'weekly', priority: '1.0' };
+  if (page === 'artesanos') return { changefreq: 'weekly', priority: '0.8' };
+  if (page === 'libro') return { changefreq: 'monthly', priority: '0.9' };
+  if (capituloDePageKey(page)) return { changefreq: 'yearly', priority: '0.7' };
+  return { changefreq: 'monthly', priority: '0.8' };
+}
+
 /** Sitemap with reciprocal hreflang alternates on every entry. */
 export function getSitemap(): string {
   const entries = getRoutes()
     .map(({ page, language }) => {
+      const { changefreq, priority } = crawlHints(page);
       const alternates = LANGUAGES.map(
         (code) =>
           `    <xhtml:link rel="alternate" hreflang="${code === 'es' ? 'es-CO' : 'en'}" href="${absoluteUrl(buildPath(page, code))}" />`,
@@ -193,8 +209,8 @@ export function getSitemap(): string {
         '  <url>',
         `    <loc>${absoluteUrl(buildPath(page, language))}</loc>`,
         alternates,
-        `    <changefreq>${page === 'home' || page === 'artesanos' ? 'weekly' : 'monthly'}</changefreq>`,
-        `    <priority>${page === 'home' ? '1.0' : '0.8'}</priority>`,
+        `    <changefreq>${changefreq}</changefreq>`,
+        `    <priority>${priority}</priority>`,
         '  </url>',
       ].join('\n');
     })
@@ -223,8 +239,25 @@ Sitemap: ${SITE_ORIGIN}${base}/sitemap.xml
  */
 export function getLlmsTxt(): string {
   const t = i18n.getFixedT('en');
+  const libro = libroTexto('en');
+
+  // Chapters have no `nav.*` or `seo.*` keys by design — their names and
+  // summaries come from the book, exactly as `buildHead` resolves them.
+  const label = (page: PageKey): string => {
+    const capitulo = capituloDePageKey(page);
+    return capitulo ? libro.capitulos[capitulo].titulo : t(`nav.${page}`);
+  };
+
+  const summary = (page: PageKey): string => {
+    const capitulo = capituloDePageKey(page);
+    return capitulo ? descripcionCapitulo(capitulo, 'en') : t(`seo.${page}.description`);
+  };
+
   const links = PAGE_KEYS.filter((page) => page !== 'home')
-    .map((page) => `- [${t(`nav.${page}`)}](${absoluteUrl(buildPath(page, 'en'))}): ${t(`seo.${page}.description`)}`)
+    .map(
+      (page) =>
+        `- [${label(page)}](${absoluteUrl(buildPath(page, 'en'))}): ${summary(page)}`,
+    )
     .join('\n');
 
   return `# ${COMPANY.name}
@@ -233,8 +266,10 @@ export function getLlmsTxt(): string {
 
 ${COMPANY.name} documents the craft of fique (Furcraea, a natural agave fibre) in
 Aratoca, Santander, Colombia. The site covers the seven-stage process that turns
-the plant into thread, profiles the artisans who practise it, and presents
-Taller Fique — a free digital book about the trade.
+the plant into thread, profiles the artisans who practise it, and publishes
+"${libro.titulo}" — a free illustrated book on the history, transformation and
+future of fique in Santander, issued by the ${libro.editor}. Each of its seven
+chapters is a separate page, listed below.
 
 The site is published in Spanish (at the root) and English (under /en/).
 

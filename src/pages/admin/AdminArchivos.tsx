@@ -1,13 +1,18 @@
 import { useEffect, useRef, useState, type DragEvent } from 'react';
-import { Check, Copy, HardDrive, Trash2, Upload } from 'lucide-react';
+import { BookOpen, Check, Copy, FileText, HardDrive, Trash2, Upload } from 'lucide-react';
 
 import {
   ACCEPTED_TYPES,
   FileTooLargeError,
-  MAX_FILE_BYTES,
+  MAX_IMAGE_BYTES,
+  MAX_PDF_BYTES,
+  PDF_TYPE,
   UnsupportedTypeError,
+  asignarRol,
   eliminarArchivo,
   formatBytes,
+  maxBytesFor,
+  quitarRol,
   subirArchivo,
   subscribeArchivos,
 } from '../../services/archivos';
@@ -35,7 +40,7 @@ export default function AdminArchivos() {
         await subirArchivo(file, setProgress);
       } catch (caught) {
         if (caught instanceof FileTooLargeError) {
-          setError(`"${file.name}" supera el límite de ${formatBytes(MAX_FILE_BYTES)}.`);
+          setError(`"${file.name}" supera el límite de ${formatBytes(maxBytesFor(file.type))}.`);
         } else if (caught instanceof UnsupportedTypeError) {
           setError(`"${file.name}" tiene un formato no admitido.`);
         } else {
@@ -55,14 +60,24 @@ export default function AdminArchivos() {
   }
 
   async function handleDelete(archivo: Archivo) {
-    if (
-      !window.confirm(
-        `¿Eliminar "${archivo.nombre}"? Si alguna página usa esta imagen, dejará de verse.`,
-      )
-    ) {
-      return;
-    }
+    const aviso =
+      archivo.rol === 'libro-pdf'
+        ? `¿Eliminar "${archivo.nombre}"? Es el PDF publicado del libro: el botón de descarga desaparecerá del sitio.`
+        : `¿Eliminar "${archivo.nombre}"? Si alguna página usa este archivo, dejará de verse.`;
+
+    if (!window.confirm(aviso)) return;
     await eliminarArchivo(archivo);
+  }
+
+  /** Marks a PDF as the book's published edition, or clears that mark. */
+  async function toggleLibro(archivo: Archivo) {
+    try {
+      if (archivo.rol === 'libro-pdf') await quitarRol(archivo.id);
+      else await asignarRol(archivo.id, 'libro-pdf');
+    } catch (caught) {
+      console.error('[admin/archivos] role change failed:', caught);
+      setError('No se pudo cambiar el PDF del libro.');
+    }
   }
 
   async function copyUrl(archivo: Archivo) {
@@ -93,9 +108,10 @@ export default function AdminArchivos() {
         }`}
       >
         <Upload size={32} className="mx-auto text-stone mb-4" />
-        <p className="text-charcoal mb-2">Arrastra imágenes aquí para subirlas</p>
+        <p className="text-charcoal mb-2">Arrastra archivos aquí para subirlos</p>
         <p className="text-stone text-sm mb-6">
-          JPG, PNG, WebP, AVIF o SVG · máximo {formatBytes(MAX_FILE_BYTES)} por archivo
+          JPG, PNG, WebP, AVIF o SVG hasta {formatBytes(MAX_IMAGE_BYTES)} · PDF hasta{' '}
+          {formatBytes(MAX_PDF_BYTES)}
         </p>
         <input
           ref={inputRef}
@@ -127,13 +143,50 @@ export default function AdminArchivos() {
           {archivos.map((archivo) => (
             <figure key={archivo.id} className="group">
               <div className="aspect-square rounded-lg overflow-hidden bg-moss/20 border border-stone/20 relative">
-                <img
-                  src={archivo.url}
-                  alt={archivo.nombre}
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                />
+                {archivo.tipo === PDF_TYPE ? (
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-stone p-4">
+                    <FileText size={32} />
+                    <span className="text-xs uppercase tracking-widest">PDF</span>
+                  </div>
+                ) : (
+                  <img
+                    src={archivo.url}
+                    alt={archivo.nombre}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                  />
+                )}
+
+                {archivo.rol === 'libro-pdf' && (
+                  <span className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-penca text-cream text-[10px] font-bold uppercase tracking-widest px-2 py-1">
+                    <BookOpen size={11} />
+                    Libro
+                  </span>
+                )}
+
                 <div className="absolute inset-x-0 bottom-0 flex justify-end gap-1 p-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity bg-gradient-to-t from-charcoal/70 to-transparent">
+                  {archivo.tipo === PDF_TYPE && (
+                    <button
+                      onClick={() => toggleLibro(archivo)}
+                      aria-label={
+                        archivo.rol === 'libro-pdf'
+                          ? 'Dejar de publicar como PDF del libro'
+                          : 'Publicar como PDF del libro'
+                      }
+                      title={
+                        archivo.rol === 'libro-pdf'
+                          ? 'Dejar de publicar como PDF del libro'
+                          : 'Publicar como PDF del libro'
+                      }
+                      className={`p-2 rounded-full hover:bg-cream ${
+                        archivo.rol === 'libro-pdf'
+                          ? 'bg-penca text-cream'
+                          : 'bg-cream/90 text-charcoal'
+                      }`}
+                    >
+                      <BookOpen size={14} />
+                    </button>
+                  )}
                   <button
                     onClick={() => copyUrl(archivo)}
                     aria-label="Copiar URL"

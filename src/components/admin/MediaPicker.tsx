@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Upload, X } from 'lucide-react';
 
 import {
-  ACCEPTED_TYPES,
+  IMAGE_TYPES,
   FileTooLargeError,
   UnsupportedTypeError,
   formatBytes,
@@ -34,7 +34,16 @@ export default function MediaPicker({ onSelect, onClose }: MediaPickerProps) {
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => subscribeArchivos(setArchivos, (err) => setError(err.message)), []);
+  // Images only: the library also holds the book's PDF, which is never a valid
+  // choice for a portrait or an illustration.
+  useEffect(
+    () =>
+      subscribeArchivos(
+        (todos) => setArchivos(todos.filter((archivo) => IMAGE_TYPES.includes(archivo.tipo))),
+        (err) => setError(err.message),
+      ),
+    [],
+  );
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -80,7 +89,7 @@ export default function MediaPicker({ onSelect, onClose }: MediaPickerProps) {
           <input
             ref={inputRef}
             type="file"
-            accept={ACCEPTED_TYPES.join(',')}
+            accept={IMAGE_TYPES.join(',')}
             className="hidden"
             onChange={(event) => handleUpload(event.target.files?.[0])}
           />

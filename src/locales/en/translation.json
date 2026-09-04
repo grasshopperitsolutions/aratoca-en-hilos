@@ -9,6 +9,7 @@
     "home": "Home",
     "artesanos": "Artisans",
     "tallerFique": "Fique Workshop",
+    "libro": "Book",
     "contacto": "Contact",
     "terminos": "Terms",
     "privacidad": "Privacy",
@@ -125,65 +126,92 @@
     }
   },
   "tallerFique": {
-    "accent": "Interactive Book",
+    "accent": "Interactive book",
     "title": "Fique Workshop",
-    "intro": "Taller Fique is a living book about the fibre that defines Aratoca. It gathers our artisans' knowledge into chapters you can read, watch and listen to: from planting the penca to the last knot on the loom.",
-    "comingSoon": "Coming soon",
-    "comingSoonText": "The full interactive experience is in development. In the meantime, here is what you will find in each chapter.",
-    "chaptersTitle": "The Chapters",
-    "chapters": {
-      "planta": {
-        "title": "The Plant",
-        "desc": "The botany of fique, its life cycle, and why it thrives in the canyons of Santander."
-      },
-      "fibra": {
-        "title": "From Leaf to Thread",
-        "desc": "Defibring, washing and drying explained step by step by the people who do it daily."
-      },
-      "color": {
-        "title": "Natural Dyeing",
-        "desc": "Dye recipes from leaves, bark and roots, with the exact proportions the workshop uses."
-      },
-      "telar": {
-        "title": "The Loom",
-        "desc": "Setting up the loom, the basic wefts, and the patterns inherited from the Guane tradition."
-      },
-      "diarios": {
-        "title": "Artisan Diaries",
-        "desc": "First-person accounts of the craft, of memory, and of passing the trade to the next generation."
-      },
-      "futuro": {
-        "title": "Fique and the Future",
-        "desc": "Sustainability, new uses for the fibre, and the craft's role in the local economy."
-      }
-    },
-    "faqTitle": "Frequently Asked Questions",
+    "intro": "\"Trenzando Saberes\" is the digital book of the Municipal Government of Aratoca on the history, transformation and future of fique in Santander. Seven illustrated, freely accessible chapters on the craft that sustains the families of the City of the Hills.",
+    "abrirLibro": "Open the book",
+    "chaptersTitle": "The chapters",
+    "chaptersIntro": "The work is organised in three parts: from the pre-Hispanic roots of the craft, to the process that turns the penca into thread, and on to the future of fique as a design material.",
+    "verPasos": "Read the full chapter",
+    "cursoTitle": "The workshop",
+    "cursoIntro": "The \"Fique Crafts Workshop: Creativity, Tradition and Enterprise in Aratoca\" is a non-formal training programme bringing together master artisans and young apprentices from the municipality.",
+    "faqTitle": "Frequently asked questions",
     "faq": {
       "que": {
-        "question": "What is the Fique Workshop?",
-        "answer": "It is an interactive digital book documenting the craft of fique in Aratoca, Santander. It brings together video, photography, artisan testimony and practical tutorials in a single reading experience."
+        "question": "What is \"Trenzando Saberes\"?",
+        "answer": "It is an educational and cultural guide published by the Municipal Government of Aratoca, Santander, under the 2026 Productive Projects Call. Across seven chapters it gathers the history of fique, its artisanal transformation process, and the path towards a circular bioeconomy in the municipality."
+      },
+      "donde": {
+        "question": "Where can I read it?",
+        "answer": "Right here. You can open the complete book or go straight to any of the seven chapters from this page. No sign-up and no download required."
       },
       "costo": {
         "question": "Does it cost anything?",
-        "answer": "No. The Fique Workshop is free and open to everyone. Our aim is to preserve and share artisanal knowledge, not to sell it."
+        "answer": "Nothing at all. The work is freely accessible: it is an institutional publication of the Municipal Government of Aratoca, intended to safeguard the craft and share the knowledge behind it."
+      },
+      "pdf": {
+        "question": "Can I download it as a PDF?",
+        "answer": "Yes, once the print edition is finalised. The book is still being edited; as soon as the definitive version is ready, the download button will appear on this page."
       },
       "quien": {
-        "question": "Who is it for?",
-        "answer": "For students, designers, researchers and anyone curious about traditional Colombian crafts. It also works as supporting material for workshops and classrooms."
+        "question": "Who made it?",
+        "answer": "The Municipal Government of Aratoca, through its Department of Social Development and Productive Projects, together with the artisans of the Aratoca en Hilos workshop, who contributed the technique, the memory and the voices that run through the book."
       },
-      "cuando": {
-        "question": "When will it be available?",
-        "answer": "The interactive experience is still in development. Write to us from the contact page if you would like to be notified when it launches."
-      },
-      "aportar": {
-        "question": "Can I contribute content or correct something?",
-        "answer": "Yes. This is a living archive and we welcome corrections, photographs and testimony from the community. Use the contact form to reach us."
+      "taller": {
+        "question": "How do I join the in-person workshop?",
+        "answer": "The workshop runs by open call in Aratoca and is aimed at artisans and young people from the municipality. Write to us from the contact page and we will let you know when the next cohort opens."
       }
     },
     "cta": {
-      "title": "We will let you know when the book opens",
-      "text": "Leave us a message and be among the first to walk through the Fique Workshop.",
-      "button": "Tell me more"
+      "title": "Would you like to join the workshop?",
+      "text": "Get in touch and we will tell you how to take part in the next call for the Fique Crafts Workshop.",
+      "button": "Get in touch"
+    }
+  },
+  "libro": {
+    "indice": "Contents",
+    "indiceNota": "{{total}} chapters · Free to read",
+    "parte": "Part {{numero}}",
+    "parteCapitulo": "Part {{parte}} · {{titulo}} — Chapter {{capitulo}}",
+    "leerInteractivoTitulo": "Read this chapter in the interactive book",
+    "leerInteractivo": "Open the book",
+    "navegacionCapitulos": "Chapter navigation",
+    "anterior": "Previous chapter",
+    "siguiente": "Next chapter",
+    "descargarPdf": "Download the book as PDF",
+    "abrir": "Open the interactive book",
+    "cerrar": "Close the book",
+    "cargando": "Preparing the book…",
+    "capituloDe": "Chapter {{numero}} of {{total}}",
+    "movimientoReducido": "You have asked for reduced motion, so pages change without the turning animation.",
+    "sinWebgl": "Your browser cannot show the 3D book, but you can read the whole thing chapter by chapter below.",
+    "diagramas": {
+      "furcraea": {
+        "titulo": "Life cycle of the Furcraea",
+        "desc": "Interactive diagram: as the years advance the plant gains pencas, the central cogollo stays protected and, once mature, the flower stalk emerges.",
+        "cogollo": "Protected cogollo",
+        "corte": "Basal pencas cut",
+        "anio": "Year {{numero}}",
+        "maduro": "Mature: the escapo emerges",
+        "creciendo": "Growing",
+        "control": "Years since planting",
+        "pie": "The same plant is harvested for 15 to 20 years, provided fifteen pencas are left around the cogollo."
+      },
+      "bioeconomia": {
+        "titulo": "From leaf to fibre and bagazo",
+        "desc": "Flow diagram: of each harvested leaf, 4% is recovered as fibre and the remaining 96% is bagazo, which can return to the soil as fertiliser or biopesticide.",
+        "hoja": "Harvested leaf",
+        "fibra": "Usable fibre",
+        "bagazo": "Bagazo",
+        "artesania": "Thread and craft",
+        "abono": "Organic fertiliser",
+        "biopesticida": "Biopesticide",
+        "ciclo": "Bagazo returns to feed the fique soil",
+        "pie": "The challenge and the opportunity of the trade fit into two figures: 4% and 96%."
+      },
+      "ruta": {
+        "titulo": "Route through the seven workshop modules"
+      }
     }
   },
   "contacto": {
@@ -365,8 +393,12 @@
       "description": "Meet the artisans who sustain the fique tradition in Aratoca, Santander: their crafts, their stories and their handmade work."
     },
     "tallerFique": {
-      "title": "Fique Workshop — An interactive book about the craft of fique",
-      "description": "A free digital book about the fique of Aratoca: video chapters, natural dyeing, loom techniques and artisan diaries."
+      "title": "Fique Workshop — Trenzando Saberes, the fique book of Aratoca",
+      "description": "The free digital book from the Municipal Government of Aratoca on fique: seven chapters on its history, the 7 steps of the craft and its sustainable future."
+    },
+    "libro": {
+      "title": "Trenzando Saberes — The Fique Book of Aratoca",
+      "description": "A free digital book from the Municipal Government of Aratoca on the history, transformation and future of fique in Santander. Seven illustrated chapters."
     },
     "contacto": {
       "title": "Contact — Aratoca en Hilos",

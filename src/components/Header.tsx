@@ -48,6 +48,10 @@ export default function Header() {
     to: path(page),
   }));
 
+  // Split around the centred logo. Derived rather than hardcoded so adding a
+  // nav entry rebalances the two columns instead of piling onto the right one.
+  const splitAt = Math.ceil(menuItems.length / 2);
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 40);
     window.addEventListener('scroll', handleScroll);
@@ -78,7 +82,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
         {/* Menú Izquierdo (Desktop) */}
         <nav className="hidden md:flex gap-6 w-1/3">
-          {menuItems.slice(0, 2).map((item) => (
+          {menuItems.slice(0, splitAt).map((item) => (
             <Link key={item.page} to={item.to} className={linkClasses(item.to)}>
               {item.label}
             </Link>
@@ -99,7 +103,7 @@ export default function Header() {
 
         {/* Menú Derecho (Desktop) */}
         <nav className="hidden md:flex gap-6 w-1/3 justify-end items-center">
-          {menuItems.slice(2).map((item) => (
+          {menuItems.slice(splitAt).map((item) => (
             <Link key={item.page} to={item.to} className={linkClasses(item.to)}>
               {item.label}
             </Link>

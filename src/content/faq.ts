@@ -5,4 +5,4 @@
  * it to emit FAQPage structured data, and importing a page into the SEO module
  * would drag the whole component tree along with it.
  */
-export const FAQ_IDS = ['que', 'costo', 'quien', 'cuando', 'aportar'] as const;
+export const FAQ_IDS = ['que', 'donde', 'costo', 'pdf', 'quien', 'taller'] as const;

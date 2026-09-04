@@ -15,6 +15,7 @@ import { initializeApp, deleteApp } from 'firebase/app';
 import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
 const OUTPUT = path.resolve('src/content/artesanos.generated.json');
+const OUTPUT_LIBRO = path.resolve('src/content/libro.generated.json');
 const env = loadEnv('production', process.cwd(), 'VITE_');
 
 if (!env.VITE_FIREBASE_API_KEY) {
@@ -86,6 +87,29 @@ try {
 
   await writeFile(OUTPUT, `${JSON.stringify(artesanos, null, 2)}\n`);
   console.log(`[fetch-content] Wrote ${artesanos.length} published artisan(s) to the snapshot.`);
+
+  // The book's downloadable PDF, resolved by role rather than filename so the
+  // client can swap editions from the admin panel. Baking the URL in means the
+  // download button is present in the static HTML, with no JavaScript.
+  const pdfSnapshot = await getDocs(
+    query(collection(getFirestore(app), 'archivos'), where('rol', '==', 'libro-pdf')),
+  );
+
+  const pdfDoc = pdfSnapshot.docs[0];
+  const pdf = pdfDoc
+    ? {
+        url: typeof pdfDoc.data().url === 'string' ? pdfDoc.data().url : null,
+        nombre: typeof pdfDoc.data().nombre === 'string' ? pdfDoc.data().nombre : null,
+        tamano: typeof pdfDoc.data().tamano === 'number' ? pdfDoc.data().tamano : 0,
+      }
+    : { url: null, nombre: null, tamano: 0 };
+
+  await writeFile(OUTPUT_LIBRO, `${JSON.stringify(pdf, null, 2)}\n`);
+  console.log(
+    pdf.url
+      ? `[fetch-content] Book PDF: ${pdf.nombre}`
+      : '[fetch-content] No book PDF tagged — the download button will stay hidden.',
+  );
 } catch (error) {
   // A build must never fail because Firestore was briefly unreachable — the
   // committed snapshot is a perfectly good fallback.

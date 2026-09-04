@@ -4,8 +4,12 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   onSnapshot,
+  query,
   serverTimestamp,
+  updateDoc,
+  where,
   type DocumentData,
   type QueryDocumentSnapshot,
 } from 'firebase/firestore';
@@ -14,15 +18,31 @@ import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebas
 import { db, requireDb } from '../firebase';
 import { requireStorage } from '../firebaseAdmin';
 import { descendingBy } from './ordering';
-import type { Archivo } from '../types/content';
+import type { Archivo, ArchivoRol } from '../types/content';
 
 export const ARCHIVOS_COLLECTION = 'archivos';
 export const ARCHIVOS_PREFIX = 'archivos';
 
-/** Matches the ceiling enforced in storage.rules. */
-export const MAX_FILE_BYTES = 10 * 1024 * 1024;
+export const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/svg+xml'];
+export const PDF_TYPE = 'application/pdf';
 
-export const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/svg+xml'];
+export const ACCEPTED_TYPES = [...IMAGE_TYPES, PDF_TYPE];
+
+/**
+ * Size ceilings per kind of file. These MUST stay in step with
+ * `isAllowedUpload()` in storage.rules — the rules are the enforcement, this is
+ * only the error message.
+ */
+export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+export const MAX_PDF_BYTES = 50 * 1024 * 1024;
+
+/** Largest upload allowed for a given content type. */
+export function maxBytesFor(tipo: string): number {
+  return tipo === PDF_TYPE ? MAX_PDF_BYTES : MAX_IMAGE_BYTES;
+}
+
+/** Kept for callers that only deal with images; prefer `maxBytesFor`. */
+export const MAX_FILE_BYTES = MAX_IMAGE_BYTES;
 
 export class FileTooLargeError extends Error {
   constructor() {
@@ -59,6 +79,7 @@ function mapArchivo(snapshot: QueryDocumentSnapshot<DocumentData>): Archivo {
     tipo: typeof data.tipo === 'string' ? data.tipo : '',
     tamano: typeof data.tamano === 'number' ? data.tamano : 0,
     subidoEn: subidoEn instanceof Timestamp ? subidoEn.toDate().toISOString() : null,
+    rol: data.rol === 'libro-pdf' ? 'libro-pdf' : null,
   };
 }
 
@@ -85,8 +106,8 @@ export async function subirArchivo(
   file: File,
   onProgress?: (percent: number) => void,
 ): Promise<Archivo> {
-  if (file.size > MAX_FILE_BYTES) throw new FileTooLargeError();
   if (!ACCEPTED_TYPES.includes(file.type)) throw new UnsupportedTypeError();
+  if (file.size > maxBytesFor(file.type)) throw new FileTooLargeError();
 
   const path = `${ARCHIVOS_PREFIX}/${Date.now()}-${safeName(file.name)}`;
   const task = uploadBytesResumable(ref(requireStorage(), path), file, {
@@ -122,7 +143,54 @@ export async function subirArchivo(
     tipo: file.type,
     tamano: file.size,
     subidoEn: new Date().toISOString(),
+    rol: null,
   };
+}
+
+/**
+ * Gives one file a role, clearing it from whichever file held it before.
+ *
+ * Roles are exclusive: exactly one PDF is "the book" at a time. Clearing first
+ * means a half-finished run leaves no role rather than two, which is the safer
+ * way to fail — a missing download button beats serving last year's edition.
+ */
+export async function asignarRol(archivoId: string, rol: ArchivoRol): Promise<void> {
+  const database = requireDb();
+  const anteriores = await getDocs(
+    query(collection(database, ARCHIVOS_COLLECTION), where('rol', '==', rol)),
+  );
+
+  await Promise.all(
+    anteriores.docs
+      .filter((previo) => previo.id !== archivoId)
+      .map((previo) => updateDoc(previo.ref, { rol: null })),
+  );
+
+  await updateDoc(doc(database, ARCHIVOS_COLLECTION, archivoId), { rol });
+}
+
+/** Removes a role, leaving no file in it. */
+export async function quitarRol(archivoId: string): Promise<void> {
+  await updateDoc(doc(requireDb(), ARCHIVOS_COLLECTION, archivoId), { rol: null });
+}
+
+/**
+ * Live feed of the single file holding a role, or `null` when none does.
+ *
+ * Public-facing: `archivos` is world-readable, so a visitor can resolve the
+ * current book PDF without an admin session.
+ */
+export function subscribeArchivoPorRol(
+  rol: ArchivoRol,
+  onData: (archivo: Archivo | null) => void,
+  onError?: (error: Error) => void,
+): () => void {
+  if (!db) return () => {};
+  return onSnapshot(
+    query(collection(db, ARCHIVOS_COLLECTION), where('rol', '==', rol)),
+    (snapshot) => onData(snapshot.docs.map(mapArchivo)[0] ?? null),
+    (error) => onError?.(error),
+  );
 }
 
 /** Removes the Storage object and its library entry together. */

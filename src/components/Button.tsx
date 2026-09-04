@@ -9,6 +9,8 @@ interface ButtonProps {
   onClick?: () => void;
   className?: string;
   type?: 'button' | 'submit';
+  /** Opens an `href` in a new tab, with the usual opener protection. */
+  external?: boolean;
 }
 
 const variantStyles: Record<string, string> = {
@@ -30,6 +32,7 @@ export default function Button({
   onClick,
   className = '',
   type = 'button',
+  external = false,
 }: ButtonProps) {
   const baseStyles =
     'inline-flex items-center gap-2 px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest transition-all duration-300';
@@ -38,7 +41,11 @@ export default function Button({
 
   if (href) {
     return (
-      <a href={href} className={classes}>
+      <a
+        href={href}
+        className={classes}
+        {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
+      >
         {children}
       </a>
     );
