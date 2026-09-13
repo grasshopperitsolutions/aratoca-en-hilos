@@ -1,0 +1,22 @@
+TRENZANDO SABERES — Archivos editables
+======================================
+
+CÓMO EDITAR
+  index.html  → todo el texto del libro, página por página (comentarios <!-- 1. CUBIERTA --> etc.)
+  styles.css  → colores, tipografías, márgenes y estilos
+  assets/     → fotografías y escudos
+  fonts/      → tipografías incrustadas (no requiere internet)
+
+CÓMO REGENERAR EL PDF
+  Abrir index.html en Chrome → Imprimir → Guardar como PDF
+  Márgenes: Ninguno | Gráficos de fondo: activado | Tamaño: Carta
+
+LOGOS PENDIENTES  (ahora hay marcadores grises)
+  Reemplazar conservando EXACTAMENTE estos nombres:
+    assets/escudo-aratoca.png            (escudo del municipio)
+    assets/logo-ministerio-culturas.png  (Ministerio de las Culturas)
+  Preferible PNG con fondo transparente. Se ajustan solos al tamaño.
+
+CAMPOS POR COMPLETAR (líneas subrayadas en el PDF)
+  Alcalde · Secretaría de Cultura · Coordinación · Investigación y textos
+  Fotografía · Diseño · ISBN · Imprenta y mes · Autoría fotográfica

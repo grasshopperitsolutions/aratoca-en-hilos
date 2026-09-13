@@ -1,0 +1,370 @@
+/* ============================================================
+   TRENZANDO SABERES — Sistema de diseño editorial
+   Formato: Carta vertical (216 × 279 mm)
+   ============================================================ */
+
+:root{
+  --tinta:      #23201B;
+  --tinta-sua:  #4A443B;
+  --gris:       #7A7266;
+  --verde:      #2E5A3C;
+  --verde-osc:  #1B3826;
+  --verde-cla:  #6E9268;
+  --ocre:       #BE8A3C;
+  --ocre-cla:   #E0C489;
+  --terracota:  #A4432C;
+  --crema:      #FBF7EE;
+  --fibra:      #EFE5D0;
+  --fibra-osc:  #DFD0AF;
+  --papel:      #FFFFFF;
+
+  --pw: 215.9mm;  /* 8.5 in */
+  --ph: 279.4mm;  /* 11 in  */
+  --mx: 26mm;
+  --mt: 24mm;
+  --mb: 20mm;
+}
+
+@page { size: 215.9mm 279.4mm; margin: 0; }
+
+*{ box-sizing:border-box; }
+
+html,body{ margin:0; padding:0; background:#8d8d8d; }
+
+body{
+  font-family:'Source Serif 4', Georgia, serif;
+  color:var(--tinta);
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+
+/* ---------- Página ---------- */
+.page{
+  position:relative;
+  width:var(--pw);
+  height:var(--ph);
+  overflow:hidden;
+  background:var(--papel);
+  margin:0 auto 8mm;
+  page-break-after:always;
+  break-after:page;
+}
+.page:last-child{ page-break-after:auto; }
+
+@media print{
+  html,body{ background:#fff; }
+  .page{ margin:0; box-shadow:none; }
+}
+@media screen{
+  .page{ box-shadow:0 2px 14px rgba(0,0,0,.35); }
+}
+
+.page.crema{ background:var(--crema); }
+.page.fibra{ background:var(--fibra); }
+.page.verde{ background:var(--verde-osc); color:var(--crema); }
+
+.marco{
+  position:absolute;
+  top:var(--mt); left:var(--mx); right:var(--mx); bottom:var(--mb);
+}
+.marco.centrado{ display:flex; flex-direction:column; justify-content:center; }
+
+/* ---------- Folios y cornisas ---------- */
+.folio{
+  position:absolute; bottom:11mm;
+  font-family:'Barlow Condensed', sans-serif;
+  font-size:8.5pt; letter-spacing:.14em; color:var(--gris);
+  text-transform:uppercase;
+}
+.folio.izq{ left:var(--mx); }
+.folio.der{ right:var(--mx); text-align:right; }
+.folio .num{ color:var(--verde); font-weight:600; }
+
+.cornisa{
+  position:absolute; top:12mm; left:var(--mx); right:var(--mx);
+  font-family:'Barlow Condensed', sans-serif;
+  font-size:8pt; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--gris);
+  border-bottom:.35pt solid var(--fibra-osc);
+  padding-bottom:2mm;
+  display:flex; justify-content:space-between;
+}
+.cornisa .der{ color:var(--verde); }
+
+/* ---------- Texto corrido ---------- */
+p{ margin:0; font-size:10.4pt; line-height:1.63; text-align:justify; hyphens:auto; }
+p + p{ text-indent:5.5mm; }
+p.sin-sangria{ text-indent:0; }
+
+.entradilla{
+  font-family:'Cormorant Garamond', Georgia, serif;
+  font-size:14.5pt; line-height:1.45; color:var(--verde-osc);
+  text-align:left; margin-bottom:7mm; font-weight:600;
+}
+
+.capitular::first-letter{
+  font-family:'Cormorant Garamond', Georgia, serif;
+  float:left; font-size:44pt; line-height:.82; font-weight:700;
+  color:var(--verde); padding:1.5mm 2.4mm 0 0;
+}
+
+h2.seccion{
+  font-family:'Barlow Condensed', sans-serif;
+  font-size:12.5pt; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--terracota);
+  margin:8mm 0 3mm; padding-bottom:1.4mm;
+  border-bottom:.5pt solid var(--fibra-osc);
+}
+h3.sub{
+  font-family:'Cormorant Garamond', Georgia, serif;
+  font-size:14pt; font-weight:700; color:var(--verde-osc);
+  margin:6mm 0 2mm;
+}
+
+/* ---------- Portadillas ---------- */
+.parte-num{
+  font-family:'Barlow Condensed', sans-serif;
+  font-size:9.5pt; letter-spacing:.42em; text-transform:uppercase;
+  color:var(--ocre-cla);
+}
+.parte-tit{
+  font-family:'Cormorant Garamond', Georgia, serif;
+  font-size:40pt; line-height:1.06; font-weight:700; color:#fff;
+  margin:5mm 0 4mm; text-align:left;
+}
+.parte-sub{
+  font-family:'Source Serif 4', serif; font-style:italic;
+  font-size:12pt; color:var(--ocre-cla); line-height:1.5; max-width:105mm;
+}
+
+.cap-eyebrow{
+  font-family:'Barlow Condensed', sans-serif;
+  font-size:9pt; letter-spacing:.38em; text-transform:uppercase;
+  color:var(--ocre); margin-bottom:3mm;
+}
+.cap-tit{
+  font-family:'Cormorant Garamond', Georgia, serif;
+  font-size:29pt; line-height:1.1; font-weight:700; color:var(--verde-osc);
+  margin:0 0 5mm; max-width:140mm;
+}
+.regla-fique{
+  width:34mm; height:2.2mm; margin-bottom:7mm;
+  background:repeating-linear-gradient(90deg,var(--verde) 0 2.6mm,transparent 2.6mm 4.1mm);
+}
+
+/* ---------- Imágenes ---------- */
+.sangre{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.velo{
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(20,32,22,.72) 0%, rgba(20,32,22,.30) 42%, rgba(20,32,22,.86) 100%);
+}
+.velo.suave{ background:linear-gradient(180deg, rgba(20,32,22,.10) 0%, rgba(20,32,22,.55) 68%, rgba(20,32,22,.88) 100%); }
+
+figure{ margin:6mm 0 0; }
+figure img{ width:100%; display:block; }
+figcaption{
+  font-family:'Barlow Condensed', sans-serif;
+  font-size:8.6pt; line-height:1.35;
+  color:var(--gris); margin-top:2mm;
+  padding-left:3mm; border-left:1.6pt solid var(--ocre);
+}
+figcaption b{ color:var(--verde-osc); font-weight:600; letter-spacing:.06em; text-transform:uppercase; font-size:8pt; }
+
+.pie-lamina{
+  position:absolute; left:var(--mx); right:var(--mx); bottom:14mm;
+  color:#F3EEE2;
+  font-family:'Barlow Condensed', sans-serif; font-size:9.5pt; line-height:1.4;
+  max-width:120mm;
+}
+.pie-lamina b{ display:block; font-size:8.4pt; letter-spacing:.3em; text-transform:uppercase; color:var(--ocre-cla); margin-bottom:1.5mm; }
+
+/* ---------- Cajas y recursos ---------- */
+.caja{
+  background:var(--fibra); border-left:3pt solid var(--verde);
+  padding:6mm 7mm; margin:7mm 0;
+}
+.caja .rot{
+  font-family:'Barlow Condensed', sans-serif; font-size:8.6pt;
+  letter-spacing:.28em; text-transform:uppercase; color:var(--verde);
+  margin-bottom:2.5mm;
+}
+.caja p{ font-size:9.7pt; line-height:1.55; text-align:left; }
+.caja p + p{ text-indent:0; margin-top:2.5mm; }
+
+.cita{ margin:8mm 0; padding:0 0 0 8mm; border-left:2.5pt solid var(--ocre); }
+.cita p{
+  font-family:'Cormorant Garamond', Georgia, serif;
+  font-size:17pt; line-height:1.3; color:var(--verde-osc); text-align:left;
+  font-weight:600; text-indent:0;
+}
+.cita .fuente{
+  font-family:'Barlow Condensed', sans-serif; font-size:8.4pt;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--gris); margin-top:3mm;
+}
+
+.dato-fila{ display:flex; gap:5mm; margin:7mm 0; }
+.dato{
+  flex:1; background:var(--verde-osc); color:var(--crema);
+  padding:5mm 5mm 5.5mm; text-align:left;
+}
+.dato .cifra{
+  font-family:'Cormorant Garamond', serif; font-size:27pt; font-weight:700;
+  color:var(--ocre-cla); line-height:1; display:block;
+}
+.dato .glosa{
+  font-family:'Barlow Condensed', sans-serif; font-size:8.4pt; line-height:1.35;
+  letter-spacing:.08em; text-transform:uppercase; margin-top:2.5mm; display:block;
+}
+
+/* ---------- Listas ---------- */
+ul.fique{ list-style:none; margin:4mm 0; padding:0; }
+ul.fique li{
+  font-size:10.1pt; line-height:1.55; padding-left:7mm; position:relative; margin-bottom:2.6mm;
+}
+ul.fique li::before{
+  content:''; position:absolute; left:0; top:2.1mm;
+  width:3.4mm; height:1.5mm; background:var(--ocre);
+}
+ul.fique li b{ color:var(--verde-osc); }
+
+/* ---------- Proceso numerado ---------- */
+.paso{ display:flex; gap:5mm; margin-bottom:5mm; align-items:flex-start; }
+.paso .n{
+  flex:0 0 11mm; height:11mm; border-radius:50%;
+  background:var(--verde); color:#fff;
+  font-family:'Barlow Condensed',sans-serif; font-size:13pt; font-weight:600;
+  display:flex; align-items:center; justify-content:center;
+}
+.paso .txt{ flex:1; }
+.paso .txt h4{
+  font-family:'Barlow Condensed', sans-serif; font-size:11pt; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--verde-osc); margin:1.2mm 0 1.2mm;
+}
+.paso .txt p{ font-size:9.8pt; line-height:1.5; text-align:left; }
+
+/* ---------- Cubierta ---------- */
+.cub-marca{
+  position:absolute; top:18mm; left:var(--mx); right:var(--mx);
+  text-align:center; color:#F2EADA;
+  font-family:'Barlow Condensed', sans-serif;
+  font-size:9pt; letter-spacing:.38em; text-transform:uppercase;
+}
+.cub-marca .linea{ width:22mm; height:.6pt; background:var(--ocre-cla); margin:4mm auto; }
+.cub-bloque{ position:absolute; left:var(--mx); right:var(--mx); bottom:60mm; text-align:center; }
+.cub-tit{
+  font-family:'Cormorant Garamond', Georgia, serif;
+  font-size:57pt; line-height:.96; font-weight:700; color:#fff;
+  margin:0; letter-spacing:-.01em;
+  text-shadow:0 2px 22px rgba(0,0,0,.5);
+}
+.cub-sub{
+  font-family:'Source Serif 4', serif; font-style:italic;
+  font-size:14.5pt; color:var(--ocre-cla); margin-top:6mm; line-height:1.45;
+}
+.cub-pie{
+  position:absolute; left:var(--mx); right:var(--mx); bottom:13mm;
+  text-align:center; color:#E8DFCC;
+  font-family:'Barlow Condensed', sans-serif; font-size:9pt;
+  letter-spacing:.3em; text-transform:uppercase;
+}
+
+.escudo{
+  width:20mm; height:20mm; border:.8pt solid rgba(242,234,218,.55);
+  border-radius:50%; margin:0 auto 4mm;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Barlow Condensed',sans-serif; font-size:6.4pt; letter-spacing:.1em;
+  color:rgba(242,234,218,.75); text-align:center; line-height:1.15; padding:2mm;
+}
+.escudo.oscuro{ border-color:var(--verde); color:var(--verde); }
+
+/* ---------- Índice ---------- */
+.idx-parte{
+  font-family:'Barlow Condensed', sans-serif; font-size:10pt;
+  letter-spacing:.28em; text-transform:uppercase; color:var(--terracota);
+  margin:8mm 0 3mm; padding-bottom:1.5mm; border-bottom:.5pt solid var(--fibra-osc);
+}
+.idx-parte:first-of-type{ margin-top:0; }
+.idx-linea{ display:flex; align-items:baseline; gap:2mm; margin-bottom:3.4mm; }
+.idx-linea .cap{
+  font-family:'Barlow Condensed',sans-serif; font-size:9pt; letter-spacing:.1em;
+  color:var(--ocre); flex:0 0 17mm; text-transform:uppercase;
+}
+.idx-linea .tit{ font-size:10.4pt; color:var(--tinta); }
+.idx-linea .pts{ flex:1; border-bottom:.4pt dotted var(--fibra-osc); transform:translateY(-1mm); }
+.idx-linea .pag{ font-family:'Barlow Condensed',sans-serif; font-size:10pt; color:var(--verde); font-weight:600; }
+
+/* ---------- Créditos / legal ---------- */
+.legal{ font-size:8.7pt; line-height:1.55; color:var(--tinta-sua); text-align:left; }
+.legal p + p{ text-indent:0; margin-top:3.2mm; }
+.legal .rot{
+  font-family:'Barlow Condensed',sans-serif; font-size:8.4pt; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--verde); margin:6mm 0 2mm;
+}
+.campo{
+  display:inline-block; min-width:52mm; border-bottom:.5pt solid var(--ocre);
+  color:var(--gris); font-style:italic;
+}
+
+/* ---------- Contracubierta ---------- */
+.contra-txt{ font-family:'Source Serif 4', serif; font-size:10.6pt; line-height:1.68; color:#EDE6D6; text-align:left; }
+.contra-txt p + p{ margin-top:4mm; text-indent:0; }
+.contra-tit{
+  font-family:'Cormorant Garamond', serif; font-size:26pt; font-weight:700;
+  color:#fff; line-height:1.1; margin-bottom:6mm;
+}
+.isbn{
+  font-family:'Barlow Condensed',sans-serif; font-size:8pt; letter-spacing:.2em;
+  color:rgba(237,230,214,.7); text-transform:uppercase;
+}
+
+/* ---------- Añadidos de ajuste ---------- */
+.parte-caps{
+  margin-top:7mm; padding-top:4mm;
+  border-top:.5pt solid rgba(224,196,137,.45);
+  font-family:'Barlow Condensed', sans-serif;
+  font-size:9.2pt; line-height:1.9; letter-spacing:.06em;
+  color:rgba(243,238,226,.88); max-width:112mm;
+}
+figure img.img-m{ height:74mm; object-fit:cover; }
+figure img.img-s{ height:62mm; object-fit:cover; }
+.velo.parte{
+  background:
+    linear-gradient(180deg, rgba(14,26,17,.62) 0%, rgba(14,26,17,.50) 30%, rgba(14,26,17,.78) 72%, rgba(14,26,17,.92) 100%),
+    linear-gradient(90deg, rgba(14,26,17,.68) 0%, rgba(14,26,17,.34) 62%, rgba(14,26,17,.12) 100%);
+}
+
+/* ---------- Lockup institucional: Aratoca + Ministerio ---------- */
+.logos{
+  display:flex; align-items:center; justify-content:center; gap:7mm;
+}
+.logos img{ height:15mm; width:auto; display:block; }
+.logos img.min{ height:13.5mm; }
+.logos .sep{ width:.5pt; height:13mm; background:rgba(35,32,27,.22); }
+
+.logos.grande{ gap:10mm; }
+.logos.grande img{ height:23mm; }
+.logos.grande img.min{ height:20.5mm; }
+.logos.grande .sep{ height:20mm; }
+
+.logos.legal{ justify-content:flex-start; gap:6mm; margin-top:3mm; }
+.logos.legal img{ height:12mm; }
+.logos.legal img.min{ height:11mm; }
+.logos.legal .sep{ height:10mm; }
+
+/* placa blanca para que las marcas a color sean legibles sobre foto */
+.placa-logos{
+  position:absolute; left:50%; transform:translateX(-50%);
+  bottom:23mm; background:#fff; padding:5mm 9mm;
+  box-shadow:0 1mm 4mm rgba(0,0,0,.28);
+}
+.placa-logos.contra{
+  position:static; transform:none; display:inline-block;
+  margin:0 0 5mm; padding:4.5mm 8mm; box-shadow:none;
+}
+
+/* ---------- Página legal: composición compacta ---------- */
+.pagina-legal .legal p + p{ margin-top:2.5mm; }
+.pagina-legal .legal .rot{ margin:4.5mm 0 1.6mm; }
+.pagina-legal .logos.legal img{ height:10mm; }
+.pagina-legal .logos.legal img.min{ height:9mm; }
+.pagina-legal .logos.legal .sep{ height:8.5mm; }
