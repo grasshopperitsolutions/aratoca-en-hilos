@@ -1,7 +1,6 @@
 import {
   ChevronDown,
   Coins,
-  GraduationCap,
   Landmark,
   Palette,
   Recycle,
@@ -12,9 +11,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-import AssetFigure from '../components/libro/AssetFigure';
-import { ModulosWeb, Sesion3h } from '../components/libro/Bloques';
-import { MapaAprendizaje } from '../components/libro/Diagramas';
+import { Foto } from '../components/libro/Bloques';
 import Button from '../components/Button';
 import DescargarPdf from '../components/libro/DescargarPdf';
 import IconCircle from '../components/IconCircle';
@@ -41,7 +38,6 @@ const CHAPTER_ICONS: Record<LibroCapitulo, { icon: LucideIcon; color: string }> 
   4: { icon: Recycle, color: '#8FA878' },
   5: { icon: Scissors, color: '#B85C38' },
   6: { icon: Palette, color: '#6B4226' },
-  7: { icon: GraduationCap, color: '#4C7A3D' },
 };
 
 /**
@@ -57,6 +53,11 @@ export default function TallerFique() {
   const { language, path } = useLanguage();
 
   const libro = libroTexto(language);
+
+  // The six phases are part of chapter 4, not a separate list: reading them
+  // from the chapter is what stops this page drifting from the book.
+  const fases =
+    libro.capitulos[4].bloques.find((bloque) => bloque.tipo === 'fases')?.items ?? [];
   const chapterPath = (numero: LibroCapitulo) =>
     buildPath(pageKeyDeCapitulo(numero), language);
 
@@ -71,7 +72,13 @@ export default function TallerFique() {
       {/* El libro: portada, panorama y accesos */}
       <section className="px-6 md:px-12 py-16 md:py-20 bg-cream">
         <div className="max-w-4xl mx-auto">
-          <AssetFigure tag="TAG_01_HERO_PANORAMA" priority className="!mt-0" />
+          <Foto
+            foto={libro.laminas.territorio.foto}
+            titulo={libro.laminas.territorio.titulo}
+            pie={libro.laminas.territorio.pie}
+            prioridad
+            className="!mt-0"
+          />
 
           <Reveal>
             <div className="text-center mt-4">
@@ -153,29 +160,29 @@ export default function TallerFique() {
         </div>
       </section>
 
-      {/* Los 7 pasos — tira visual */}
+      {/* Las seis fases del proceso */}
       <section className="px-6 md:px-12 py-20 md:py-28 bg-cream">
         <div className="max-w-6xl mx-auto">
           <Reveal>
             <h2 className="text-4xl md:text-5xl font-fraunces text-charcoal text-center">
-              {libro.pasos.titulo}
+              {t('libro.fases')}
             </h2>
             <p className="text-charcoal/70 font-light text-center max-w-2xl mx-auto mt-4 mb-16">
-              {libro.pasos.intro}
+              {t('tallerFique.fasesIntro')}
             </p>
           </Reveal>
 
-          <ol className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-            {libro.pasos.items.map((paso, index) => (
-              <Reveal key={paso.numero} delay={(index % 4) * 120}>
+          <ol className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {fases.map((fase, index) => (
+              <Reveal key={fase.titulo} delay={(index % 3) * 120}>
                 <li className="h-full border-t-2 border-fique pt-4">
                   <span
                     className="block font-fraunces text-3xl text-fique leading-none"
                     aria-hidden="true"
                   >
-                    {String(paso.numero).padStart(2, '0')}
+                    {String(index + 1).padStart(2, '0')}
                   </span>
-                  <h3 className="font-fraunces text-base text-charcoal mt-3">{paso.titulo}</h3>
+                  <h3 className="font-fraunces text-base text-charcoal mt-3">{fase.titulo}</h3>
                 </li>
               </Reveal>
             ))}
@@ -183,29 +190,11 @@ export default function TallerFique() {
 
           <Reveal>
             <div className="text-center mt-14">
-              <Button to={chapterPath(5)} variant="outline">
+              <Button to={chapterPath(4)} variant="outline">
                 {t('tallerFique.verPasos')}
               </Button>
             </div>
           </Reveal>
-        </div>
-      </section>
-
-      {/* El taller presencial y los módulos digitales */}
-      <section className="px-6 md:px-12 py-20 md:py-28 bg-moss/10">
-        <div className="max-w-4xl mx-auto">
-          <Reveal>
-            <h2 className="text-4xl md:text-5xl font-fraunces text-charcoal text-center">
-              {t('tallerFique.cursoTitle')}
-            </h2>
-            <p className="text-charcoal/70 font-light text-center max-w-2xl mx-auto mt-4 mb-12">
-              {t('tallerFique.cursoIntro')}
-            </p>
-          </Reveal>
-
-          <MapaAprendizaje />
-          <Sesion3h />
-          <ModulosWeb />
         </div>
       </section>
 

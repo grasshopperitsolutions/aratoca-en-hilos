@@ -133,8 +133,6 @@
     "chaptersTitle": "The chapters",
     "chaptersIntro": "The work is organised in three parts: from the pre-Hispanic roots of the craft, to the process that turns the penca into thread, and on to the future of fique as a design material.",
     "verPasos": "Read the full chapter",
-    "cursoTitle": "The workshop",
-    "cursoIntro": "The \"Fique Crafts Workshop: Creativity, Tradition and Enterprise in Aratoca\" is a non-formal training programme bringing together master artisans and young apprentices from the municipality.",
     "faqTitle": "Frequently asked questions",
     "faq": {
       "que": {
@@ -166,15 +164,13 @@
       "title": "Would you like to join the workshop?",
       "text": "Get in touch and we will tell you how to take part in the next call for the Fique Crafts Workshop.",
       "button": "Get in touch"
-    }
+    },
+    "fasesIntro": "The path from the cut penca to the finished thread comprises six clearly distinct phases. Each has its own timings, tools and quality criteria."
   },
   "libro": {
     "indice": "Contents",
-    "indiceNota": "{{total}} chapters · Free to read",
+    "cerrarIndice": "Close the contents",
     "parte": "Part {{numero}}",
-    "parteCapitulo": "Part {{parte}} · {{titulo}} — Chapter {{capitulo}}",
-    "leerInteractivoTitulo": "Read this chapter in the interactive book",
-    "leerInteractivo": "Open the book",
     "navegacionCapitulos": "Chapter navigation",
     "anterior": "Previous chapter",
     "siguiente": "Next chapter",
@@ -183,36 +179,19 @@
     "cerrar": "Close the book",
     "cargando": "Preparing the book…",
     "capituloDe": "Chapter {{numero}} of {{total}}",
-    "movimientoReducido": "You have asked for reduced motion, so pages change without the turning animation.",
     "sinWebgl": "Your browser cannot show the 3D book, but you can read the whole thing chapter by chapter below.",
-    "diagramas": {
-      "furcraea": {
-        "titulo": "Life cycle of the Furcraea",
-        "desc": "Interactive diagram: as the years advance the plant gains pencas, the central cogollo stays protected and, once mature, the flower stalk emerges.",
-        "cogollo": "Protected cogollo",
-        "corte": "Basal pencas cut",
-        "anio": "Year {{numero}}",
-        "maduro": "Mature: the escapo emerges",
-        "creciendo": "Growing",
-        "control": "Years since planting",
-        "pie": "The same plant is harvested for 15 to 20 years, provided fifteen pencas are left around the cogollo."
-      },
-      "bioeconomia": {
-        "titulo": "From leaf to fibre and bagazo",
-        "desc": "Flow diagram: of each harvested leaf, 4% is recovered as fibre and the remaining 96% is bagazo, which can return to the soil as fertiliser or biopesticide.",
-        "hoja": "Harvested leaf",
-        "fibra": "Usable fibre",
-        "bagazo": "Bagazo",
-        "artesania": "Thread and craft",
-        "abono": "Organic fertiliser",
-        "biopesticida": "Biopesticide",
-        "ciclo": "Bagazo returns to feed the fique soil",
-        "pie": "The challenge and the opportunity of the trade fit into two figures: 4% and 96%."
-      },
-      "ruta": {
-        "titulo": "Route through the seven workshop modules"
-      }
-    }
+    "actividad": "Activity",
+    "comprobar": "Check",
+    "reintentar": "Try again",
+    "verdadero": "True",
+    "falso": "False",
+    "si": "Yes",
+    "no": "No",
+    "fases": "The six phases of the process",
+    "lineaTiempo": "A century of fique in Aratoca",
+    "glosario": "Glossary",
+    "fuentes": "Sources",
+    "creditos": "Credits"
   },
   "contacto": {
     "accent": "Let's talk",

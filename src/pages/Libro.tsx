@@ -4,30 +4,30 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import Button from '../components/Button';
-import Callouts from '../components/libro/Callouts';
+import Bloques, { Foto } from '../components/libro/Bloques';
 import DescargarPdf from '../components/libro/DescargarPdf';
 import Reveal from '../components/Reveal';
 import { libroTexto } from '../content/libro';
-import { CAPITULOS, capitulosDeParte } from '../content/libro/estructura';
+import { ESCUDOS, capitulosDeParte } from '../content/libro/estructura';
 import { useLanguage } from '../i18n/languageContext';
 import { buildPath, pageKeyDeCapitulo } from '../i18n/routes';
 import { LIBRO_CAPITULOS, LIBRO_PARTES, type LibroCapitulo } from '../types/libro';
 
 /**
- * three.js, drei and the page textures together outweigh the entire rest of the
- * site, so the reader is a separate chunk that only downloads when someone
- * actually opens the book. Mounting it from state (never during render) also
- * keeps this page's prerendered markup deterministic.
+ * The book's front door: cover, foreword and contents.
+ *
+ * Everything here is prerendered and stays in the static HTML. The reader opens
+ * over it on request; until then — and for anyone without JavaScript — this is a
+ * complete, navigable table of contents rather than an empty frame.
  */
 const Reader = lazy(() => import('../components/libro/Reader'));
 
 /**
- * False on the server and during the hydration pass, true afterwards.
+ * False on the server and through the hydration pass, true afterwards.
  *
  * The prerendered HTML carries no query string, so deciding whether to open the
- * reader from `?c=` during the first client render produces a tree the server
- * never rendered — React tears it down with a hydration error. Gating on this
- * keeps the first render identical on both sides.
+ * reader from `?c=` during the first client render would build a tree the server
+ * never sent, and React would tear it down with a hydration error.
  */
 const suscribirNada = () => () => {};
 function useHidratado(): boolean {
@@ -38,42 +38,26 @@ function useHidratado(): boolean {
   );
 }
 
-/**
- * The book's front door: cover, foreword and contents.
- *
- * Everything here is prerendered and stays in the static HTML. The 3D reader
- * mounts over this after hydration; until it does — and for anyone without
- * JavaScript or WebGL — this page is a complete, navigable table of contents
- * rather than an empty canvas.
- */
 export default function Libro() {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [sinWebgl, setSinWebgl] = useState(false);
-
   const libro = libroTexto(language);
-  const chapterPath = (numero: LibroCapitulo) =>
+  const rutaCapitulo = (numero: LibroCapitulo) =>
     buildPath(pageKeyDeCapitulo(numero), language);
 
-  // ?c=5 opens the reader straight at that chapter, which is what the button on
-  // each chapter page links to.
   const solicitado = Number(searchParams.get('c'));
   const capituloInicial = (LIBRO_CAPITULOS as readonly number[]).includes(solicitado)
     ? (solicitado as LibroCapitulo)
     : null;
 
-  // Arriving with ?c=N opens the reader straight away; the chapter pages link
-  // here that way. Only after hydration, so the first render still matches the
-  // prerendered markup.
   const hidratado = useHidratado();
   const [abiertoManual, setAbiertoManual] = useState(false);
   const lectorAbierto = abiertoManual || (hidratado && capituloInicial !== null);
 
   function cerrarLector() {
     setAbiertoManual(false);
-    // Also drop the deep link, or the reader would immediately reopen.
     if (searchParams.has('c')) {
       searchParams.delete('c');
       setSearchParams(searchParams, { replace: true });
@@ -82,11 +66,9 @@ export default function Libro() {
 
   return (
     <>
-      {/* Portada.
-          Fique beige rather than charcoal: the fixed header's links are
+      {/* Portada. Fique beige rather than charcoal: the fixed header's links are
           text-charcoal until the visitor scrolls, so a dark band here would
-          render the whole navigation invisible on arrival. Beige also happens to
-          be the right colour for a cover — it is the tone of the dried fibre. */}
+          render the whole navigation invisible on arrival. */}
       <header className="px-6 md:px-12 pt-32 md:pt-40 pb-16 md:pb-20 bg-fique">
         <div className="max-w-4xl mx-auto text-center">
           <Reveal>
@@ -109,10 +91,9 @@ export default function Libro() {
           </Reveal>
           <Reveal delay={400}>
             <p className="text-charcoal/55 text-xs uppercase tracking-widest mt-10">
-              {libro.version}
+              {libro.lugar} · {libro.edicion}
             </p>
           </Reveal>
-
           <Reveal delay={500}>
             <div className="flex flex-wrap justify-center gap-4 mt-8">
               <Button onClick={() => setAbiertoManual(true)} variant="secondary">
@@ -121,30 +102,46 @@ export default function Libro() {
               </Button>
               <DescargarPdf variant="outline" />
             </div>
-            {sinWebgl && (
-              <p className="text-charcoal/70 text-sm max-w-md mx-auto mt-6">
-                {t('libro.sinWebgl')}
-              </p>
-            )}
+          </Reveal>
+          <Reveal delay={600}>
+            <div className="flex items-center justify-center gap-5 mt-12">
+              <img src={ESCUDOS.aratoca} alt="" className="h-12 w-auto" />
+              <span className="w-px h-10 bg-charcoal/20" />
+              <img src={ESCUDOS.ministerio} alt="" className="h-11 w-auto" />
+            </div>
           </Reveal>
         </div>
       </header>
 
-      {/* Prólogo */}
+      {/* Presentación */}
       <section className="px-6 md:px-12 py-20 md:py-24 bg-cream">
         <div className="max-w-3xl mx-auto">
           <Reveal>
-            <h2 className="font-fraunces text-3xl md:text-4xl text-charcoal mb-8">
-              {libro.prologo.titulo}
+            <p className="text-xs font-bold uppercase tracking-widest text-penca">
+              {libro.presentacion.ordinal}
+            </p>
+            <h2 className="font-fraunces text-3xl md:text-4xl text-charcoal mt-2 mb-8">
+              {libro.presentacion.titulo}
             </h2>
           </Reveal>
-          {libro.prologo.parrafos.map((parrafo) => (
-            <Reveal key={parrafo.slice(0, 48)}>
-              <p className="text-charcoal/70 leading-relaxed font-light mb-6">{parrafo}</p>
-            </Reveal>
-          ))}
+          <Bloques bloques={libro.presentacion.bloques} />
+          <Reveal>
+            <p className="text-xs uppercase tracking-widest text-stone mt-8">
+              {libro.presentacion.firma}
+            </p>
+          </Reveal>
+        </div>
+      </section>
 
-          <Callouts callouts={libro.prologo.callouts} language={language} />
+      {/* Lámina del territorio */}
+      <section className="px-6 md:px-12 pb-4 bg-cream">
+        <div className="max-w-4xl mx-auto">
+          <Foto
+            foto={libro.laminas.territorio.foto}
+            titulo={libro.laminas.territorio.titulo}
+            pie={libro.laminas.territorio.pie}
+            prioridad
+          />
         </div>
       </section>
 
@@ -179,7 +176,7 @@ export default function Libro() {
                       <Reveal key={numero} delay={(index % 3) * 120}>
                         <li>
                           <Link
-                            to={chapterPath(numero)}
+                            to={rutaCapitulo(numero)}
                             className="group flex items-baseline gap-5 bg-cream border border-stone/20 rounded-tl-3xl rounded-br-3xl px-6 py-5 hover:border-stone hover:shadow-lg transition-all duration-500"
                           >
                             <span
@@ -200,25 +197,12 @@ export default function Libro() {
               );
             })}
           </div>
-
-          <Reveal>
-            <p className="text-stone text-sm text-center mt-16 font-light">
-              {t('libro.indiceNota', { total: Object.keys(CAPITULOS).length })}
-            </p>
-          </Reveal>
         </div>
       </section>
 
       {lectorAbierto && (
         <Suspense fallback={null}>
-          <Reader
-            capituloInicial={capituloInicial}
-            onClose={cerrarLector}
-            onUnsupported={() => {
-              setSinWebgl(true);
-              cerrarLector();
-            }}
-          />
+          <Reader capituloInicial={capituloInicial} onClose={cerrarLector} />
         </Suspense>
       )}
     </>

@@ -1,5 +1,6 @@
-import { type ReactNode } from 'react';
+import { useContext, type ReactNode } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { RevealInerte } from './revealContexto';
 
 interface RevealProps {
   children: ReactNode;
@@ -15,6 +16,7 @@ export default function Reveal({
   className = '',
 }: RevealProps) {
   const [ref, isVisible] = useScrollReveal<HTMLDivElement>();
+  const inerte = useContext(RevealInerte);
 
   const getTransform = () => {
     if (isVisible) return 'translate-y-0 translate-x-0 opacity-100';
@@ -29,6 +31,11 @@ export default function Reveal({
         return 'translate-y-12 opacity-0';
     }
   };
+
+  // Inside the reader the surrounding page animates as a whole, so this stays
+  // out of the way entirely — no transform, no opacity, no observer effect on
+  // the layout.
+  if (inerte) return <div className={className}>{children}</div>;
 
   return (
     <div

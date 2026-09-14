@@ -155,6 +155,19 @@ export function getRedirects(): RedirectPage[] {
       target: absoluteUrl(buildPath('artesanos', 'es')),
       href: `${withBase(buildPath('artesanos', 'es'))}/`,
     },
+    // The book was rebuilt on the printed first edition, which has six
+    // chapters rather than seven. The retired seventh sends readers to the
+    // contents rather than to a 404.
+    {
+      outputPath: 'libro/capitulo-7',
+      target: absoluteUrl(buildPath('libro', 'es')),
+      href: `${withBase(buildPath('libro', 'es'))}/`,
+    },
+    {
+      outputPath: 'en/book/chapter-7',
+      target: absoluteUrl(buildPath('libro', 'en')),
+      href: `${withBase(buildPath('libro', 'en'))}/`,
+    },
   ];
 }
 
@@ -173,7 +186,7 @@ export function renderRedirect(redirect: RedirectPage): string {
     <meta name="robots" content="noindex, follow" />
   </head>
   <body>
-    <p>Esta página se ha movido a <a href="${redirect.href}">Artesanos</a>.</p>
+    <p>Esta página se ha movido. <a href="${redirect.href}">Continuar</a>.</p>
   </body>
 </html>
 `;

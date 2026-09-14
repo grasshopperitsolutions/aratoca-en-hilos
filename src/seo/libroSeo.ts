@@ -32,7 +32,14 @@ export function tituloCapitulo(capitulo: LibroCapitulo, language: Language): str
   return `${libro.capitulos[capitulo].titulo} — ${libro.titulo}`;
 }
 
+/**
+ * The chapter's own opening words. The standfirst is written to stand alone, so
+ * it makes a better meta description than the first body paragraph.
+ */
 export function descripcionCapitulo(capitulo: LibroCapitulo, language: Language): string {
-  const { parrafos } = libroTexto(language).capitulos[capitulo];
-  return resumen(parrafos[0] ?? '');
+  const { bloques } = libroTexto(language).capitulos[capitulo];
+  const entradilla = bloques.find((bloque) => bloque.tipo === 'entradilla');
+  if (entradilla) return resumen(entradilla.texto);
+  const parrafo = bloques.find((bloque) => bloque.tipo === 'parrafo');
+  return resumen(parrafo?.texto ?? '');
 }

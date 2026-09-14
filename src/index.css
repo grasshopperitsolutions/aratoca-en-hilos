@@ -30,3 +30,148 @@ body {
   background-color: var(--color-terracotta);
   color: var(--color-cream);
 }
+
+/* Wrong-answer feedback in the book's activities. Paired with `motion-safe:`
+   at the call site, so a reader who asked for less motion gets the colour and
+   the icon without the movement. */
+@keyframes sacudir {
+  0%, 100% { transform: translateX(0); }
+  18% { transform: translateX(-7px); }
+  38% { transform: translateX(6px); }
+  58% { transform: translateX(-4px); }
+  78% { transform: translateX(3px); }
+}
+
+/* ------------------------------------------------------------------ *
+ * The page fold.
+ *
+ * Driven entirely by CSS animation on `transform`, so a turn runs on the
+ * compositor with no per-frame JavaScript and no texture uploads — the two
+ * things that made the previous WebGL reader stutter. A turning leaf is
+ * promoted only while it is moving; `will-change` is applied by the animation
+ * itself rather than left on permanently.
+ * ------------------------------------------------------------------ */
+
+.libro-escena {
+  perspective: 2200px;
+  perspective-origin: 50% 42%;
+}
+
+.libro-hoja {
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.libro-cara {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.libro-cara--dorso {
+  transform: rotateY(180deg);
+}
+
+/* The sweep of light across a turning sheet. Two veils, one per face, animated
+   in opposition — cheaper than a filter and it reads as the page catching the
+   light as it lifts. */
+.libro-velo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, rgba(46, 33, 24, 0.42), rgba(46, 33, 24, 0) 62%);
+}
+
+/* `background-image`, not the `background` shorthand: the shorthand resets
+   background-color and would wipe the page's cream, leaving charcoal text on a
+   charcoal page. */
+.libro-gutter {
+  background-image: linear-gradient(90deg, rgba(46, 33, 24, 0.16), rgba(46, 33, 24, 0) 7%),
+    linear-gradient(270deg, rgba(46, 33, 24, 0.16), rgba(46, 33, 24, 0) 7%);
+}
+
+/* Content settling onto a page.
+ *
+ * This sits INSIDE the cream sheet, never on it: animating the sheet made the
+ * book itself blink on every turn. The paper stays put and only what is printed
+ * on it arrives. It runs once per page, on the half a turn has just exposed —
+ * the half the leaf itself delivered is already at full opacity when it lands,
+ * so animating that one would be the same blink in miniature. */
+@keyframes libro-entrada {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* A page bled to its edges has nothing to rise into: a translated photograph
+   would drag a strip of bare paper across the foot of the page. */
+@keyframes libro-entrada-plana {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.libro-entrada {
+  animation: libro-entrada 480ms cubic-bezier(0.22, 0.8, 0.3, 1) both;
+}
+
+.libro-entrada--plana {
+  animation: libro-entrada-plana 480ms ease-out both;
+}
+
+/* A reader page fits itself (see `Ajustar`), so anything left to scroll is a
+   rounding artefact or a page dense enough to hit the scale floor. Either way a
+   scrollbar down the middle of a book is furniture the book should not have —
+   the content still scrolls by wheel, touch and keyboard, it just stops drawing
+   a rail for it. */
+.libro-sin-barra {
+  scrollbar-width: none;
+}
+
+.libro-sin-barra::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* The contents drawer, and the scrim that catches a click outside it. */
+@keyframes indice-entra {
+  from { transform: translateX(-100%); }
+  to   { transform: none; }
+}
+
+@keyframes indice-velo {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.libro-indice {
+  animation: indice-entra 260ms cubic-bezier(0.22, 0.8, 0.3, 1) both;
+}
+
+.libro-indice-velo {
+  animation: indice-velo 220ms ease-out both;
+}
+
+@keyframes hoja-adelante {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(-180deg); }
+}
+
+@keyframes hoja-atras {
+  from { transform: rotateY(-180deg); }
+  to   { transform: rotateY(0deg); }
+}
+
+@keyframes velo-entra { from { opacity: 0; } to { opacity: 1; } }
+@keyframes velo-sale  { from { opacity: 1; } to { opacity: 0; } }
+
+/* A reader who asked for less motion gets the page change without the turn. */
+@media (prefers-reduced-motion: reduce) {
+  .libro-hoja { animation-duration: 1ms !important; }
+  .libro-velo { animation-duration: 1ms !important; }
+  .libro-entrada,
+  .libro-entrada--plana,
+  .libro-indice,
+  .libro-indice-velo { animation-duration: 1ms !important; }
+}

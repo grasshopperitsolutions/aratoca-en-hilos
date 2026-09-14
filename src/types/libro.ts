@@ -1,18 +1,20 @@
 /**
  * Shape of "Trenzando Saberes", the Alcaldía's book.
  *
- * The book is a fixed publication authored in Word, not admin-editable content,
- * so it lives in the repo as typed modules rather than in Firestore: versioned,
- * reviewable, and prerendered with no fetch on the site's heaviest page.
+ * Modelled directly on the printed first edition (`Trenzando_Saberes_EDITABLE/`),
+ * whose editorial furniture this mirrors term for term — entradilla, capitular,
+ * caja, cita, dato, paso, lámina — so the two editions stay recognisably the
+ * same work and a change to one can be traced to the other.
  *
- * Structure (which chapter holds which asset) is language-neutral and lives in
- * `content/libro/estructura.ts`; prose and alt text are localised and live in
- * `content/libro/{es,en}.ts`. Both sides key off the same tags and numbers, so
- * a missing translation is a type error rather than a blank page.
+ * The split follows the rest of the project: anything language-neutral
+ * (placement, photographs, which answer is correct) lives in
+ * `content/libro/estructura.ts`; anything a reader reads lives in
+ * `content/libro/{es,en}.ts`. Correctness deliberately sits on the neutral side
+ * so the two languages cannot disagree about the answer to a question.
  */
 
-/** Chapters, as numbered in the source document. */
-export const LIBRO_CAPITULOS = [1, 2, 3, 4, 5, 6, 7] as const;
+/** Chapters, as numbered in the printed edition. */
+export const LIBRO_CAPITULOS = [1, 2, 3, 4, 5, 6] as const;
 export type LibroCapitulo = (typeof LIBRO_CAPITULOS)[number];
 
 /** The book's three parts. */
@@ -20,129 +22,163 @@ export const LIBRO_PARTES = [1, 2, 3] as const;
 export type LibroParte = (typeof LIBRO_PARTES)[number];
 
 /**
- * Asset tags exactly as the client's "Guía y Catálogo Técnico de Recursos
- * Fotográficos y de Video" names them. Kept verbatim so a photographer's
- * delivery can be matched to a slot without a translation table.
+ * Photographs, keyed by the stem of the file in the printed edition's asset
+ * folder. The app keeps its own copies under `src/assets/libro/`, deliberately
+ * duplicated so neither folder depends on the other; keeping the stems
+ * identical is what makes each copy traceable to its original.
  */
-export const ASSET_TAGS = [
-  'TAG_01_HERO_PANORAMA',
-  'TAG_02_GUANE_MUSEUM',
-  'TAG_03_PORTRAIT_ELDER',
-  'TAG_04_LANDSCAPE_FIQUE',
-  'TAG_05_TRADITIONAL_DESFIBRADO',
-  'TAG_06_FIBERS_DRYING',
-  'TAG_07_SPINNING_WHEEL',
-  'TAG_08_LOOM_WEAVING',
-  'TAG_09_BAGAZO_INNOVATION',
-  'TAG_10_MODERN_PRODUCTS_FLATLAY',
-  'TAG_11_TALLER_SESSION',
-  'TAG_12_APP_UX_MOCKUP',
-  'TAG_13_ALCALDIA_DELIVERY',
+export const FOTOS = [
+  'planta_fique_maguey',
+  'vista_panoramica_aratoca',
+  'cultivo_fique',
+  'planta_y_montana',
+  'toma_iglesia_aratoca',
+  'penga_fique_cortada',
+  'maguey',
+  'lavado_artesanal',
+  'uso_artesanal_fique',
+  'hombre_manipulando_fique',
+  'hombre_trabajando_fique',
+  'tejedor_trabajando_fique',
 ] as const;
-export type AssetTag = (typeof ASSET_TAGS)[number];
+export type FotoId = (typeof FOTOS)[number];
+
+/* ------------------------------------------------------------------ */
+/* Activities                                                          */
+/* ------------------------------------------------------------------ */
 
 /**
- * Interactive treatment an asset receives inside the reader.
- *
- * `null` means the asset is presented as a plain figure. Only the media-rich
- * tier is in scope — the calculators, the weaving simulator and the WhatsApp
- * catalogue described in the source document are deliberately absent.
+ * The five interaction primitives. One small set, reused throughout, so a
+ * reader learns the vocabulary once and then recognises it everywhere.
  */
-export type WidgetKind =
-  | 'parallax'
-  | 'viewer360'
-  | 'audioNote'
-  | 'timeline'
-  | 'video'
-  | 'ambientAudio';
+export type TipoActividad =
+  | 'verdaderoFalso'
+  | 'siNo'
+  | 'opcionMultiple'
+  | 'deslizador'
+  | 'clasificar';
 
-/** Structured blocks that are not plain prose. */
-export type BloqueKind =
-  | 'datosClave'
-  | 'sietePasos'
-  | 'sesion3h'
-  | 'modulos7'
-  | 'modulosWeb'
-  | 'diagramaFurcraea'
-  | 'diagramaBioeconomia';
+/** Illustrations a slider can drive. Each is an inline SVG that redraws live. */
+export type IlustracionId = 'cogollo' | 'rendimiento' | 'varillado' | 'remojo';
 
-/** Technical, language-neutral description of one catalogued asset. */
-export interface AssetMeta {
-  tag: AssetTag;
-  /** Aspect ratio as specified by the client's catalogue, e.g. `'16:9'`. */
-  formato: string;
-  /** Interactive treatment in the reader, or `null` for a plain figure. */
-  widget: WidgetKind | null;
+/**
+ * Language-neutral definition of one activity: which primitive, and what counts
+ * as correct. The wording lives in the locale files, keyed by the same id.
+ */
+export type ActividadMeta =
+  | {
+      tipo: 'verdaderoFalso' | 'siNo';
+      id: string;
+      /** The correct answer. `siNo` reads true as "sí". */
+      respuesta: boolean;
+    }
+  | {
+      tipo: 'opcionMultiple';
+      id: string;
+      /** Indices into the localised `opciones` array that are correct. */
+      correctas: readonly number[];
+      /** Guards against a locale file drifting out of step with this list. */
+      totalOpciones: number;
+    }
+  | {
+      tipo: 'deslizador';
+      id: string;
+      min: number;
+      max: number;
+      inicial: number;
+      /** Inclusive band that counts as right; the illustration settles inside it. */
+      aciertoMin: number;
+      aciertoMax: number;
+      ilustracion: IlustracionId;
+    }
+  | {
+      tipo: 'clasificar';
+      id: string;
+      /** Column each item belongs in, by index into the localised `items`. */
+      columnas: readonly (0 | 1)[];
+    };
+
+/** Localised wording for one activity. */
+export interface ActividadTexto {
+  pregunta: string;
+  /** Shown once answered, whatever the outcome — the point is to teach. */
+  explicacion: string;
+  /** `opcionMultiple` only, in the order `ActividadMeta.correctas` indexes. */
+  opciones?: readonly string[];
+  /** `clasificar` only: the two column headings, then the items to sort. */
+  grupos?: readonly [string, string];
+  items?: readonly string[];
+  /** `deslizador` only: unit suffix, and the caption at each stage. */
+  unidad?: string;
+  /** Caption shown while the value is below, inside, and above the right band. */
+  tramos?: readonly [string, string, string];
+}
+
+/* ------------------------------------------------------------------ */
+/* Prose                                                               */
+/* ------------------------------------------------------------------ */
+
+/**
+ * One block of a chapter. A chapter is a flat sequence of these, which is how
+ * the printed edition is laid out and what lets the same content drive both the
+ * scrolling chapter page and the paginated reader.
+ */
+export type Bloque =
+  /** Standfirst under the chapter title. */
+  | { tipo: 'entradilla'; texto: string }
+  /** Body paragraph. The first of a chapter carries the drop cap. */
+  | { tipo: 'parrafo'; texto: string; capitular?: boolean }
+  /** Subheading within a chapter. */
+  | { tipo: 'subtitulo'; texto: string }
+  /** Tinted pull-out box, e.g. "Punto crítico del proceso". */
+  | { tipo: 'caja'; rotulo: string; parrafos: readonly string[] }
+  /** Display quotation with its attribution line. */
+  | { tipo: 'cita'; texto: string; fuente: string }
+  /** Row of figures, e.g. 18.000 / 95% / 5. */
+  | { tipo: 'datos'; items: readonly { cifra: string; leyenda: string }[] }
+  /** Definition-style list, e.g. the products, the four fronts. */
+  | { tipo: 'lista'; items: readonly { titulo: string; texto: string }[] }
+  /** The six phases of transformation, stepped through rather than scored. */
+  | { tipo: 'fases'; items: readonly { titulo: string; texto: string }[] }
   /**
-   * Resolved image URL — assign a Vite `import` from `src/assets/libro/` so the
-   * file is fingerprinted and bundled, matching how `content/images.ts` will
-   * work once the client's photography lands.
-   *
-   * `null` until delivered. Every consumer must handle that: nothing has been
-   * shot yet, so `null` is the normal case today, not an edge case.
+   * The century of fique in Aratoca, on a draggable year. Exploratory: a
+   * timeline has no right answer, so it is an illustration you operate rather
+   * than a question, and it stays out of the score.
    */
-  archivo: string | null;
-}
+  | { tipo: 'lineaTiempo'; hitos: readonly { anio: number; titulo: string; texto: string }[] }
+  /** An inline photograph with its caption. */
+  | { tipo: 'foto'; foto: FotoId; titulo: string; pie: string }
+  /** An activity, placed by id; its definition lives in `estructura.ts`. */
+  | { tipo: 'actividad'; id: string };
 
-/** One chapter's language-neutral placement data. */
-export interface CapituloMeta {
-  numero: LibroCapitulo;
-  parte: LibroParte;
-  /** Assets shown in this chapter, in reading order. */
-  assets: readonly AssetTag[];
-  /** Non-prose blocks this chapter renders, in reading order. */
-  bloques: readonly BloqueKind[];
-}
-
-/** One of the seven traditional steps. */
-export interface PasoTexto {
-  numero: number;
+/** A full-bleed photographic plate between chapters. */
+export interface LaminaTexto {
+  foto: FotoId;
   titulo: string;
-  texto: string;
-}
-
-/** One phase of the three-hour workshop session. */
-export interface FaseTexto {
-  titulo: string;
-  duracion: string;
-  texto: string;
-}
-
-/** A named learning module. */
-export interface ModuloTexto {
-  titulo: string;
-  texto: string;
-}
-
-/** Localised text for one asset. */
-export interface AssetTexto {
-  /** Title from the client's catalogue. */
-  titulo: string;
-  /** Alt text. Required — every figure must be described. */
-  alt: string;
-  /** Caption shown under the figure. */
   pie: string;
 }
 
-/**
- * A pull-out box. The manuscript uses two kinds, marked with an emoji in Word:
- * "sabias" (💡 ¿Sabías que?) carries a piece of context, and "consejo"
- * (🛠️ Consejo de taller) carries practical advice aimed at a working artisan.
- *
- * Both were dropped from version 2 of the manuscript; they are restored here
- * from version 1 at the client's request.
- */
-export interface CalloutTexto {
-  tipo: 'sabias' | 'consejo';
+export interface CapituloTexto {
+  /** "Capítulo uno" — spelled out, as the printed edition does. */
+  ordinal: string;
   titulo: string;
-  texto: string;
+  bloques: readonly Bloque[];
 }
 
-/** Localised text for one chapter. */
-export interface CapituloTexto {
+export interface ParteTexto {
   titulo: string;
-  parrafos: readonly string[];
-  callouts?: readonly CalloutTexto[];
+  subtitulo: string;
+  foto: FotoId;
+}
+
+export interface TerminoGlosario {
+  termino: string;
+  definicion: string;
+}
+
+export interface GrupoGlosario {
+  titulo: string;
+  terminos: readonly TerminoGlosario[];
 }
 
 /** Everything the book says, in one language. */
@@ -150,18 +186,28 @@ export interface LibroTexto {
   titulo: string;
   subtitulo: string;
   editor: string;
-  version: string;
-  /** Back-cover summary of the whole work. */
-  sinopsis: string;
-  prologo: CapituloTexto;
-  /** Part titles are the manuscript's own, split at their colon. */
-  partes: Record<LibroParte, { titulo: string; subtitulo: string }>;
+  lugar: string;
+  edicion: string;
+  presentacion: { ordinal: string; titulo: string; bloques: readonly Bloque[]; firma: string };
+  sinopsis: { ordinal: string; titulo: string; bloques: readonly Bloque[] };
+  partes: Record<LibroParte, ParteTexto>;
   capitulos: Record<LibroCapitulo, CapituloTexto>;
-  datosClave: { titulo: string; items: readonly string[] };
-  pasos: { titulo: string; intro: string; items: readonly PasoTexto[] };
-  sesion: { titulo: string; intro: string; items: readonly FaseTexto[] };
-  /** The workshop's seven-module curriculum. */
-  modulos: { titulo: string; intro: string; items: readonly ModuloTexto[] };
-  modulosWeb: { titulo: string; intro: string; items: readonly ModuloTexto[] };
-  assets: Record<AssetTag, AssetTexto>;
+  /** Plates keyed by the photograph they show. */
+  laminas: Record<string, LaminaTexto>;
+  glosario: { titulo: string; intro: string; grupos: readonly GrupoGlosario[] };
+  fuentes: { titulo: string; bloques: readonly Bloque[] };
+  creditos: { titulo: string; bloques: readonly Bloque[] };
+  colofon: { parrafos: readonly string[] };
+  contracubierta: { parrafos: readonly string[] };
+  actividades: Record<string, ActividadTexto>;
+  /** Reader chrome that is part of the book rather than the site. */
+  cierre: {
+    titulo: string;
+    intro: string;
+    resumen: string;
+    sinRespuestas: string;
+    reiniciar: string;
+  };
+  /** The parity page. Only printed when the book would otherwise end odd. */
+  enhorabuena: { titulo: string; texto: string; boton: string };
 }

@@ -133,8 +133,6 @@
     "chaptersTitle": "Los capítulos",
     "chaptersIntro": "La obra se organiza en tres partes: de las raíces prehispánicas del oficio, al proceso que convierte la penca en hilo, y de ahí al futuro del fique como material de diseño.",
     "verPasos": "Leer el capítulo completo",
-    "cursoTitle": "El taller",
-    "cursoIntro": "El «Taller de Oficios del Fique: Creatividad, Tradición y Emprendimiento en Aratoca» es un espacio de formación no formal que reúne a maestros artesanos y jóvenes aprendices del municipio.",
     "faqTitle": "Preguntas frecuentes",
     "faq": {
       "que": {
@@ -166,15 +164,13 @@
       "title": "¿Quieres formar parte del taller?",
       "text": "Escríbenos y te contamos cómo participar en la próxima convocatoria del Taller de Oficios del Fique.",
       "button": "Contactar"
-    }
+    },
+    "fasesIntro": "El recorrido que va de la penca cortada al hilo terminado comprende seis fases claramente diferenciadas. Cada una tiene sus tiempos, sus herramientas y sus criterios de calidad."
   },
   "libro": {
     "indice": "Índice",
-    "indiceNota": "{{total}} capítulos · Lectura libre y gratuita",
+    "cerrarIndice": "Cerrar el índice",
     "parte": "Parte {{numero}}",
-    "parteCapitulo": "Parte {{parte}} · {{titulo}} — Capítulo {{capitulo}}",
-    "leerInteractivoTitulo": "Lee este capítulo en el libro interactivo",
-    "leerInteractivo": "Abrir el libro",
     "navegacionCapitulos": "Navegación entre capítulos",
     "anterior": "Capítulo anterior",
     "siguiente": "Siguiente capítulo",
@@ -183,36 +179,19 @@
     "cerrar": "Cerrar el libro",
     "cargando": "Preparando el libro…",
     "capituloDe": "Capítulo {{numero}} de {{total}}",
-    "movimientoReducido": "Has pedido menos movimiento, así que las páginas cambian sin animación de giro.",
     "sinWebgl": "Tu navegador no puede mostrar el libro en 3D, pero puedes leerlo completo capítulo por capítulo aquí abajo.",
-    "diagramas": {
-      "furcraea": {
-        "titulo": "Ciclo de vida de la Furcraea",
-        "desc": "Diagrama interactivo: al avanzar los años la planta gana pencas, se protege el cogollo central y, tras la madurez, brota el escapo floral.",
-        "cogollo": "Cogollo protegido",
-        "corte": "Pencas basales cortadas",
-        "anio": "Año {{numero}}",
-        "maduro": "Madurez: brota el escapo",
-        "creciendo": "En crecimiento",
-        "control": "Años transcurridos desde la siembra",
-        "pie": "Una misma mata se cosecha durante 15 a 20 años si se dejan quince pencas rodeando el cogollo."
-      },
-      "bioeconomia": {
-        "titulo": "De la hoja a la fibra y al bagazo",
-        "desc": "Diagrama de flujo: de cada hoja cosechada, el 4% se aprovecha como fibra y el 96% restante es bagazo, que puede volver al suelo como abono o biopesticida.",
-        "hoja": "Hoja cosechada",
-        "fibra": "Fibra útil",
-        "bagazo": "Bagazo",
-        "artesania": "Hilo y artesanía",
-        "abono": "Abono orgánico",
-        "biopesticida": "Biopesticida",
-        "ciclo": "El bagazo vuelve a nutrir el suelo fiquero",
-        "pie": "El reto y la oportunidad del oficio caben en dos cifras: 4% y 96%."
-      },
-      "ruta": {
-        "titulo": "Ruta de los siete módulos del taller"
-      }
-    }
+    "actividad": "Actividad",
+    "comprobar": "Comprobar",
+    "reintentar": "Intentar de nuevo",
+    "verdadero": "Verdadero",
+    "falso": "Falso",
+    "si": "Sí",
+    "no": "No",
+    "fases": "Las seis fases del proceso",
+    "lineaTiempo": "Un siglo de fique en Aratoca",
+    "glosario": "Glosario",
+    "fuentes": "Fuentes",
+    "creditos": "Créditos"
   },
   "contacto": {
     "accent": "Hablemos",

@@ -128,7 +128,7 @@ function book(url: UrlBuilder, language: Language) {
     isAccessibleForFree: true,
     author: { '@type': 'Organization', name: libro.editor },
     publisher: { '@id': `${url('/')}#organization` },
-    abstract: libro.prologo.parrafos[0],
+    abstract: libro.sinopsis.bloques.find((bloque) => bloque.tipo === 'entradilla')?.texto ?? '',
     hasPart: LIBRO_CAPITULOS.map((numero) => ({
       '@type': 'Chapter',
       position: numero,
