@@ -38,47 +38,43 @@
       "titleLine3": "a Mano.",
       "intro": "Aratoca en Hilos es una ventana al legado del fique. Descubre cómo la fibra natural se transforma en arte sostenible a través de manos que preservan nuestra historia.",
       "cta": "Comenzar viaje",
-      "imageAlt": "Artesana tejiendo fique en un telar tradicional"
+      "imageAlt": "Aratoca vista desde el aire, entre las montañas de Santander"
     },
     "historia": {
       "title": "Herencia de la Penca",
       "p1": "Los pueblos Guanes, originarios de los cañones de Santander, fueron los primeros maestros de esta fibra. Su conocimiento sagrado sobre los ciclos de la tierra les permitía extraer los hilos más resistentes.",
       "p2": "Hoy, Aratoca mantiene vivo este pulso. El fique dejó de ser solo para los empaques de café y se ha elevado a un nivel de arte, fusionando tintes naturales de hojas y cortezas con técnicas de telar que han sobrevivido siglos.",
       "note": "Nuestra memoria está atada.",
-      "imageAltPlant": "Planta de fique en el campo de Aratoca",
-      "imageAltTexture": "Textura cercana de la fibra de fique"
+      "imageAltPlant": "Planta de fique con su mástil de maguey, en el campo de Aratoca",
+      "imageAltTexture": "Pencas de fique recién cortadas al borde del camino"
     },
     "proceso": {
       "accent": "El Ritual",
-      "title": "7 Pasos a la Eternidad",
+      "title": "Las Seis Fases del Oficio",
       "steps": {
         "cosecha": {
           "title": "Cosecha",
-          "desc": "Se seleccionan las hojas maduras, cuidando el cogollo central para que la planta siga viva y floreciente."
+          "desc": "Se cortan las hojas maduras y se clasifican por calidad, dejando de quince a veinte pencas en el cogollo para que la planta siga viva."
         },
         "desfibrado": {
-          "title": "Desfibrado",
-          "desc": "Con destreza, se raspa la hoja para liberar las fibras largas y fuertes de la pulpa verde."
+          "title": "Extracción o desfibrado",
+          "desc": "Se separa la fibra de la pulpa: por varillado, raspando la penca contra una vara fija, o con desfibradora mecánica."
         },
-        "lavado": {
-          "title": "Lavado",
-          "desc": "El agua pura de los nacimientos limpia la fibra, eliminando impurezas naturales."
-        },
-        "secado": {
-          "title": "Secado al Sol",
-          "desc": "Extendidas bajo el sol de Aratoca, las hebras adquieren ese característico color crema o beige natural."
+        "lavadoSecado": {
+          "title": "Lavado y secado",
+          "desc": "Las fibras se sumergen de doce a quince horas, se lavan y se tienden al sol, que fija el color crema característico."
         },
         "escarmenado": {
-          "title": "Escarmenado",
-          "desc": "Un cepillado vigoroso que separa, alinea y suaviza la fibra, preparándola para el huso."
+          "title": "Escarmenado y peinado",
+          "desc": "Los manojos secos pasan por un cepillo de clavos que desenreda, alinea y pule los filamentos."
         },
         "hilado": {
           "title": "Hilado",
-          "desc": "El baile del artesano; torciendo la fibra a pedal o a mano para crear hilos de distintos grosores."
+          "desc": "La fibra se tuerce para formar el hilo. Del grosor y de la tensión del torcido dependen su resistencia y su destino."
         },
-        "tejido": {
-          "title": "Tejido",
-          "desc": "En el telar, los hilos se cruzan creando tramas que dan vida a tapetes, lienzos y alpargatas."
+        "acabado": {
+          "title": "Acabado final",
+          "desc": "El hilo se teje en telar, ganchillo o máquina: costales, bolsos, manteles, tapetes."
         }
       }
     },
@@ -390,6 +386,26 @@
     "privacidad": {
       "title": "Política de Privacidad — Aratoca en Hilos",
       "description": "Cómo recolectamos y tratamos tus datos personales conforme a la Ley 1581 de 2012 de Colombia, y cómo ejercer tus derechos."
+    }
+  },
+  "pendiente": {
+    "etiqueta": "Falta",
+    "etiquetaFoto": "Foto pendiente",
+    "aviso": "Dato pendiente de la Alcaldía: {{detalle}}. Lo que se muestra es provisional y no debe publicarse.",
+    "imagen": "Fotografía pendiente: {{detalle}}",
+    "avisoLegal": "Esta página cita datos de la entidad que aún no se han facilitado ({{campos}}). No es válida hasta completarlos.",
+    "campos": {
+      "razonSocial": "la razón social",
+      "nit": "el NIT",
+      "telefono": "el teléfono",
+      "whatsapp": "el WhatsApp",
+      "direccion": "la dirección",
+      "redes": "las redes sociales"
+    },
+    "fotos": {
+      "mochilas": "Mochilas y bolsos de fique de Aratoca, sobre fondo neutro",
+      "tapices": "Tapices decorativos tejidos en fique",
+      "calzado": "Calzado tradicional en fique"
     }
   }
 }

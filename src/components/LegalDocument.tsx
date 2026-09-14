@@ -1,7 +1,9 @@
 import { Fragment } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import Reveal from './Reveal';
+import { MOSTRAR_PENDIENTES, PENDIENTES_LEGALES } from '../content/pendientes';
 
 interface LegalDocumentProps {
   /** Translation namespace: `terminos` or `privacidad`. */
@@ -49,6 +51,26 @@ export default function LegalDocument({
   return (
     <section className="px-6 md:px-12 py-16 md:py-24 bg-cream">
       <article className="max-w-3xl mx-auto">
+        {/* TEMPORARY — pre-handover scaffolding; see `content/pendientes.ts`.
+            These documents quote entity details that are still placeholders, and
+            a legal notice built on a placeholder NIT is not a legal notice. The
+            values stay visible, but the page says so at the top. */}
+        {MOSTRAR_PENDIENTES && PENDIENTES_LEGALES.length > 0 && (
+          <div
+            role="note"
+            className="mb-12 flex gap-3 rounded-lg border border-dashed border-terracotta/70 bg-terracotta/10 p-5 text-sm leading-relaxed text-charcoal/85"
+          >
+            <AlertTriangle size={18} className="mt-0.5 shrink-0 text-terracotta" aria-hidden="true" />
+            <p>
+              {t('pendiente.avisoLegal', {
+                campos: PENDIENTES_LEGALES.map((campo) =>
+                  t(`pendiente.campos.${campo}`),
+                ).join(', '),
+              })}
+            </p>
+          </div>
+        )}
+
         <Reveal>
           <p className="text-sm uppercase tracking-widest text-stone mb-8">{updated}</p>
           <p className="text-lg text-charcoal/80 leading-relaxed mb-16 font-light">

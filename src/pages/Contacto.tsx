@@ -6,6 +6,8 @@ import Button from '../components/Button';
 import PageHeader from '../components/PageHeader';
 import Reveal from '../components/Reveal';
 import { COMPANY, FULL_ADDRESS, MAILTO_URL, TEL_URL, WHATSAPP_URL } from '../content/company';
+import Pendiente from '../components/Pendiente';
+import { FALTA } from '../content/pendientes';
 import { useLanguage } from '../i18n/languageContext';
 import {
   CONTACT_LIMITS,
@@ -274,9 +276,23 @@ export default function Contacto() {
                     <p className="text-xs font-bold uppercase tracking-widest text-stone mb-1">
                       {t('contacto.direct.phoneLabel')}
                     </p>
-                    <a href={TEL_URL} className="text-charcoal hover:text-terracotta transition-colors">
-                      {COMPANY.phone}
-                    </a>
+                    {/* The link stays live even though the number is a
+                        placeholder: the client asked to see the site exactly as
+                        it stands, with the gaps marked rather than papered
+                        over. The badge is what says it does not work. */}
+                    <Pendiente
+                      detalle={FALTA.telefono ? t('pendiente.campos.telefono') : ''}
+                      si={FALTA.telefono}
+                    >
+                      <a
+                        href={TEL_URL}
+                        className={`text-charcoal hover:text-terracotta transition-colors ${
+                          FALTA.telefono ? 'line-through decoration-terracotta/60' : ''
+                        }`}
+                      >
+                        {COMPANY.phone}
+                      </a>
+                    </Pendiente>
                   </div>
                 </div>
 
@@ -286,14 +302,21 @@ export default function Contacto() {
                     <p className="text-xs font-bold uppercase tracking-widest text-stone mb-1">
                       {t('contacto.direct.whatsappLabel')}
                     </p>
-                    <a
-                      href={WHATSAPP_URL}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="text-charcoal hover:text-terracotta transition-colors"
+                    <Pendiente
+                      detalle={FALTA.whatsapp ? t('pendiente.campos.whatsapp') : ''}
+                      si={FALTA.whatsapp}
                     >
-                      {t('contacto.direct.whatsappAction')}
-                    </a>
+                      <a
+                        href={WHATSAPP_URL}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className={`text-charcoal hover:text-terracotta transition-colors ${
+                          FALTA.whatsapp ? 'line-through decoration-terracotta/60' : ''
+                        }`}
+                      >
+                        {t('contacto.direct.whatsappAction')}
+                      </a>
+                    </Pendiente>
                   </div>
                 </div>
 
@@ -303,7 +326,14 @@ export default function Contacto() {
                     <p className="text-xs font-bold uppercase tracking-widest text-stone mb-1">
                       {t('contacto.direct.addressLabel')}
                     </p>
-                    <p className="text-charcoal">{FULL_ADDRESS}</p>
+                    <p className="text-charcoal">
+                      <Pendiente
+                        detalle={t('pendiente.campos.direccion')}
+                        si={FALTA.direccion}
+                      >
+                        {FULL_ADDRESS}
+                      </Pendiente>
+                    </p>
                   </div>
                 </div>
 

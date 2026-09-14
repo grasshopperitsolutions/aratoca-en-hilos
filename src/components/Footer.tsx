@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import SocialLinks from './SocialLinks';
 import { COMPANY, FULL_ADDRESS, MAILTO_URL } from '../content/company';
+import Pendiente from './Pendiente';
+import { FALTA } from '../content/pendientes';
 import { useLanguage } from '../i18n/languageContext';
 import { LEGAL_PAGES, NAV_PAGES } from '../i18n/routes';
 
@@ -74,13 +76,23 @@ export default function Footer() {
                 </li>
                 <li className="flex items-center justify-center md:justify-start gap-2">
                   <MapPin size={14} className="text-penca shrink-0" />
-                  <span>{FULL_ADDRESS}</span>
+                  <span>
+                    <Pendiente detalle={t('pendiente.campos.direccion')} si={FALTA.direccion}>
+                      {FULL_ADDRESS}
+                    </Pendiente>
+                  </span>
                 </li>
               </ul>
             </div>
           </div>
 
-          <SocialLinks />
+          {FALTA.redes ? (
+            <div className="flex justify-center">
+              <Pendiente detalle={t('pendiente.campos.redes')} />
+            </div>
+          ) : (
+            <SocialLinks />
+          )}
         </div>
 
         <div className="text-center text-stone text-xs uppercase tracking-widest border-t border-stone/20 pt-8">

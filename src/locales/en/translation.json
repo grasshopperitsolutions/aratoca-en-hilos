@@ -38,47 +38,43 @@
       "titleLine3": "by Hand.",
       "intro": "Aratoca en Hilos is a window into the legacy of fique. Discover how this natural fibre becomes sustainable art through hands that keep our history alive.",
       "cta": "Begin the journey",
-      "imageAlt": "Artisan weaving fique on a traditional loom"
+      "imageAlt": "Aratoca seen from the air, among the mountains of Santander"
     },
     "historia": {
       "title": "Heritage of the Penca",
       "p1": "The Guane people, native to the canyons of Santander, were the first masters of this fibre. Their sacred knowledge of the earth's cycles let them draw out the strongest threads of all.",
       "p2": "Aratoca keeps that pulse alive today. Fique is no longer just coffee sacking: it has been raised to an art form, blending natural dyes from leaves and bark with loom techniques that have survived for centuries.",
       "note": "Our memory is bound in thread.",
-      "imageAltPlant": "Fique plant growing in the fields of Aratoca",
-      "imageAltTexture": "Close-up texture of fique fibre"
+      "imageAltPlant": "A fique plant with its maguey stalk, in the fields of Aratoca",
+      "imageAltTexture": "Freshly cut fique leaves at the roadside"
     },
     "proceso": {
       "accent": "The Ritual",
-      "title": "7 Steps to Eternity",
+      "title": "The Six Phases of the Craft",
       "steps": {
         "cosecha": {
           "title": "Harvest",
-          "desc": "Mature leaves are selected one by one, sparing the central shoot so the plant lives on and keeps flourishing."
+          "desc": "Mature leaves are cut and sorted by quality, leaving fifteen to twenty pencas in the crown so the plant lives on."
         },
         "desfibrado": {
-          "title": "Defibring",
-          "desc": "The leaf is skilfully scraped to release the long, strong fibres from the green pulp."
+          "title": "Extraction, or defibring",
+          "desc": "The fibre is separated from the pulp: by varillado, scraping the leaf against a fixed pole, or by mechanical defibring machine."
         },
-        "lavado": {
-          "title": "Washing",
-          "desc": "Pure spring water rinses the fibre, carrying away its natural impurities."
-        },
-        "secado": {
-          "title": "Sun Drying",
-          "desc": "Spread out under the Aratoca sun, the strands take on their characteristic cream and beige tones."
+        "lavadoSecado": {
+          "title": "Washing and drying",
+          "desc": "The fibres soak for twelve to fifteen hours, are washed, then dried in the sun, which sets the characteristic cream colour."
         },
         "escarmenado": {
-          "title": "Combing",
-          "desc": "A vigorous brushing that separates, aligns and softens the fibre, readying it for the spindle."
+          "title": "Escarmenado and combing",
+          "desc": "The dried bundles are drawn through a nail comb that untangles, aligns and polishes the filaments."
         },
         "hilado": {
           "title": "Spinning",
-          "desc": "The artisan's dance: twisting the fibre by pedal or by hand into threads of every thickness."
+          "desc": "The fibre is twisted into thread. Its strength and its destination depend on the thickness and tension of the twist."
         },
-        "tejido": {
-          "title": "Weaving",
-          "desc": "On the loom the threads cross into wefts that become rugs, canvases and alpargatas."
+        "acabado": {
+          "title": "Finishing",
+          "desc": "The thread is woven on a loom, with a crochet hook or by machine: sacks, bags, table linen, rugs."
         }
       }
     },
@@ -390,6 +386,26 @@
     "privacidad": {
       "title": "Privacy Policy — Aratoca en Hilos",
       "description": "How we collect and process your personal data under Colombia’s Law 1581 of 2012, and how to exercise your rights."
+    }
+  },
+  "pendiente": {
+    "etiqueta": "Missing",
+    "etiquetaFoto": "Photo pending",
+    "aviso": "Awaiting the municipality: {{detalle}}. What is shown is provisional and must not be published.",
+    "imagen": "Photograph pending: {{detalle}}",
+    "avisoLegal": "This page cites entity details that have not been supplied yet ({{campos}}). It is not valid until they are.",
+    "campos": {
+      "razonSocial": "the registered legal name",
+      "nit": "the tax number",
+      "telefono": "the telephone number",
+      "whatsapp": "the WhatsApp number",
+      "direccion": "the street address",
+      "redes": "the social profiles"
+    },
+    "fotos": {
+      "mochilas": "Fique bags and mochilas from Aratoca, on a neutral background",
+      "tapices": "Decorative tapestries woven in fique",
+      "calzado": "Traditional fique footwear"
     }
   }
 }

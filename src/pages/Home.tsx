@@ -8,7 +8,6 @@ import {
   MapPin,
   RefreshCw,
   Scissors,
-  Sun,
   Wind,
   type LucideIcon,
 } from 'lucide-react';
@@ -16,21 +15,27 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '../components/Button';
 import Reveal from '../components/Reveal';
+import { ImagenPendiente } from '../components/Pendiente';
 import { IMAGES } from '../content/images';
 import { useLanguage } from '../i18n/languageContext';
 
-/** The seven stages of fique. Ids match the translation keys. */
+/**
+ * The six phases of fique, named as the book names them.
+ *
+ * This page used to advertise seven steps under names of its own, which put the
+ * landing page in direct contradiction with the book the same site publishes.
+ * The book is the researched source, so it wins. Ids match the translation keys.
+ */
 const PROCESS_STEPS: { id: string; icon: LucideIcon; color: string }[] = [
   { id: 'cosecha', icon: Leaf, color: '#4C7A3D' },
   { id: 'desfibrado', icon: Scissors, color: '#6B4226' },
-  { id: 'lavado', icon: Droplets, color: '#8FA878' },
-  { id: 'secado', icon: Sun, color: '#B85C38' },
+  { id: 'lavadoSecado', icon: Droplets, color: '#8FA878' },
   { id: 'escarmenado', icon: Wind, color: '#A79E8E' },
   { id: 'hilado', icon: RefreshCw, color: '#6B4226' },
-  { id: 'tejido', icon: Layers, color: '#B85C38' },
+  { id: 'acabado', icon: Layers, color: '#B85C38' },
 ];
 
-const COLLECTION = [
+const COLLECTION: { id: string; img: string | null; offset: string }[] = [
   { id: 'mochilas', img: IMAGES.collectionBags, offset: 'md:mt-0' },
   { id: 'tapices', img: IMAGES.collectionTapestries, offset: 'md:mt-16' },
   { id: 'calzado', img: IMAGES.collectionFootwear, offset: 'md:mt-8' },
@@ -252,13 +257,23 @@ export default function Home() {
             {COLLECTION.map((item, i) => (
               <Reveal key={item.id} delay={i * 200} className={`group ${item.offset}`}>
                 <div className="relative overflow-hidden rounded-tl-3xl rounded-br-3xl mb-6 bg-earth">
-                  <div className="absolute inset-0 bg-charcoal/20 group-hover:bg-transparent transition-colors z-10 duration-500"></div>
-                  <img
-                    src={item.img}
-                    alt={t(`home.coleccion.items.${item.id}.title`)}
-                    loading="lazy"
-                    className="w-full h-96 object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[800ms]"
-                  />
+                  {item.img ? (
+                    <>
+                      <div className="absolute inset-0 bg-charcoal/20 group-hover:bg-transparent transition-colors z-10 duration-500"></div>
+                      <img
+                        src={item.img}
+                        alt={t(`home.coleccion.items.${item.id}.title`)}
+                        loading="lazy"
+                        className="w-full h-96 object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[800ms]"
+                      />
+                    </>
+                  ) : (
+                    <ImagenPendiente
+                      detalle={t(`pendiente.fotos.${item.id}`)}
+                      tono="contraste"
+                      className="h-96"
+                    />
+                  )}
                 </div>
                 <h3 className="text-2xl font-fraunces text-cream mb-2">
                   {t(`home.coleccion.items.${item.id}.title`)}
