@@ -8,7 +8,8 @@ import Bloques, { Foto } from '../components/libro/Bloques';
 import DescargarPdf from '../components/libro/DescargarPdf';
 import Reveal from '../components/Reveal';
 import { libroTexto } from '../content/libro';
-import { ESCUDOS, capitulosDeParte } from '../content/libro/estructura';
+import { capitulosDeParte } from '../content/libro/estructura';
+import { useEscudos } from '../hooks/useEscudos';
 import { useLanguage } from '../i18n/languageContext';
 import { buildPath, pageKeyDeCapitulo } from '../i18n/routes';
 import { LIBRO_CAPITULOS, LIBRO_PARTES, type LibroCapitulo } from '../types/libro';
@@ -44,6 +45,7 @@ export default function Libro() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const libro = libroTexto(language);
+  const escudos = useEscudos();
   const rutaCapitulo = (numero: LibroCapitulo) =>
     buildPath(pageKeyDeCapitulo(numero), language);
 
@@ -105,9 +107,9 @@ export default function Libro() {
           </Reveal>
           <Reveal delay={600}>
             <div className="flex items-center justify-center gap-5 mt-12">
-              <img src={ESCUDOS.aratoca} alt="" className="h-12 w-auto" />
+              <img src={escudos.aratoca} alt="" className="h-12 w-auto" />
               <span className="w-px h-10 bg-charcoal/20" />
-              <img src={ESCUDOS.ministerio} alt="" className="h-11 w-auto" />
+              <img src={escudos.ministerio} alt="" className="h-11 w-auto" />
             </div>
           </Reveal>
         </div>

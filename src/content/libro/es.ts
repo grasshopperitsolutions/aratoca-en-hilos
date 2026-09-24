@@ -1022,5 +1022,57 @@ export const LIBRO_ES: LibroTexto = {
       explicacion:
         'Ninguno de los dos grupos puede sostener el oficio por separado. Por eso el encuentro intergeneracional es el mecanismo de salvaguardia más eficaz disponible.',
     },
+    /* --- Glosario · repaso de vocabulario --- */
+    'g-terminos-etapa': {
+      pregunta: 'Cada término pertenece a una etapa del oficio. ¿Dónde va cada uno?',
+      grupos: ['La planta y el cultivo', 'El taller y los productos'],
+      items: ['Cogollo', 'Alpargata', 'Penca', 'Telar horizontal', 'Maguey', 'Ganchillo'],
+      explicacion:
+        'Cogollo, penca y maguey nombran partes y momentos de la planta; alpargata, telar horizontal y ganchillo pertenecen al taller. El glosario sigue ese mismo recorrido: primero la mata, después la fibra, al final el producto.',
+    },
+    'g-varillado': {
+      pregunta: '¿Qué es el varillado?',
+      opciones: [
+        'Torcer la fibra para formar el hilo',
+        'Raspar la penca contra una vara fija hasta desprender la pulpa',
+        'Pasar el manojo seco por un cepillo de clavos',
+        'Sumergir la fibra en agua antes de secarla',
+      ],
+      explicacion:
+        'El varillado es el desfibrado manual y tradicional. Las otras tres opciones también existen, pero son el hilado, el escarmenado y el remojo: fases distintas del mismo recorrido.',
+    },
+    'g-cabuya': {
+      pregunta: '¿Qué es exactamente la cabuya?',
+      opciones: [
+        'La hoja entera del fique',
+        'El residuo que queda tras el desfibrado',
+        'La fibra útil extraída de la penca, y el hilo que se hace con ella',
+        'El tallo floral que emite la planta al final de su vida',
+      ],
+      explicacion:
+        'La hoja es la penca, el residuo es el bagazo y el tallo floral es el maguey. La cabuya es lo que queda cuando se separa la fibra de la pulpa: apenas el cuatro por ciento del peso de la hoja.',
+    },
+    'g-escarmenado': {
+      pregunta: 'El escarmenado se hace antes del lavado de la fibra.',
+      explicacion:
+        'Falso. El escarmenado va después: se pasa por el cepillo de clavos el manojo ya lavado y seco. Cepillar la fibra húmeda y con pulpa adherida la rompería en lugar de peinarla.',
+    },
+    'g-costal-ralo': {
+      pregunta: '¿Sigue siendo el costal ralo el principal producto del fique en Aratoca?',
+      explicacion:
+        'No. Desde los años ochenta las fibras sintéticas lo reemplazaron casi por completo, y el oficio se reorientó hacia bolsos, mochilas, tapetes, alpargatas y artesanía decorativa: productos de mayor valor agregado.',
+    },
+    'g-biomanto': {
+      pregunta: '¿Para qué sirve un biomanto?',
+      opciones: [
+        'Para controlar la erosión y estabilizar taludes',
+        'Para teñir la fibra con pigmentos naturales',
+        'Para transportar café y papa',
+        'Para peinar y alinear los filamentos',
+      ],
+      explicacion:
+        'Es una manta vegetal biodegradable que sujeta el suelo en terrenos de alta pendiente — justamente los de Aratoca. Es uno de los destinos posibles del bagazo, ese noventa y seis por ciento de la hoja que hoy se descarta.',
+    },
   },
+
 };

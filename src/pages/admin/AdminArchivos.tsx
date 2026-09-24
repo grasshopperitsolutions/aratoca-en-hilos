@@ -16,7 +16,20 @@ import {
   subirArchivo,
   subscribeArchivos,
 } from '../../services/archivos';
-import type { Archivo } from '../../types/content';
+import { ARCHIVO_ROLES, ROL_ACEPTA, type Archivo, type ArchivoRol } from '../../types/content';
+
+/** What each role is called on screen, and the warning shown before deleting it. */
+const ROL_ETIQUETA: Record<ArchivoRol, string> = {
+  'libro-pdf': 'PDF del libro',
+  'escudo-aratoca': 'Escudo de Aratoca',
+  'logo-ministerio': 'Logo del Ministerio',
+};
+
+/** Roles a file of this content type is allowed to fill. */
+function rolesParaTipo(tipo: string): ArchivoRol[] {
+  const clase = tipo === PDF_TYPE ? 'pdf' : 'imagen';
+  return ARCHIVO_ROLES.filter((rol) => ROL_ACEPTA[rol] === clase);
+}
 
 export default function AdminArchivos() {
   const [archivos, setArchivos] = useState<Archivo[]>([]);
@@ -60,23 +73,27 @@ export default function AdminArchivos() {
   }
 
   async function handleDelete(archivo: Archivo) {
-    const aviso =
-      archivo.rol === 'libro-pdf'
-        ? `¿Eliminar "${archivo.nombre}"? Es el PDF publicado del libro: el botón de descarga desaparecerá del sitio.`
-        : `¿Eliminar "${archivo.nombre}"? Si alguna página usa este archivo, dejará de verse.`;
+    const aviso = archivo.rol
+      ? `¿Eliminar "${archivo.nombre}"? Está publicado como ${ROL_ETIQUETA[archivo.rol]}: el sitio volverá a la versión incluida en el código.`
+      : `¿Eliminar "${archivo.nombre}"? Si alguna página usa este archivo, dejará de verse.`;
 
     if (!window.confirm(aviso)) return;
     await eliminarArchivo(archivo);
   }
 
-  /** Marks a PDF as the book's published edition, or clears that mark. */
-  async function toggleLibro(archivo: Archivo) {
+  /**
+   * Publishes this file into a slot, or clears the one it holds.
+   *
+   * One file per role: `asignarRol` clears whoever held it before, so picking a
+   * new crest replaces the old one in a single step.
+   */
+  async function cambiarRol(archivo: Archivo, rol: ArchivoRol | '') {
     try {
-      if (archivo.rol === 'libro-pdf') await quitarRol(archivo.id);
-      else await asignarRol(archivo.id, 'libro-pdf');
+      if (rol === '') await quitarRol(archivo.id);
+      else await asignarRol(archivo.id, rol);
     } catch (caught) {
       console.error('[admin/archivos] role change failed:', caught);
-      setError('No se pudo cambiar el PDF del libro.');
+      setError('No se pudo cambiar la publicación del archivo.');
     }
   }
 
@@ -157,35 +174,33 @@ export default function AdminArchivos() {
                   />
                 )}
 
-                {archivo.rol === 'libro-pdf' && (
+                {archivo.rol && (
                   <span className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-penca text-cream text-[10px] font-bold uppercase tracking-widest px-2 py-1">
                     <BookOpen size={11} />
-                    Libro
+                    {ROL_ETIQUETA[archivo.rol]}
                   </span>
                 )}
 
                 <div className="absolute inset-x-0 bottom-0 flex justify-end gap-1 p-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity bg-gradient-to-t from-charcoal/70 to-transparent">
-                  {archivo.tipo === PDF_TYPE && (
-                    <button
-                      onClick={() => toggleLibro(archivo)}
-                      aria-label={
-                        archivo.rol === 'libro-pdf'
-                          ? 'Dejar de publicar como PDF del libro'
-                          : 'Publicar como PDF del libro'
+                  {rolesParaTipo(archivo.tipo).length > 0 && (
+                    <select
+                      value={archivo.rol ?? ''}
+                      onChange={(event) =>
+                        void cambiarRol(archivo, event.target.value as ArchivoRol | '')
                       }
-                      title={
-                        archivo.rol === 'libro-pdf'
-                          ? 'Dejar de publicar como PDF del libro'
-                          : 'Publicar como PDF del libro'
-                      }
-                      className={`p-2 rounded-full hover:bg-cream ${
-                        archivo.rol === 'libro-pdf'
-                          ? 'bg-penca text-cream'
-                          : 'bg-cream/90 text-charcoal'
+                      aria-label={`Publicar "${archivo.nombre}" como`}
+                      title="Publicar este archivo en el sitio"
+                      className={`rounded-full text-xs px-2 py-1.5 border-0 cursor-pointer ${
+                        archivo.rol ? 'bg-penca text-cream' : 'bg-cream/90 text-charcoal'
                       }`}
                     >
-                      <BookOpen size={14} />
-                    </button>
+                      <option value="">Sin publicar</option>
+                      {rolesParaTipo(archivo.tipo).map((rol) => (
+                        <option key={rol} value={rol}>
+                          {ROL_ETIQUETA[rol]}
+                        </option>
+                      ))}
+                    </select>
                   )}
                   <button
                     onClick={() => copyUrl(archivo)}

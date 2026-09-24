@@ -33,7 +33,13 @@ import {
 export { LIBRO_CAPITULOS, LIBRO_PARTES } from '../../types/libro';
 export type { LibroCapitulo, LibroParte } from '../../types/libro';
 
-export const ESCUDOS = { aratoca: escudoAratoca, ministerio: logoMinisterio } as const;
+/**
+ * The crests as they appear in the printed first edition.
+ *
+ * Read through `useEscudos()` rather than directly: an admin can override
+ * either one from /admin/archivos, and these are the fallback.
+ */
+export const ESCUDOS_IMPRESOS = { aratoca: escudoAratoca, ministerio: logoMinisterio } as const;
 
 /** Resolved URL per photograph. */
 export const FOTO_SRC: Record<FotoId, string> = {
@@ -208,9 +214,54 @@ export const ACTIVIDADES: Record<string, ActividadMeta> = {
     // criterio técnico · memoria · lenguaje visual · herramientas digitales · canales de venta
     columnas: [0, 0, 1, 1, 1],
   },
+
+  /* --- Glosario · repaso de vocabulario ---
+     These close the book rather than a chapter: they check the words the
+     reader has met along the way, not the argument of any one chapter. */
+  'g-terminos-etapa': {
+    tipo: 'clasificar',
+    id: 'g-terminos-etapa',
+    // cogollo · alpargata · penca · telar horizontal · maguey · ganchillo
+    columnas: [0, 1, 0, 1, 0, 1],
+  },
+  'g-varillado': {
+    tipo: 'opcionMultiple',
+    id: 'g-varillado',
+    correctas: [1],
+    totalOpciones: 4,
+  },
+  'g-cabuya': {
+    tipo: 'opcionMultiple',
+    id: 'g-cabuya',
+    correctas: [2],
+    totalOpciones: 4,
+  },
+  'g-escarmenado': { tipo: 'verdaderoFalso', id: 'g-escarmenado', respuesta: false },
+  'g-costal-ralo': { tipo: 'siNo', id: 'g-costal-ralo', respuesta: false },
+  'g-biomanto': {
+    tipo: 'opcionMultiple',
+    id: 'g-biomanto',
+    correctas: [0],
+    totalOpciones: 4,
+  },
 };
 
 /** Activity ids in reading order, for progress and the closing summary. */
+/**
+ * The vocabulary review that closes the glossary, in the order it is shown.
+ *
+ * Kept separate from `ACTIVIDADES_EN_ORDEN` because these belong to no chapter:
+ * `paginar` places them after the glossary groups rather than inside the body.
+ */
+export const GLOSARIO_ACTIVIDADES: readonly string[] = [
+  'g-terminos-etapa',
+  'g-varillado',
+  'g-cabuya',
+  'g-escarmenado',
+  'g-costal-ralo',
+  'g-biomanto',
+];
+
 export const ACTIVIDADES_EN_ORDEN: readonly string[] = [
   'c1-algodon-o-fique',
   'c1-gremio',
@@ -229,4 +280,10 @@ export const ACTIVIDADES_EN_ORDEN: readonly string[] = [
   'c6-frentes',
   'c6-desafio',
   'c6-quien-aporta',
+  'g-terminos-etapa',
+  'g-varillado',
+  'g-cabuya',
+  'g-escarmenado',
+  'g-costal-ralo',
+  'g-biomanto',
 ];

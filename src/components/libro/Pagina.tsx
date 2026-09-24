@@ -2,7 +2,8 @@ import { useTranslation } from 'react-i18next';
 
 import Ajustar from './Ajustar';
 import Bloques from './Bloques';
-import { ESCUDOS, FOTO_SRC, LAMINAS, PARTE_DE_CAPITULO } from '../../content/libro/estructura';
+import { FOTO_SRC, LAMINAS, PARTE_DE_CAPITULO } from '../../content/libro/estructura';
+import { useEscudos } from '../../hooks/useEscudos';
 import { libroTexto } from '../../content/libro';
 import { ACTIVIDADES_EN_ORDEN } from '../../content/libro/estructura';
 import { resumirProgreso, useProgresoLibro } from '../../hooks/useProgresoLibro';
@@ -27,6 +28,7 @@ export default function Pagina({
   const { t } = useTranslation();
   const { language } = useLanguage();
   const libro = libroTexto(language);
+  const escudos = useEscudos();
 
   switch (pagina.tipo) {
     case 'portada':
@@ -49,9 +51,9 @@ export default function Pagina({
               {libro.subtitulo}
             </p>
             <div className="flex items-center gap-4 bg-cream rounded-sm px-5 py-3 mt-10">
-              <img src={ESCUDOS.aratoca} alt="" className="h-8 sm:h-10 w-auto" />
+              <img src={escudos.aratoca} alt="" className="h-8 sm:h-10 w-auto" />
               <span className="w-px h-8 bg-stone/40" />
-              <img src={ESCUDOS.ministerio} alt="" className="h-7 sm:h-9 w-auto" />
+              <img src={escudos.ministerio} alt="" className="h-7 sm:h-9 w-auto" />
             </div>
             <p className="text-[0.6rem] uppercase tracking-[0.25em] text-cream/70 mt-8">
               {libro.edicion}
@@ -218,6 +220,26 @@ export default function Pagina({
       );
     }
 
+    case 'repaso':
+      return (
+        <Ajustar className="px-7 sm:px-10 py-8">
+          {pagina.inicio && (
+            <header className="mb-6">
+              <p className="text-xs font-bold uppercase tracking-widest text-penca">
+                {t('libro.glosario')}
+              </p>
+              <h2 className="font-fraunces text-2xl sm:text-3xl text-charcoal mt-2">
+                {t('libro.repaso')}
+              </h2>
+              <p className="text-charcoal/70 font-light leading-relaxed mt-4 text-sm">
+                {t('libro.repasoIntro')}
+              </p>
+            </header>
+          )}
+          <Bloques bloques={pagina.bloques} />
+        </Ajustar>
+      );
+
     case 'cierre':
       return <Cierre />;
 
@@ -251,9 +273,9 @@ export default function Pagina({
               ))}
             </div>
             <div className="flex items-center gap-4 bg-cream rounded-sm px-4 py-2.5 self-start">
-              <img src={ESCUDOS.aratoca} alt="" className="h-7 w-auto" />
+              <img src={escudos.aratoca} alt="" className="h-7 w-auto" />
               <span className="w-px h-6 bg-stone/40" />
-              <img src={ESCUDOS.ministerio} alt="" className="h-6 w-auto" />
+              <img src={escudos.ministerio} alt="" className="h-6 w-auto" />
             </div>
           </div>
         </div>

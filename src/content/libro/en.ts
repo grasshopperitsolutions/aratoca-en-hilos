@@ -1019,5 +1019,57 @@ export const LIBRO_EN: LibroTexto = {
       explicacion:
         'Neither group can sustain the trade alone. That is why intergenerational encounter is the most effective safeguarding mechanism available.',
     },
+    /* --- Glossary · vocabulary review --- */
+    'g-terminos-etapa': {
+      pregunta: 'Each term belongs to a stage of the craft. Where does each one go?',
+      grupos: ['The plant and the crop', 'The workshop and its products'],
+      items: ['Cogollo', 'Alpargata', 'Penca', 'Horizontal loom', 'Maguey', 'Crochet hook'],
+      explicacion:
+        'Cogollo, penca and maguey name parts and moments of the plant; the alpargata, the horizontal loom and the crochet hook belong to the workshop. The glossary follows that same path: first the plant, then the fibre, finally the product.',
+    },
+    'g-varillado': {
+      pregunta: 'What is varillado?',
+      opciones: [
+        'Twisting the fibre to form thread',
+        'Scraping the leaf against a fixed rod until the pulp comes away',
+        'Passing the dry bundle through a nail brush',
+        'Soaking the fibre in water before drying it',
+      ],
+      explicacion:
+        'Varillado is manual, traditional defibring. The other three exist too, but they are spinning, combing and soaking: different stages of the same journey.',
+    },
+    'g-cabuya': {
+      pregunta: 'What exactly is cabuya?',
+      opciones: [
+        'The whole fique leaf',
+        'The residue left after defibring',
+        'The usable fibre drawn from the leaf, and the thread made from it',
+        'The flower stalk the plant sends up at the end of its life',
+      ],
+      explicacion:
+        'The leaf is the penca, the residue is the bagasse and the flower stalk is the maguey. Cabuya is what remains once fibre is separated from pulp: barely four per cent of the leaf by weight.',
+    },
+    'g-escarmenado': {
+      pregunta: 'Combing takes place before the fibre is washed.',
+      explicacion:
+        'False. Combing comes afterwards: the nail brush is passed through a bundle that has already been washed and dried. Brushing fibre while it is wet and still carrying pulp would tear it rather than comb it.',
+    },
+    'g-costal-ralo': {
+      pregunta: 'Is the coarse sack still the main fique product in Aratoca?',
+      explicacion:
+        'No. From the 1980s onwards synthetic fibres replaced it almost entirely, and the craft turned towards bags, mochilas, rugs, alpargatas and decorative work: products carrying far more added value.',
+    },
+    'g-biomanto': {
+      pregunta: 'What is a bio-blanket for?',
+      opciones: [
+        'Controlling erosion and stabilising slopes',
+        'Dyeing the fibre with natural pigments',
+        'Transporting coffee and potatoes',
+        'Combing and aligning the filaments',
+      ],
+      explicacion:
+        'It is a biodegradable plant matting that holds soil on steep ground — precisely the ground Aratoca is made of. It is one of the possible destinations for bagasse, the ninety-six per cent of the leaf discarded today.',
+    },
   },
+
 };

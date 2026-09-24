@@ -119,7 +119,11 @@
     "contacto": {
       "whatsapp": "Escribir por WhatsApp",
       "mapa": "Ver ubicación"
-    }
+    },
+    "mapaTitulo": "Mapa de artesanos de Aratoca",
+    "mapaCargando": "Cargando el mapa…",
+    "mapaPie": "Pasa el cursor por un punto para ver quién trabaja allí. Solo aparecen los artesanos con ubicación registrada.",
+    "verFicha": "Ver su ficha"
   },
   "tallerFique": {
     "accent": "Libro interactivo",
@@ -173,6 +177,8 @@
     "descargarPdf": "Descargar el libro en PDF",
     "abrir": "Abrir el libro interactivo",
     "cerrar": "Cerrar el libro",
+    "silenciar": "Silenciar el sonido",
+    "activarSonido": "Activar el sonido",
     "cargando": "Preparando el libro…",
     "capituloDe": "Capítulo {{numero}} de {{total}}",
     "sinWebgl": "Tu navegador no puede mostrar el libro en 3D, pero puedes leerlo completo capítulo por capítulo aquí abajo.",
@@ -186,6 +192,8 @@
     "fases": "Las seis fases del proceso",
     "lineaTiempo": "Un siglo de fique en Aratoca",
     "glosario": "Glosario",
+    "repaso": "Repaso de vocabulario",
+    "repasoIntro": "Seis ejercicios para comprobar los términos del oficio, en el mismo orden en que aparecen en el glosario.",
     "fuentes": "Fuentes",
     "creditos": "Créditos"
   },

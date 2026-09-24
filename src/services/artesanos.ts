@@ -82,6 +82,8 @@ export function mapArtesano(snapshot: QueryDocumentSnapshot<DocumentData>): Arte
     telefonos: toTelefonos(data.telefonos),
     correos: toCorreos(data.correos),
     mapaUrl: typeof data.mapaUrl === 'string' ? data.mapaUrl : '',
+    lat: typeof data.lat === 'number' ? data.lat : null,
+    lng: typeof data.lng === 'number' ? data.lng : null,
     orden: typeof data.orden === 'number' ? data.orden : 0,
     publicado: data.publicado === true,
     creadoEn: toIso(data.creadoEn),

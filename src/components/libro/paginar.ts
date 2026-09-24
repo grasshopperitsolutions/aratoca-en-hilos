@@ -1,4 +1,5 @@
 import {
+  GLOSARIO_ACTIVIDADES,
   LAMINAS,
   LIBRO_CAPITULOS,
   LIBRO_PARTES,
@@ -35,6 +36,8 @@ export type PaginaLibro =
   | { tipo: 'contenido'; capitulo: LibroCapitulo; bloques: readonly Bloque[] }
   | { tipo: 'lamina'; clave: keyof typeof LAMINAS }
   | { tipo: 'glosario'; indice: number }
+  /** Vocabulary exercises closing the glossary. */
+  | { tipo: 'repaso'; bloques: readonly Bloque[]; inicio: boolean }
   | { tipo: 'cierre' }
   | { tipo: 'enhorabuena' }
   | { tipo: 'contracubierta' };
@@ -170,6 +173,12 @@ export function construirPaginas(libro: LibroTexto): PaginaConCapitulo[] {
   }
 
   libro.glosario.grupos.forEach((_, indice) => push({ tipo: 'glosario', indice }));
+
+  // The vocabulary review closes the glossary. Each activity is in SOLOS, so
+  // `repartir` gives one per page, exactly as it does inside a chapter.
+  repartir(GLOSARIO_ACTIVIDADES.map((id) => ({ tipo: 'actividad', id }) as const)).forEach(
+    (bloques, i) => push({ tipo: 'repaso', bloques, inicio: i === 0 }),
+  );
 
   repartir(libro.fuentes.bloques).forEach((bloques, i) =>
     push({ tipo: 'seccion', clave: 'fuentes', bloques, inicio: i === 0 }),

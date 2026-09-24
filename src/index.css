@@ -175,3 +175,110 @@ body {
   .libro-indice,
   .libro-indice-velo { animation-duration: 1ms !important; }
 }
+
+/* ---------------------------------------------------------------- *
+ * FondoVivo — leaves, seeds and fibre drifting behind the site.
+ *
+ * One motion per nested element (fall, sway, spin) so none of them has to
+ * share a `transform`. All three animate `transform` only, so the layer
+ * stays on the compositor and never triggers layout.
+ * ---------------------------------------------------------------- */
+
+.fondo-vivo__caida {
+  position: absolute;
+  top: -14vh;
+  display: block;
+  will-change: transform;
+  animation: fondo-caer linear infinite;
+}
+
+.fondo-vivo__vaiven {
+  display: block;
+  animation: fondo-vaiven ease-in-out infinite;
+}
+
+.fondo-vivo__giro {
+  display: block;
+  animation: fondo-girar linear infinite;
+}
+
+@keyframes fondo-caer {
+  from { transform: translateY(0); }
+  to   { transform: translateY(126vh); }
+}
+
+@keyframes fondo-vaiven {
+  from { transform: translateX(-2.5vw); }
+  to   { transform: translateX(2.5vw); }
+}
+
+@keyframes fondo-girar {
+  from { transform: scale(var(--escala, 1)) rotate(0deg); }
+  to   { transform: scale(var(--escala, 1)) rotate(360deg); }
+}
+
+/* Drifting debris cannot be made calm by slowing it down, so it goes entirely. */
+@media (prefers-reduced-motion: reduce) {
+  .fondo-vivo { display: none; }
+}
+
+/* ---------------------------------------------------------------- *
+ * MapaArtesanos — Leaflet, dressed to match the site.
+ * ---------------------------------------------------------------- */
+
+/* The pin is the site mark; Leaflet's own icon chrome would only box it in. */
+.mapa-artesanos__pin {
+  background: none;
+  border: 0;
+}
+
+.leaflet-container {
+  font-family: var(--font-nunito), sans-serif;
+  background: var(--color-fique);
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0 1.25rem 0 1.25rem;
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+}
+
+.leaflet-popup-content { margin: 0.75rem 0.9rem; }
+.leaflet-popup-tip { background: var(--color-cream); }
+
+.mapa-artesanos__ficha {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  min-width: 11rem;
+}
+
+.mapa-artesanos__ficha img {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.mapa-artesanos__nombre {
+  font-family: var(--font-fraunces), serif;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.mapa-artesanos__oficio {
+  font-size: 0.75rem;
+  color: var(--color-stone);
+  margin: 0.1rem 0 0.3rem;
+}
+
+.mapa-artesanos__ficha a {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-penca);
+}
+
+.mapa-artesanos__ficha a:hover { color: var(--color-terracotta); }

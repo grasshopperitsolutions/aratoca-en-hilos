@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDrag } from '@use-gesture/react';
-import { ChevronLeft, ChevronRight, List, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, List, Volume2, VolumeX, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import Pagina from './Pagina';
@@ -12,6 +12,7 @@ import {
 } from './paginar';
 import { RevealInerte } from '../revealContexto';
 import { libroTexto } from '../../content/libro';
+import { useAmbiente, useEfecto, useSilencio } from '../../hooks/useSonido';
 import { useLanguage } from '../../i18n/languageContext';
 import { LIBRO_CAPITULOS, type LibroCapitulo } from '../../types/libro';
 
@@ -97,6 +98,11 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
       : 0,
   }));
   const [indiceAbierto, setIndiceAbierto] = useState(false);
+  const efecto = useEfecto();
+  const { silenciado, alternar } = useSilencio();
+
+  // The bed runs for as long as the reader is open, and stops with it.
+  useAmbiente(true);
 
   // Which half should play its entry animation next time its content changes.
   //
@@ -119,16 +125,30 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
 
   const spread = estado.spread;
 
+  // The opening thud, once. Closing is handled on the button so it fires
+  // before the component unmounts and takes the handler with it.
+  useEffect(() => {
+    efecto('abrir');
+  }, [efecto]);
+
+  const cerrarConSonido = useCallback(() => {
+    efecto('cerrar');
+    onClose();
+  }, [efecto, onClose]);
+
   const mover = useCallback(
     (direccion: 1 | -1) => {
       setEstado((actual) => {
         if (actual.fase === 'girando') return actual;
         const destino = actual.spread + direccion;
         if (destino < 0 || destino >= totalSpreads) return actual;
+        // Played here rather than on commit so the sheet is heard leaving, not
+        // landing — and a blocked turn at either end stays silent.
+        efecto('pagina');
         return { fase: 'girando', spread: actual.spread, destino, direccion };
       });
     },
-    [totalSpreads],
+    [totalSpreads, efecto],
   );
 
   // Committing is idempotent, because two things can trigger it.
@@ -158,12 +178,12 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
       else if (evento.key === 'ArrowLeft') mover(-1);
       else if (evento.key === 'Escape') {
         if (indiceAbierto) setIndiceAbierto(false);
-        else onClose();
+        else cerrarConSonido();
       }
     };
     window.addEventListener('keydown', alPulsar);
     return () => window.removeEventListener('keydown', alPulsar);
-  }, [mover, onClose, indiceAbierto]);
+  }, [mover, cerrarConSonido, indiceAbierto]);
 
   // Drag to turn. Fires on release only, and direction comes from the
   // displacement — @use-gesture reports velocity as a magnitude, so testing it
@@ -295,15 +315,33 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
             cream-on-cream control is an invisible control. */}
         <div className="absolute top-0 inset-x-0 flex items-center justify-between p-4 md:p-6 pointer-events-none">
           <button
-            onClick={() => setIndiceAbierto((abierto) => !abierto)}
+            onClick={() => {
+              efecto('clic');
+              setIndiceAbierto((abierto) => !abierto);
+            }}
             className={`${pastilla} inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest`}
           >
             <List size={15} />
             {t('libro.indice')}
           </button>
-          <button onClick={onClose} aria-label={t('libro.cerrar')} className={`${pastilla} p-3`}>
-            <X size={18} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={alternar}
+              aria-pressed={silenciado}
+              aria-label={silenciado ? t('libro.activarSonido') : t('libro.silenciar')}
+              title={silenciado ? t('libro.activarSonido') : t('libro.silenciar')}
+              className={`${pastilla} p-3`}
+            >
+              {silenciado ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            </button>
+            <button
+              onClick={cerrarConSonido}
+              aria-label={t('libro.cerrar')}
+              className={`${pastilla} p-3`}
+            >
+              <X size={18} />
+            </button>
+          </div>
         </div>
 
         <div className="absolute bottom-0 inset-x-0 flex items-center justify-center gap-3 sm:gap-5 p-4 sm:p-6 pointer-events-none">

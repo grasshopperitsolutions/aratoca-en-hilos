@@ -77,6 +77,8 @@ try {
         telefonos: telefonos(data.telefonos),
         correos: correos(data.correos),
         mapaUrl: typeof data.mapaUrl === 'string' ? data.mapaUrl : '',
+        lat: typeof data.lat === 'number' ? data.lat : null,
+        lng: typeof data.lng === 'number' ? data.lng : null,
         orden: typeof data.orden === 'number' ? data.orden : 0,
         publicado: true,
         creadoEn: toIso(data.creadoEn),
@@ -104,11 +106,32 @@ try {
       }
     : { url: null, nombre: null, tamano: 0 };
 
-  await writeFile(OUTPUT_LIBRO, `${JSON.stringify(pdf, null, 2)}\n`);
+  // The two crests, same idea. A role left empty stays null and the bundled
+  // artwork from the printed edition is used instead.
+  async function urlPorRol(rol) {
+    const encontrado = await getDocs(
+      query(collection(getFirestore(app), 'archivos'), where('rol', '==', rol)),
+    );
+    const doc = encontrado.docs[0];
+    return doc && typeof doc.data().url === 'string' ? doc.data().url : null;
+  }
+
+  const libro = {
+    ...pdf,
+    escudoAratoca: await urlPorRol('escudo-aratoca'),
+    logoMinisterio: await urlPorRol('logo-ministerio'),
+  };
+
+  await writeFile(OUTPUT_LIBRO, `${JSON.stringify(libro, null, 2)}\n`);
   console.log(
-    pdf.url
-      ? `[fetch-content] Book PDF: ${pdf.nombre}`
+    libro.url
+      ? `[fetch-content] Book PDF: ${libro.nombre}`
       : '[fetch-content] No book PDF tagged — the download button will stay hidden.',
+  );
+  console.log(
+    `[fetch-content] Crests: Aratoca ${libro.escudoAratoca ? 'uploaded' : 'bundled'}, Ministry ${
+      libro.logoMinisterio ? 'uploaded' : 'bundled'
+    }.`,
   );
 } catch (error) {
   // A build must never fail because Firestore was briefly unreachable — the

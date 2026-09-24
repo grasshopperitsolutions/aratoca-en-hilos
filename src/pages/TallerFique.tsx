@@ -1,4 +1,5 @@
 import {
+  BookOpen,
   ChevronDown,
   Coins,
   Landmark,
@@ -92,9 +93,16 @@ export default function TallerFique() {
                 {libro.editor}
               </p>
 
+              {/* Three ways in, by decreasing commitment: the chapter-by-chapter
+                  reader, the reader opened straight onto page one, and the PDF.
+                  `?c=1` is the same entry the chapter pages use. */}
               <div className="flex flex-wrap gap-4 justify-center mt-10">
                 <Button to={path('libro')} variant="primary">
                   {t('tallerFique.abrirLibro')}
+                </Button>
+                <Button to={`${path('libro')}?c=1`} variant="secondary">
+                  <BookOpen size={16} />
+                  {t('libro.abrir')}
                 </Button>
                 <DescargarPdf />
               </div>

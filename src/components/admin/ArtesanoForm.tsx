@@ -4,6 +4,7 @@ import { CircleAlert, ExternalLink, ImageIcon, Plus, Trash2 } from 'lucide-react
 import MediaPicker, { type MediaSelection } from './MediaPicker';
 import SocialGlyph from '../SocialGlyph';
 import { NETWORK_LABELS, detectNetwork, hostLabel } from '../../content/social';
+import { coordenadasDesdeUrl } from '../../services/coordenadas';
 import type { ArtesanoInput } from '../../services/artesanos';
 import type { ArtesanoErrors } from '../../services/artesanosAdmin';
 
@@ -22,6 +23,14 @@ interface ArtesanoFormProps {
 
 export default function ArtesanoForm({ form, errors, onChange }: ArtesanoFormProps) {
   const [pickerOpen, setPickerOpen] = useState(false);
+
+  /** An empty or half-typed coordinate field is null, not NaN. */
+  const aNumero = (texto: string): number | null => {
+    const limpio = texto.trim();
+    if (!limpio || limpio === '-') return null;
+    const valor = Number(limpio);
+    return Number.isFinite(valor) ? valor : null;
+  };
 
   const set = <K extends keyof ArtesanoInput>(key: K, value: ArtesanoInput[K]) =>
     onChange({ ...form, [key]: value });
@@ -308,10 +317,58 @@ export default function ArtesanoForm({ form, errors, onChange }: ArtesanoFormPro
             className={FIELD}
             placeholder="https://maps.app.goo.gl/…"
             value={form.mapaUrl}
-            onChange={(event) => set('mapaUrl', event.target.value)}
+            onChange={(event) => {
+              const url = event.target.value;
+              // Pre-fill the pin from the link when it carries coordinates, but
+              // never overwrite a pair someone has already typed or corrected.
+              const leidas = coordenadasDesdeUrl(url);
+              if (leidas && form.lat === null && form.lng === null) {
+                onChange({ ...form, mapaUrl: url, lat: leidas.lat, lng: leidas.lng });
+              } else {
+                set('mapaUrl', url);
+              }
+            }}
           />
           <p className="text-stone text-xs mt-2">
-            Se muestra como un enlace “Ver ubicación”, sin mapa incrustado.
+            Se muestra como un enlace “Ver ubicación”. Si el enlace lleva coordenadas, se
+            copian abajo automáticamente.
+          </p>
+        </div>
+
+        <div>
+          <span className={LABEL}>Punto en el mapa de artesanos</span>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="lat" className="sr-only">
+                Latitud
+              </label>
+              <input
+                id="lat"
+                className={FIELD}
+                inputMode="decimal"
+                placeholder="Latitud — 6.6940"
+                value={form.lat ?? ''}
+                onChange={(event) => set('lat', aNumero(event.target.value))}
+              />
+            </div>
+            <div>
+              <label htmlFor="lng" className="sr-only">
+                Longitud
+              </label>
+              <input
+                id="lng"
+                className={FIELD}
+                inputMode="decimal"
+                placeholder="Longitud — -73.0180"
+                value={form.lng ?? ''}
+                onChange={(event) => set('lng', aNumero(event.target.value))}
+              />
+            </div>
+          </div>
+          <p className="text-stone text-xs mt-2">
+            {form.lat !== null && form.lng !== null
+              ? 'Aparecerá como un punto en el mapa de la página de artesanos.'
+              : 'Sin coordenadas no aparece en el mapa. En Google Maps: clic derecho sobre el punto → la primera opción copia “latitud, longitud”.'}
           </p>
         </div>
       </section>

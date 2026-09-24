@@ -1,6 +1,8 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Check, RotateCcw, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+
+import { useEfecto } from '../../hooks/useSonido';
 
 import Ilustracion from './Ilustraciones';
 import Reveal from '../Reveal';
@@ -42,6 +44,14 @@ function Envoltura({
   onReintentar?: () => void;
 }) {
   const { t } = useTranslation();
+  const efecto = useEfecto();
+
+  // Every activity type funnels its outcome through this wrapper, so sounding
+  // the answer here covers all five without touching each one.
+  useEffect(() => {
+    if (estado === 'sin-responder') return;
+    efecto(estado === 'acierto' ? 'acierto' : 'fallo');
+  }, [estado, efecto]);
 
   return (
     <div

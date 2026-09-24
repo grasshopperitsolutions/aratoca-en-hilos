@@ -23,6 +23,8 @@ const EMPTY_FORM: ArtesanoInput = {
   telefonos: [],
   correos: [],
   mapaUrl: '',
+  lat: null,
+  lng: null,
   orden: 0,
   publicado: false,
 };
@@ -39,6 +41,8 @@ function toInput(artesano: Artesano): ArtesanoInput {
     telefonos: artesano.telefonos,
     correos: artesano.correos,
     mapaUrl: artesano.mapaUrl,
+    lat: artesano.lat,
+    lng: artesano.lng,
     orden: artesano.orden,
     publicado: artesano.publicado,
   };

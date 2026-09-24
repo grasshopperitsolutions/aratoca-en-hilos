@@ -119,7 +119,11 @@
     "contacto": {
       "whatsapp": "Message on WhatsApp",
       "mapa": "View location"
-    }
+    },
+    "mapaTitulo": "Map of Aratoca’s artisans",
+    "mapaCargando": "Loading the map…",
+    "mapaPie": "Hover over a pin to see who works there. Only artisans with a registered location appear.",
+    "verFicha": "See their profile"
   },
   "tallerFique": {
     "accent": "Interactive book",
@@ -173,6 +177,8 @@
     "descargarPdf": "Download the book as PDF",
     "abrir": "Open the interactive book",
     "cerrar": "Close the book",
+    "silenciar": "Mute the sound",
+    "activarSonido": "Turn the sound on",
     "cargando": "Preparing the book…",
     "capituloDe": "Chapter {{numero}} of {{total}}",
     "sinWebgl": "Your browser cannot show the 3D book, but you can read the whole thing chapter by chapter below.",
@@ -186,6 +192,8 @@
     "fases": "The six phases of the process",
     "lineaTiempo": "A century of fique in Aratoca",
     "glosario": "Glossary",
+    "repaso": "Vocabulary review",
+    "repasoIntro": "Six exercises to check the terms of the craft, in the same order the glossary presents them.",
     "fuentes": "Sources",
     "creditos": "Credits"
   },

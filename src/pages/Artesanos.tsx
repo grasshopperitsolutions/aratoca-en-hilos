@@ -2,6 +2,7 @@ import { ExternalLink, Leaf, Mail, MapPin, MessageCircle, Phone } from 'lucide-r
 import { useTranslation } from 'react-i18next';
 
 import Button from '../components/Button';
+import MapaArtesanos from '../components/MapaArtesanos';
 import PageHeader from '../components/PageHeader';
 import Reveal from '../components/Reveal';
 import SocialGlyph from '../components/SocialGlyph';
@@ -140,7 +141,12 @@ function ArtesanoEntry({ artesano, index }: { artesano: Artesano; index: number 
   const bio = localised(artesano.bio, language);
 
   return (
-    <article className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start">
+    // The id is what the map popups link to, and `scroll-mt` keeps the fixed
+    // header from covering the card once the jump lands.
+    <article
+      id={`artesano-${artesano.id}`}
+      className="scroll-mt-28 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start"
+    >
       {/* Portrait + description */}
       <Reveal
         direction={imageFirst ? 'right' : 'left'}
@@ -204,6 +210,8 @@ export default function Artesanos() {
         intro={t('artesanos.intro')}
         note={t('artesanos.note')}
       />
+
+      <MapaArtesanos artesanos={artesanos} />
 
       <section className="px-6 md:px-12 py-20 md:py-28 bg-cream">
         <div className="max-w-6xl mx-auto">

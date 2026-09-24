@@ -41,8 +41,14 @@ export interface Artesano {
   telefonos: TelefonoArtesano[];
   /** Optional email addresses. */
   correos: string[];
-  /** Optional Google Maps link. Rendered as a link, not an embedded map. */
+  /** Optional Google Maps link. Rendered as a link alongside the map. */
   mapaUrl: string;
+  /**
+   * Optional position on the artisans map. Both or neither: a pin needs the
+   * pair, so `null` means this artisan simply does not appear on the map.
+   */
+  lat: number | null;
+  lng: number | null;
   /** Sort position, ascending. */
   orden: number;
   publicado: boolean;
@@ -69,10 +75,28 @@ export interface Mensaje {
 }
 
 /**
- * A role a library file can be given, so a page can find it by meaning rather
- * than by filename. At most one file holds each role at a time.
+ * Slots a media-library file can fill. One file per role, swappable from
+ * /admin/archivos without a redeploy.
+ *
+ * The two crests ship as bundled images too, so a role that is empty is not a
+ * broken page — it simply means nobody has overridden the printed edition's
+ * artwork yet.
  */
-export type ArchivoRol = 'libro-pdf';
+export type ArchivoRol = 'libro-pdf' | 'escudo-aratoca' | 'logo-ministerio';
+
+/** Every role, in the order the admin screen lists them. */
+export const ARCHIVO_ROLES: readonly ArchivoRol[] = [
+  'libro-pdf',
+  'escudo-aratoca',
+  'logo-ministerio',
+];
+
+/** Content types a given role will accept. */
+export const ROL_ACEPTA: Record<ArchivoRol, 'pdf' | 'imagen'> = {
+  'libro-pdf': 'pdf',
+  'escudo-aratoca': 'imagen',
+  'logo-ministerio': 'imagen',
+};
 
 /** A file in the media library, managed from /admin/archivos. */
 export interface Archivo {
@@ -84,8 +108,8 @@ export interface Archivo {
   tamano: number;
   subidoEn: string | null;
   /**
-   * Set when this file is the one a page asks for by role — currently only the
-   * downloadable book PDF. Lets the client replace the book without a redeploy.
+   * Set when this file is the one a page asks for by role. Lets the client
+   * swap the book PDF or either crest without a redeploy.
    */
   rol: ArchivoRol | null;
 }
