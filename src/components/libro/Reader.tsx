@@ -90,6 +90,25 @@ function alinear(pagina: number, doble: boolean): number {
   return doble ? pagina - (pagina % 2) : pagina;
 }
 
+/**
+ * Two pages side by side only when there is genuinely room for both.
+ *
+ * Each page of a spread gets half the width, so a 900px threshold put two
+ * ~450px pages on screen — narrower than the single page the same device would
+ * show in portrait, and cramped enough that the spread stopped being worth it.
+ * Landscape is required as well: a tall, narrow window has the width for one
+ * page, not two.
+ *
+ * Anything below this — phones in either orientation, tablets in portrait,
+ * half-screen desktop windows — reads one page at a time.
+ */
+const ANCHO_MINIMO_DOBLE = 1100;
+
+function cabenDosPaginas(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth >= ANCHO_MINIMO_DOBLE && window.innerWidth > window.innerHeight;
+}
+
 export interface ReaderProps {
   capituloInicial: LibroCapitulo | null;
   onClose: () => void;
@@ -101,11 +120,7 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
   const libro = useMemo(() => libroTexto(language), [language]);
   const paginas = useMemo<PaginaConCapitulo[]>(() => construirPaginas(libro), [libro]);
 
-  // One page at a time on a phone: two pages side by side on a 390px screen
-  // would be unreadable whatever the typography.
-  const [doble, setDoble] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth >= 900,
-  );
+  const [doble, setDoble] = useState(cabenDosPaginas);
 
   // How far one turn travels, and therefore how the whole book is indexed: a
   // spread of two on a wide screen, a single page on a phone. Before this was
@@ -116,10 +131,7 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
 
   const [estado, setEstado] = useState<Estado>(() => ({
     fase: 'quieto',
-    pagina: alinear(
-      capituloInicial ? paginaDeCapitulo(paginas, capituloInicial) : 0,
-      typeof window !== 'undefined' && window.innerWidth >= 900,
-    ),
+    pagina: alinear(capituloInicial ? paginaDeCapitulo(paginas, capituloInicial) : 0, cabenDosPaginas()),
   }));
   const [indiceAbierto, setIndiceAbierto] = useState(false);
   const efecto = useEfecto();
@@ -137,9 +149,15 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
   const [lado, setLado] = useState<'ambos' | 'izquierda' | 'derecha'>('ambos');
 
   useEffect(() => {
-    const alRedimensionar = () => setDoble(window.innerWidth >= 900);
+    const alRedimensionar = () => setDoble(cabenDosPaginas());
     window.addEventListener('resize', alRedimensionar);
-    return () => window.removeEventListener('resize', alRedimensionar);
+    // Rotating a phone fires `orientationchange` before `resize` settles on
+    // some browsers, so both are listened for.
+    window.addEventListener('orientationchange', alRedimensionar);
+    return () => {
+      window.removeEventListener('resize', alRedimensionar);
+      window.removeEventListener('orientationchange', alRedimensionar);
+    };
   }, []);
 
   // Derived, not stored: rotating a phone into two-page mode can leave the
