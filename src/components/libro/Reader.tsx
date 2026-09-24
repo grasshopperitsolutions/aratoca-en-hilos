@@ -19,8 +19,10 @@ import { LIBRO_CAPITULOS, type LibroCapitulo } from '../../types/libro';
 /**
  * The interactive reader.
  *
- * A spread is two pages side by side; turning rotates a single leaf about the
- * spine. The leaf is real DOM, so the pages it carries stay selectable,
+ * On a wide screen a spread is two pages side by side and turning rotates a
+ * single leaf about the spine; on a phone there is no spine, so pages advance
+ * one at a time behind a cross-fade. Either way every page in the book is
+ * reachable — `paso` is what differs. The leaf is real DOM, so the pages it carries stay selectable,
  * interactive and readable by a screen reader — which is what makes the
  * activities possible at all.
  *
@@ -75,8 +77,18 @@ function Hoja({
 }
 
 type Estado =
-  | { fase: 'quieto'; spread: number }
-  | { fase: 'girando'; spread: number; destino: number; direccion: 1 | -1 };
+  | { fase: 'quieto'; pagina: number }
+  | { fase: 'girando'; pagina: number; destino: number; direccion: 1 | -1 };
+
+/**
+ * A spread always opens on an even page, so two-page mode snaps to one.
+ *
+ * Single-page mode has no such constraint: every page is a valid resting
+ * position, which is exactly what makes the whole book reachable on a phone.
+ */
+function alinear(pagina: number, doble: boolean): number {
+  return doble ? pagina - (pagina % 2) : pagina;
+}
 
 export interface ReaderProps {
   capituloInicial: LibroCapitulo | null;
@@ -89,13 +101,25 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
   const libro = useMemo(() => libroTexto(language), [language]);
   const paginas = useMemo<PaginaConCapitulo[]>(() => construirPaginas(libro), [libro]);
 
-  const totalSpreads = Math.ceil(paginas.length / 2);
+  // One page at a time on a phone: two pages side by side on a 390px screen
+  // would be unreadable whatever the typography.
+  const [doble, setDoble] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth >= 900,
+  );
+
+  // How far one turn travels, and therefore how the whole book is indexed: a
+  // spread of two on a wide screen, a single page on a phone. Before this was
+  // conditional the mobile path advanced two pages at a time and rendered only
+  // the first, which silently hid every odd page in the book.
+  const paso = doble ? 2 : 1;
+  const ultimaPagina = paginas.length - 1;
 
   const [estado, setEstado] = useState<Estado>(() => ({
     fase: 'quieto',
-    spread: capituloInicial
-      ? Math.floor(paginaDeCapitulo(paginas, capituloInicial) / 2)
-      : 0,
+    pagina: alinear(
+      capituloInicial ? paginaDeCapitulo(paginas, capituloInicial) : 0,
+      typeof window !== 'undefined' && window.innerWidth >= 900,
+    ),
   }));
   const [indiceAbierto, setIndiceAbierto] = useState(false);
   const efecto = useEfecto();
@@ -112,18 +136,17 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
   // both.
   const [lado, setLado] = useState<'ambos' | 'izquierda' | 'derecha'>('ambos');
 
-  // One page at a time on a phone: two pages side by side on a 390px screen
-  // would be unreadable whatever the typography.
-  const [doble, setDoble] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth >= 900,
-  );
   useEffect(() => {
     const alRedimensionar = () => setDoble(window.innerWidth >= 900);
     window.addEventListener('resize', alRedimensionar);
     return () => window.removeEventListener('resize', alRedimensionar);
   }, []);
 
-  const spread = estado.spread;
+  // Derived, not stored: rotating a phone into two-page mode can leave the
+  // reader resting on an odd page, which is not the start of any spread.
+  // Aligning on read snaps to the spread containing it — and needs no effect
+  // writing state back, which would render twice and fight the turn.
+  const pagina = alinear(estado.pagina, doble);
 
   // The opening thud, once. Closing is handled on the button so it fires
   // before the component unmounts and takes the handler with it.
@@ -140,15 +163,17 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
     (direccion: 1 | -1) => {
       setEstado((actual) => {
         if (actual.fase === 'girando') return actual;
-        const destino = actual.spread + direccion;
-        if (destino < 0 || destino >= totalSpreads) return actual;
+        // From the aligned position, so a turn that begins right after a
+        // resize lands on a spread boundary rather than perpetuating an odd one.
+        const destino = alinear(actual.pagina, doble) + direccion * paso;
+        if (destino < 0 || destino > ultimaPagina) return actual;
         // Played here rather than on commit so the sheet is heard leaving, not
         // landing — and a blocked turn at either end stays silent.
         efecto('pagina');
-        return { fase: 'girando', spread: actual.spread, destino, direccion };
+        return { fase: 'girando', pagina: alinear(actual.pagina, doble), destino, direccion };
       });
     },
-    [totalSpreads, efecto],
+    [paso, ultimaPagina, doble, efecto],
   );
 
   // Committing is idempotent, because two things can trigger it.
@@ -157,7 +182,7 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
     // The half that waited blank behind the leaf is the one whose content
     // arrives now; the other half the leaf put down itself.
     setLado(estado.direccion === 1 ? 'derecha' : 'izquierda');
-    setEstado({ fase: 'quieto', spread: estado.destino });
+    setEstado({ fase: 'quieto', pagina: estado.destino });
   }, [estado]);
 
   // A backstop for the turn.
@@ -198,8 +223,10 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
     { axis: 'x', filterTaps: true, pointer: { touch: true } },
   );
 
+  // On a phone only the one page is showing, so the facing page must not be
+  // allowed to report the chapter.
   const capituloActual =
-    paginas[spread * 2]?.capitulo ?? paginas[spread * 2 + 1]?.capitulo ?? null;
+    paginas[pagina]?.capitulo ?? (doble ? paginas[pagina + 1]?.capitulo : null) ?? null;
 
   // Which pages sit where during a turn. The half the turn is about to reveal
   // waits blank: showing the incoming page under the lifting leaf and then
@@ -207,13 +234,13 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
   const girando = estado.fase === 'girando';
   const adelante = girando && estado.direccion === 1;
 
-  const izquierdaFija = girando && !adelante ? null : spread * 2;
-  const derechaFija = adelante ? null : spread * 2 + 1;
-  const caraFrente = adelante ? spread * 2 + 1 : girando ? estado.destino * 2 + 1 : 0;
-  const caraDorso = adelante ? estado.destino * 2 : girando ? spread * 2 : 0;
+  const izquierdaFija = girando && !adelante ? null : pagina;
+  const derechaFija = adelante ? null : pagina + 1;
+  const caraFrente = adelante ? pagina + 1 : girando ? estado.destino + 1 : 0;
+  const caraDorso = adelante ? estado.destino : girando ? pagina : 0;
 
   // On a phone the page beneath the cross-fade is already the incoming one.
-  const paginaMovil = girando ? estado.destino * 2 : spread * 2;
+  const paginaMovil = girando ? estado.destino : pagina;
 
   const pastilla =
     'pointer-events-auto rounded-full bg-charcoal/90 text-cream ring-1 ring-cream/25 shadow-lg backdrop-blur-sm transition-colors hover:bg-charcoal';
@@ -303,7 +330,7 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
                   onAnimationEnd={terminar}
                   aria-hidden="true"
                 >
-                  <Hoja paginas={paginas} indice={spread * 2} sombra={false} onCerrar={onClose} />
+                  <Hoja paginas={paginas} indice={pagina} sombra={false} onCerrar={onClose} />
                 </div>
               )}
             </div>
@@ -347,7 +374,7 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
         <div className="absolute bottom-0 inset-x-0 flex items-center justify-center gap-3 sm:gap-5 p-4 sm:p-6 pointer-events-none">
           <button
             onClick={() => mover(-1)}
-            disabled={spread === 0}
+            disabled={pagina === 0}
             aria-label={t('libro.anterior')}
             className={`${pastilla} p-3 disabled:opacity-40`}
           >
@@ -360,7 +387,7 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
           </p>
           <button
             onClick={() => mover(1)}
-            disabled={spread >= totalSpreads - 1}
+            disabled={pagina + paso > ultimaPagina}
             aria-label={t('libro.siguiente')}
             className={`${pastilla} p-3 disabled:opacity-40`}
           >
@@ -396,7 +423,7 @@ export default function Reader({ capituloInicial, onClose }: ReaderProps) {
                           setLado('ambos');
                           setEstado({
                             fase: 'quieto',
-                            spread: Math.floor(paginaDeCapitulo(paginas, numero) / 2),
+                            pagina: alinear(paginaDeCapitulo(paginas, numero), doble),
                           });
                           setIndiceAbierto(false);
                         }}
